@@ -1,0 +1,55 @@
+var AppConstants = require('../constants/app-constants');
+var AppDispatcher = require('../dispatchers/app-dispatcher');
+
+var actions = AppConstants.actions;
+
+var AppActions = {
+  moveLeft: function (piece) {
+    AppDispatcher.handleViewAction({
+      actionType: actions.MOVE_LEFT,
+      piece: piece
+    });
+  },
+
+  moveRight: function (piece) {
+    AppDispatcher.handleViewAction({
+      actionType: actions.MOVE_RIGHT,
+      piece: piece
+    });
+  },
+
+  hardDrop: function (piece) {
+    AppDispatcher.handleViewAction({
+      actionType: actions.HARD_DROP,
+      piece: piece
+    });
+  },
+
+  flipClockwise: function (piece) {
+    AppDispatcher.handleViewAction({
+      actionType: actions.FLIP_CLOCKWISE,
+      piece: piece
+    });
+  },
+
+  flipCounterclockwise: function (piece) {
+    AppDispatcher.handleViewAction({
+      actionType: actions.FLIP_COUNTERCLOCKWISE,
+      piece: piece
+    });
+  },
+
+  pause: function () {
+    AppDispatcher.handleViewAction({
+      actionType: actions.PAUSE
+    });
+  },
+
+  resume: function () {
+    AppDispatcher.handleViewAction({
+      actionType: actions.RESUME
+    });
+  },
+};
+
+module.exports = AppActions;
