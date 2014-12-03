@@ -5,7 +5,9 @@ var GameStore = require('../stores/game-store');
 var key = require('keymaster');
 
 function gameBoard () {
-  return {gameBoard: GameStore.getGameBoard()};
+  return {
+    gameBoard: GameStore.getGameBoard()
+  };
 }
 
 function bindKeyboardEvents () {

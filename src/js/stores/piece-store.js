@@ -4,6 +4,7 @@ var PieceTypes = require('./piece-types');
 var BoardStore = require('./board-store')
 var EventEmitter = require('./event-emitter');
 var _ = require('lodash');
+var events = AppConstants.events;
 
 var actions = AppConstants.actions;
 
@@ -108,7 +109,11 @@ var PieceStore = _.extend({
 
     // going into a queue of promises so we want to return something positive for a resolve
     return true;
-  })
+  }),
+
+   emitPlayerLost: function () {
+    this.emit(events.PLAYER_LOST);
+   }
 }, EventEmitter);
 
 function emitChangeIf (val) {
@@ -150,8 +155,7 @@ function setUpNewPiece () {
   _position = _.clone(initialPosition);
   PieceStore.emitChange();
   if (!BoardStore.isEmptyPosition(_piece, _rotation, _position)) {
-    alert('YOU JUST LOST');
-    // should emit event or something nice idk
+    PieceStore.emitPlayerLost();
   }
 }
 

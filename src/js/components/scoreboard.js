@@ -3,7 +3,10 @@ var React = require('react');
 var ScoreStore = require('../stores/score-store');
 
 function getScore () {
-  return {points: ScoreStore.getPoints(), linesCleared: ScoreStore.getLinesCleared()};
+  return {
+    points: ScoreStore.getPoints(),
+    linesCleared: ScoreStore.getLinesCleared()
+  };
 }
 
 var Scoreboard = React.createClass({

@@ -3,6 +3,8 @@ var React = require('react');
 var Scoreboard = require('./scoreboard');
 var Gameboard = require('./gameboard');
 
+// LOOK AT GAMESTORE CURRENT STATE
+// PUT A MENU UP AT SOME POINT
 var Tetris = React.createClass({
   render: function () {
     return (

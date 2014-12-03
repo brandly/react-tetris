@@ -3,6 +3,7 @@ var AppConstants = require('../constants/app-constants');
 var EventEmitter = require('./event-emitter');
 var pieceSetter = require('./piece-setter');
 var events = AppConstants.events;
+var states = AppConstants.states;
 var _ = require('lodash');
 
 // Two-dimensional array

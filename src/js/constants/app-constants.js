@@ -12,11 +12,13 @@ module.exports = {
 
   states: {
     PAUSED: 'PAUSED',
-    PLAYING: 'PLAYING'
+    PLAYING: 'PLAYING',
+    GAME_RESULT: 'GAME_RESULT'
   },
 
   events: {
-    LINE_CLEARED: 'LINE_CLEARED'
+    LINE_CLEARED: 'LINE_CLEARED',
+    PLAYER_LOST: 'PLAYER_LOST'
   },
 
   // dimensions in "blocks"

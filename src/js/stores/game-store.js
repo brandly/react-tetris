@@ -5,6 +5,9 @@ var BoardStore = require('./board-store');
 var PieceStore = require('./piece-store');
 var pieceSetter = require('./piece-setter');
 var _ = require('lodash');
+var states = AppConstants.states;
+
+var _currentState = null;
 
 var GameStore = _.extend({
   getGameBoard: function () {
@@ -15,6 +18,10 @@ var GameStore = _.extend({
     return gameBoard;
   },
 
+  getCurrentState: function () {
+    return _currentState;
+  },
+
   tick: function () {
     PieceStore.tick();
   },
@@ -23,6 +30,7 @@ var GameStore = _.extend({
     global.setInterval(function () {
       GameStore.tick();
     }, 800);
+    _currentState = states.PLAYING;
   }
 }, EventEmitter);
 
