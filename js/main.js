@@ -25616,6 +25616,13 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var actions = AppConstants.actions;
 
 var AppActions = {
+  moveDown: function (piece) {
+    AppDispatcher.handleViewAction({
+      actionType: actions.MOVE_DOWN,
+      piece: piece
+    });
+  },
+
   moveLeft: function (piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.MOVE_LEFT,
@@ -25698,12 +25705,13 @@ function gameBoard () {
 }
 
 function bindKeyboardEvents () {
+  key('down', AppActions.moveDown);
   key('left', AppActions.moveLeft);
   key('right', AppActions.moveRight);
-  key('down', AppActions.hardDrop);
+  key('space', AppActions.hardDrop);
   key('z', AppActions.flipCounterclockwise);
   key('x', AppActions.flipClockwise);
-  key('space', AppActions.pause);
+  key('up', AppActions.flipClockwise);
 }
 
 var Gameboard = React.createClass({displayName: 'Gameboard',
@@ -25812,6 +25820,7 @@ module.exports = Tetris;
 module.exports = {
   actions: {
     HARD_DROP: 'HARD_DROP',
+    MOVE_DOWN: 'MOVE_DOWN',
     MOVE_LEFT: 'MOVE_LEFT',
     MOVE_RIGHT: 'MOVE_RIGHT',
     FLIP_CLOCKWISE: 'FLIP_CLOCKWISE',
@@ -26080,6 +26089,18 @@ function _moveRight () {
   }
 }
 
+function _moveDown () {
+  var newPosition = _.clone(_position);
+  newPosition.y += 1;
+
+  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+    _position = newPosition;
+    return true;
+  } else {
+    _lockInPiece();
+  }
+}
+
 function _hardDrop () {
   var yPosition = _position.y;
 
@@ -26120,20 +26141,16 @@ var PieceStore = _.extend({
   },
 
   tick: function () {
-    var newPosition = _.clone(_position);
-    newPosition.y += 1;
-
-    if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
-      _position = newPosition;
-    } else {
-      _lockInPiece();
-    }
-    PieceStore.emitChange();
+    emitChangeIf(_moveDown());
   },
 
   dispatcherIndex: AppDispatcher.register(function (payload) {
     var action = payload.action; // this is our action from handleViewAction
     switch (action.actionType) {
+      case actions.MOVE_DOWN:
+        emitChangeIf(_moveDown());
+        break;
+
       case actions.MOVE_LEFT:
         emitChangeIf(_moveLeft());
         break;
@@ -26329,7 +26346,7 @@ var O = {
       [0, 0, 0, 0]
     ]
   ],
-  className: 'piece-i'
+  className: 'piece-o'
 };
 
 var S = {
