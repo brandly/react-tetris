@@ -2,6 +2,7 @@
 module.exports = {
   actions: {
     HARD_DROP: 'HARD_DROP',
+    MOVE_DOWN: 'MOVE_DOWN',
     MOVE_LEFT: 'MOVE_LEFT',
     MOVE_RIGHT: 'MOVE_RIGHT',
     FLIP_CLOCKWISE: 'FLIP_CLOCKWISE',

@@ -32,6 +32,18 @@ function _moveRight () {
   }
 }
 
+function _moveDown () {
+  var newPosition = _.clone(_position);
+  newPosition.y += 1;
+
+  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+    _position = newPosition;
+    return true;
+  } else {
+    _lockInPiece();
+  }
+}
+
 function _hardDrop () {
   var yPosition = _position.y;
 
@@ -72,20 +84,16 @@ var PieceStore = _.extend({
   },
 
   tick: function () {
-    var newPosition = _.clone(_position);
-    newPosition.y += 1;
-
-    if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
-      _position = newPosition;
-    } else {
-      _lockInPiece();
-    }
-    PieceStore.emitChange();
+    emitChangeIf(_moveDown());
   },
 
   dispatcherIndex: AppDispatcher.register(function (payload) {
     var action = payload.action; // this is our action from handleViewAction
     switch (action.actionType) {
+      case actions.MOVE_DOWN:
+        emitChangeIf(_moveDown());
+        break;
+
       case actions.MOVE_LEFT:
         emitChangeIf(_moveLeft());
         break;

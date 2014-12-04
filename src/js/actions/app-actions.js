@@ -4,6 +4,13 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var actions = AppConstants.actions;
 
 var AppActions = {
+  moveDown: function (piece) {
+    AppDispatcher.handleViewAction({
+      actionType: actions.MOVE_DOWN,
+      piece: piece
+    });
+  },
+
   moveLeft: function (piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.MOVE_LEFT,

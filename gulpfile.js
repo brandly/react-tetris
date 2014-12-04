@@ -35,7 +35,7 @@ function bundleShare (b) {
   b.bundle()
     .on('error', handleError)
     .pipe(source('main.js'))
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('dist/'))
 }
 
 gulp.task('browserify', function () {

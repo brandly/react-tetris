@@ -116,7 +116,7 @@ var O = {
       [0, 0, 0, 0]
     ]
   ],
-  className: 'piece-i'
+  className: 'piece-o'
 };
 
 var S = {

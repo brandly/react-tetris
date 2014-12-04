@@ -11,12 +11,13 @@ function gameBoard () {
 }
 
 function bindKeyboardEvents () {
+  key('down', AppActions.moveDown);
   key('left', AppActions.moveLeft);
   key('right', AppActions.moveRight);
-  key('down', AppActions.hardDrop);
+  key('space', AppActions.hardDrop);
   key('z', AppActions.flipCounterclockwise);
   key('x', AppActions.flipClockwise);
-  key('space', AppActions.pause);
+  key('up', AppActions.flipClockwise);
 }
 
 var Gameboard = React.createClass({
