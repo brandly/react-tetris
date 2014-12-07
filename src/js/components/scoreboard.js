@@ -18,6 +18,10 @@ var Scoreboard = React.createClass({
     ScoreStore.addChangeListener(this._onChange);
   },
 
+  componentWillUnmount: function () {
+    ScoreStore.removeChangeListener(this._onChange);
+  },
+
   _onChange: function () {
     this.setState(getScore());
   },

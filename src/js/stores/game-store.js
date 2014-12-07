@@ -6,8 +6,10 @@ var PieceStore = require('./piece-store');
 var pieceSetter = require('./piece-setter');
 var _ = require('lodash');
 var states = AppConstants.states;
+var actions = AppConstants.actions;
 
 var _currentState = null;
+var _interval = null;
 
 var GameStore = _.extend({
   getGameBoard: function () {
@@ -22,16 +24,34 @@ var GameStore = _.extend({
     return _currentState;
   },
 
-  tick: function () {
-    PieceStore.tick();
-  },
-
   start: function () {
-    global.setInterval(function () {
-      GameStore.tick();
+    _interval = global.setInterval(function () {
+      PieceStore.tick();
     }, 800);
     _currentState = states.PLAYING;
-  }
+    this.emitChange();
+  },
+
+  pause: function () {
+    global.clearInterval(_interval);
+    _currentState = states.PAUSED;
+    this.emitChange();
+  },
+
+  dispatcherIndex: AppDispatcher.register(function (payload) {
+    var action = payload.action;
+    switch (action.actionType) {
+      case actions.PAUSE:
+        GameStore.pause();
+        break;
+
+      case actions.RESUME:
+        GameStore.start();
+        break;
+    }
+
+    return true;
+  })
 }, EventEmitter);
 
 // Game store should emit all changes that occur

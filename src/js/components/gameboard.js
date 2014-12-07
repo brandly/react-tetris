@@ -1,8 +1,10 @@
 /** @jsx REACT.DOM */
 var React = require('react');
+var key = require('keymaster');
 var AppActions = require('../actions/app-actions');
 var GameStore = require('../stores/game-store');
-var key = require('keymaster');
+var AppConstants = require('../constants/app-constants');
+var states = AppConstants.states;
 
 function gameBoard () {
   return {
@@ -18,6 +20,14 @@ function bindKeyboardEvents () {
   key('z', AppActions.flipCounterclockwise);
   key('x', AppActions.flipClockwise);
   key('up', AppActions.flipClockwise);
+
+  key('p', function () {
+    if (GameStore.getCurrentState() === states.PLAYING) {
+      AppActions.pause();
+    } else {
+      AppActions.resume();
+    }
+  });
 }
 
 var Gameboard = React.createClass({

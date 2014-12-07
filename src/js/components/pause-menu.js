@@ -1,7 +1,6 @@
 /** @jsx REACT.DOM */
 var React = require('react');
 var Scoreboard = require('./scoreboard');
-// var PauseMenu = require('./pause-menu');
 var Gameboard = require('./gameboard');
 var GameStore = require('../stores/game-store');
 var AppConstants = require('../constants/app-constants');
@@ -13,28 +12,26 @@ function gameState () {
   };
 }
 
-var Tetris = React.createClass({
-  // getInitialState: function () {
-  //   return gameState();
-  // },
+var PauseMenu = React.createClass({
+  getInitialState: function () {
+    return gameState();
+  },
 
-  // componentWillMount: function () {
-  //   GameStore.addChangeListener(this._onChange);
-  // },
+  componentDidMount: function () {
+    GameStore.addChangeListener(this._onChange);
+  },
 
-  // _onChange: function () {
-  //   this.setState(gameState());
-  // },
+  _onChange: function () {
+    this.setState(gameState());
+  },
 
   render: function () {
     return (
-      <div>
-        <Scoreboard />
-        <Gameboard />
-
+      <div className="overlay">
+        <h1>hi</h1>
       </div>
     )
   }
 });
 
-module.exports = Tetris;
+module.exports = PauseMenu;
