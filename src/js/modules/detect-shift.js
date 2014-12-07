@@ -29,7 +29,11 @@ module.exports = {
   bind: function (callback) {
     callbacks.push(callback);
   },
-  unbind: function () {
 
+  unbind: function (callback) {
+    var index = callbacks.indexOf(callback);
+    if (index !== -1) {
+      callbacks.splice(index, 1);
+    }
   }
 };

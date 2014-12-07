@@ -1,8 +1,8 @@
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
-var PieceTypes = require('./piece-types');
+var PieceTypes = require('../modules/piece-types');
 var BoardStore = require('./board-store')
-var EventEmitter = require('./event-emitter');
+var EventEmitter = require('../modules/event-emitter');
 var _ = require('lodash');
 var events = AppConstants.events;
 
