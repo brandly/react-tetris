@@ -5,6 +5,7 @@ var Scoreboard = require('./scoreboard');
 var Gameboard = require('./gameboard');
 var GameStore = require('../stores/game-store');
 var HeldPiece = require('./held-piece');
+var PieceQueue = require('./piece-queue');
 var AppConstants = require('../constants/app-constants');
 var states = AppConstants.states;
 
@@ -29,12 +30,20 @@ var Tetris = React.createClass({
 
   render: function () {
     return (
-      <div>
-        <Scoreboard />
-        <Gameboard />
+      <div className="row">
+        <div className="col-md-2">
+          <HeldPiece />
+          <Scoreboard />
+        </div>
 
+        <div className="col-md-4">
+          <Gameboard />
+        </div>
 
-        <HeldPiece />
+        <div className="col-md-4">
+          <PieceQueue />
+        </div>
+
       </div>
     )
   }

@@ -103,7 +103,8 @@ var PieceStore = _.extend({
       rotation: _rotation,
       position: _position,
 
-      heldPiece: _heldPiece
+      heldPiece: _heldPiece,
+      queue: queue.getQueue()
     };
   },
 
