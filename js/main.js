@@ -25669,6 +25669,12 @@ var AppActions = {
       actionType: actions.RESUME
     });
   },
+
+  hold: function () {
+    AppDispatcher.handleViewAction({
+      actionType: actions.HOLD
+    });
+  }
 };
 
 module.exports = AppActions;
@@ -25694,9 +25700,12 @@ module.exports = app;
 },{"./tetris":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/tetris.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/components/gameboard.js":[function(require,module,exports){
 /** @jsx REACT.DOM */
 var React = require('react');
+var key = require('keymaster');
 var AppActions = require('../actions/app-actions');
 var GameStore = require('../stores/game-store');
-var key = require('keymaster');
+var AppConstants = require('../constants/app-constants');
+var states = AppConstants.states;
+var DetectShift = require('../modules/detect-shift');
 
 function gameBoard () {
   return {
@@ -25712,6 +25721,17 @@ function bindKeyboardEvents () {
   key('z', AppActions.flipCounterclockwise);
   key('x', AppActions.flipClockwise);
   key('up', AppActions.flipClockwise);
+
+  key('p', function () {
+    if (GameStore.getCurrentState() === states.PLAYING) {
+      AppActions.pause();
+    } else {
+      AppActions.resume();
+    }
+  });
+
+  // key('a', AppActions.hold);
+  DetectShift.bind(AppActions.hold);
 }
 
 var Gameboard = React.createClass({displayName: 'Gameboard',
@@ -25757,7 +25777,114 @@ var Gameboard = React.createClass({displayName: 'Gameboard',
 
 module.exports = Gameboard;
 
-},{"../actions/app-actions":"/Users/brandly/Documents/code/web/tetris-react/src/js/actions/app-actions.js","../stores/game-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/game-store.js","keymaster":"/Users/brandly/Documents/code/web/tetris-react/node_modules/keymaster/keymaster.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/components/scoreboard.js":[function(require,module,exports){
+},{"../actions/app-actions":"/Users/brandly/Documents/code/web/tetris-react/src/js/actions/app-actions.js","../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../modules/detect-shift":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/detect-shift.js","../stores/game-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/game-store.js","keymaster":"/Users/brandly/Documents/code/web/tetris-react/node_modules/keymaster/keymaster.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/components/held-piece.js":[function(require,module,exports){
+/** @jsx REACT.DOM */
+var React = require('react');
+var PieceStore = require('../stores/piece-store');
+var PieceView = require('./piece-view');
+var AppConstants = require('../constants/app-constants');
+var states = AppConstants.states;
+
+function piece () {
+  return {
+    piece: PieceStore.getPieceData().heldPiece
+  };
+}
+
+var HeldPiece = React.createClass({displayName: 'HeldPiece',
+  getInitialState: function () {
+    return piece();
+  },
+
+  componentWillMount: function () {
+    PieceStore.addChangeListener(this._onChange);
+  },
+
+  _onChange: function () {
+    this.setState(piece());
+  },
+
+  render: function () {
+    return (
+      React.createElement("div", null, 
+        React.createElement("h3", null, "HOLD"), 
+        React.createElement(PieceView, {piece: this.state.piece})
+      )
+    )
+  }
+});
+
+module.exports = HeldPiece;
+
+},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../stores/piece-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-store.js","./piece-view":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/piece-view.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/components/piece-view.js":[function(require,module,exports){
+/** @jsx REACT.DOM */
+var React = require('react');
+var Scoreboard = require('./scoreboard');
+// var PauseMenu = require('./pause-menu');
+var Gameboard = require('./gameboard');
+var GameStore = require('../stores/game-store');
+var AppConstants = require('../constants/app-constants');
+var states = AppConstants.states;
+
+function gameState () {
+  return {
+    gameState: GameStore.getCurrentState()
+  };
+}
+
+function defaultData () {
+  return [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+}
+
+var PieceView = React.createClass({displayName: 'PieceView',
+
+  render: function () {
+    var piece = this.props.piece || defaultData();
+
+    // TODO: make this not a mess
+    var blocks;
+    if (this.props.piece) {
+      blocks = this.props.piece.blocks[0]
+    } else {
+      blocks = defaultData();
+    }
+
+    var self = this;
+    var rows = blocks.map(function (row, i) {
+
+      var blocksInRow = row.map(function (block, j) {
+        var classString = 'game-block ';
+
+        if (block) {
+          classString += self.props.piece.className;
+        } else {
+          classString += 'block-empty';
+        }
+
+        return (
+          React.createElement("td", {key: j, className: classString})
+        );
+      });
+
+      return (
+        React.createElement("tr", {key: i}, 
+          blocksInRow
+        )
+      );
+    });
+    return (
+      React.createElement("table", {className: "game-board"}, 
+        React.createElement("tbody", null, 
+          rows
+        )
+      )
+    )
+  }
+});
+
+module.exports = PieceView;
+
+},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../stores/game-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/game-store.js","./gameboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/gameboard.js","./scoreboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/scoreboard.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/components/scoreboard.js":[function(require,module,exports){
 /** @jsx REACT.DOM */
 var React = require('react');
 var ScoreStore = require('../stores/score-store');
@@ -25776,6 +25903,10 @@ var Scoreboard = React.createClass({displayName: 'Scoreboard',
 
   componentWillMount: function () {
     ScoreStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function () {
+    ScoreStore.removeChangeListener(this._onChange);
   },
 
   _onChange: function () {
@@ -25798,16 +25929,40 @@ module.exports = Scoreboard;
 /** @jsx REACT.DOM */
 var React = require('react');
 var Scoreboard = require('./scoreboard');
+// var PauseMenu = require('./pause-menu');
 var Gameboard = require('./gameboard');
+var GameStore = require('../stores/game-store');
+var HeldPiece = require('./held-piece');
+var AppConstants = require('../constants/app-constants');
+var states = AppConstants.states;
 
-// LOOK AT GAMESTORE CURRENT STATE
-// PUT A MENU UP AT SOME POINT
+function gameState () {
+  return {
+    gameState: GameStore.getCurrentState()
+  };
+}
+
 var Tetris = React.createClass({displayName: 'Tetris',
+  // getInitialState: function () {
+  //   return gameState();
+  // },
+
+  // componentWillMount: function () {
+  //   GameStore.addChangeListener(this._onChange);
+  // },
+
+  // _onChange: function () {
+  //   this.setState(gameState());
+  // },
+
   render: function () {
     return (
       React.createElement("div", null, 
         React.createElement(Scoreboard, null), 
-        React.createElement(Gameboard, null)
+        React.createElement(Gameboard, null), 
+
+
+        React.createElement(HeldPiece, null)
       )
     )
   }
@@ -25815,7 +25970,7 @@ var Tetris = React.createClass({displayName: 'Tetris',
 
 module.exports = Tetris;
 
-},{"./gameboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/gameboard.js","./scoreboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/scoreboard.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js":[function(require,module,exports){
+},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../stores/game-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/game-store.js","./gameboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/gameboard.js","./held-piece":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/held-piece.js","./scoreboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/scoreboard.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js":[function(require,module,exports){
 
 module.exports = {
   actions: {
@@ -25826,7 +25981,8 @@ module.exports = {
     FLIP_CLOCKWISE: 'FLIP_CLOCKWISE',
     FLIP_COUNTERCLOCKWISE: 'FLIP_COUNTERCLOCKWISE',
     PAUSE: 'PAUSE',
-    RESUME: 'RESUME'
+    RESUME: 'RESUME',
+    HOLD: 'HOLD'
   },
 
   states: {
@@ -25869,100 +26025,48 @@ React.render(
   document.getElementById('main')
 );
 
-},{"./components/app":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/app.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/board-store.js":[function(require,module,exports){
-var AppDispatcher = require('../dispatchers/app-dispatcher');
-var AppConstants = require('../constants/app-constants');
-var EventEmitter = require('./event-emitter');
-var pieceSetter = require('./piece-setter');
-var events = AppConstants.events;
-var states = AppConstants.states;
-var _ = require('lodash');
+},{"./components/app":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/app.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/detect-shift.js":[function(require,module,exports){
 
-// Two-dimensional array
-// First dimension is height. Second is width.
-var _gameBoard = (function buildGameBoard () {
-  var board = new Array(AppConstants.GAME_HEIGHT);
-  for (var y = 0; y < board.length; y++) {
-    board[y] = buildGameRow();
-  }
-  return board;
-}());
+var callbacks = [];
+var isPressed = false;
 
-function buildGameRow () {
-  var row = new Array(AppConstants.GAME_WIDTH);
-  for (var x = 0; x < row.length; x++) {
-    // nothing in it
-    row[x] = false;
+document.addEventListener('keydown', function (e) {
+  if (e.shiftKey && !isPressed) {
+    isPressed = e.shiftKey;
+    callCallbacks();
   }
-  return row;
+
+  return true;
+});
+
+document.addEventListener('keyup', function (e) {
+  if (!e.shiftKey && isPressed) {
+    isPressed = e.shiftKey;
+  }
+
+  return true;
+});
+
+function callCallbacks () {
+  callbacks.forEach(function (callback) {
+    callback();
+  });
 }
 
-var _setPiece = pieceSetter(_gameBoard);
-
-var BoardStore = _.extend({
-  getBoard: function () {
-    return _gameBoard;
+module.exports = {
+  bind: function (callback) {
+    callbacks.push(callback);
   },
 
-  setPiece: function (piece, rotation, position) {
-    _setPiece.apply(null, arguments);
-    BoardStore.clearFullLines();
-    BoardStore.emitChange();
-  },
-
-  isEmptyPosition: function (piece, rotation, position) {
-    var blocks = piece.blocks[rotation];
-
-    for (var x = 0; x < piece.blocks[0].length; x++) {
-      for (var y = 0; y < piece.blocks[0].length; y++) {
-        var block = blocks[y][x];
-        var boardX = x + position.x;
-        var boardY = y + position.y;
-
-        // might not be filled, ya know
-        if (block) {
-          // make sure it's on the board
-          if (boardX >= 0 && boardX < AppConstants.GAME_WIDTH && boardY < AppConstants.GAME_HEIGHT) {
-            // make sure it's available
-            if (_gameBoard[boardY][boardX]) {
-              // that square is taken by the board already
-              return false;
-            }
-          } else {
-            // there's a square in the block that's off the board
-            return false;
-          }
-        }
-      }
+  unbind: function (callback) {
+    var index = callbacks.indexOf(callback);
+    if (index !== -1) {
+      callbacks.splice(index, 1);
     }
-    return true;
-  },
-
-  clearFullLines: function () {
-    var linesCleared = 0;
-    for (var y = 0; y < _gameBoard.length; y++) {
-      // it's a full line
-      if (_.every(_gameBoard[y])) {
-        // so rip it out
-        _gameBoard.splice(y, 1);
-        _gameBoard.unshift(buildGameRow());
-        linesCleared += 1;
-      }
-    }
-
-    if (linesCleared) {
-      this.emitClearedLines(linesCleared);
-    }
-  },
-
-  emitClearedLines: function (count) {
-    this.emit(events.LINE_CLEARED, count);
   }
-}, EventEmitter);
+};
 
-module.exports = BoardStore;
-
-},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../dispatchers/app-dispatcher":"/Users/brandly/Documents/code/web/tetris-react/src/js/dispatchers/app-dispatcher.js","./event-emitter":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/event-emitter.js","./piece-setter":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-setter.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/event-emitter.js":[function(require,module,exports){
+},{}],"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/event-emitter.js":[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter;
 var _ = require('lodash');
 var CHANGE_EVENT = 'change';
@@ -25984,206 +26088,8 @@ var EE = _.extend({
 
 module.exports = EE;
 
-},{"events":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/game-store.js":[function(require,module,exports){
-(function (global){
-var AppDispatcher = require('../dispatchers/app-dispatcher');
-var AppConstants = require('../constants/app-constants');
-var EventEmitter = require('./event-emitter');
-var BoardStore = require('./board-store');
-var PieceStore = require('./piece-store');
-var pieceSetter = require('./piece-setter');
-var _ = require('lodash');
-var states = AppConstants.states;
-
-var _currentState = null;
-
-var GameStore = _.extend({
-  getGameBoard: function () {
-    var gameBoard = _.cloneDeep(BoardStore.getBoard());
-    var pieceData = PieceStore.getPieceData();
-    var setter = pieceSetter(gameBoard);
-    setter(pieceData.piece, pieceData.rotation, pieceData.position);
-    return gameBoard;
-  },
-
-  getCurrentState: function () {
-    return _currentState;
-  },
-
-  tick: function () {
-    PieceStore.tick();
-  },
-
-  start: function () {
-    global.setInterval(function () {
-      GameStore.tick();
-    }, 800);
-    _currentState = states.PLAYING;
-  }
-}, EventEmitter);
-
-// Game store should emit all changes that occur
-PieceStore.addChangeListener(function () {
-  GameStore.emitChange();
-});
-
-BoardStore.addChangeListener(function () {
-  GameStore.emitChange();
-});
-
-module.exports = GameStore;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../dispatchers/app-dispatcher":"/Users/brandly/Documents/code/web/tetris-react/src/js/dispatchers/app-dispatcher.js","./board-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/board-store.js","./event-emitter":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/event-emitter.js","./piece-setter":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-setter.js","./piece-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-store.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-setter.js":[function(require,module,exports){
-// Closure around a board
-// the returned function will set a piece on that board
-module.exports = function (board) {
-  return function (piece, rotation, position) {
-    var blocks = piece.blocks[rotation];
-
-    for (var x = 0; x < piece.blocks[0].length; x++) {
-      for (var y = 0; y < piece.blocks[0].length; y++) {
-        var block = blocks[y][x];
-        if (block) {
-          var boardX = position.x + x;
-          var boardY = position.y + y;
-          board[boardY][boardX] = piece.className;
-        }
-      }
-    }
-  }
-}
-
-},{}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-store.js":[function(require,module,exports){
-var AppDispatcher = require('../dispatchers/app-dispatcher');
-var AppConstants = require('../constants/app-constants');
+},{"events":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/piece-queue.js":[function(require,module,exports){
 var PieceTypes = require('./piece-types');
-var BoardStore = require('./board-store')
-var EventEmitter = require('./event-emitter');
-var _ = require('lodash');
-var events = AppConstants.events;
-
-var actions = AppConstants.actions;
-
-// local data
-var _piece, _rotation, _position;
-
-function _moveLeft () {
-  // compute new position
-  var newPosition = _.clone(_position);
-  newPosition.x -= 1;
-  // ask board if it's valid
-  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
-    // if so, set it as the position and return true
-    _position = newPosition;
-    return true;
-  }
-}
-
-function _moveRight () {
-  var newPosition = _.clone(_position);
-  newPosition.x += 1;
-  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
-    _position = newPosition;
-    return true;
-  }
-}
-
-function _moveDown () {
-  var newPosition = _.clone(_position);
-  newPosition.y += 1;
-
-  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
-    _position = newPosition;
-    return true;
-  } else {
-    _lockInPiece();
-  }
-}
-
-function _hardDrop () {
-  var yPosition = _position.y;
-
-  while (BoardStore.isEmptyPosition(_piece, _rotation, {y: yPosition, x: _position.x})) {
-    yPosition += 1;
-  }
-  // at this point, we just found a non-empty position, so let's step back
-  _position.y = yPosition - 1;
-  _lockInPiece();
-}
-
-function _flipClockwise () {
-  var newRotation = (_rotation + 1) % _piece.blocks.length;
-  if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
-    _rotation = newRotation;
-    return true;
-  }
-}
-
-function _flipCounterclockwise () {
-  var newRotation = _rotation - 1;
-  if (newRotation < 0) newRotation += _piece.blocks.length;
-
-  if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
-    _rotation = newRotation;
-    return true;
-  }
-}
-
-function _lockInPiece () {
-  BoardStore.setPiece(_piece, _rotation, _position);
-  setUpNewPiece();
-}
-
-var PieceStore = _.extend({
-  getPieceData: function () {
-    return {piece: _piece, rotation: _rotation, position: _position};
-  },
-
-  tick: function () {
-    emitChangeIf(_moveDown());
-  },
-
-  dispatcherIndex: AppDispatcher.register(function (payload) {
-    var action = payload.action; // this is our action from handleViewAction
-    switch (action.actionType) {
-      case actions.MOVE_DOWN:
-        emitChangeIf(_moveDown());
-        break;
-
-      case actions.MOVE_LEFT:
-        emitChangeIf(_moveLeft());
-        break;
-
-      case actions.MOVE_RIGHT:
-        emitChangeIf(_moveRight());
-        break;
-
-      case actions.HARD_DROP:
-        emitChangeIf(_hardDrop());
-        break;
-
-      case actions.FLIP_CLOCKWISE:
-        emitChangeIf(_flipClockwise());
-        break;
-
-      case actions.FLIP_COUNTERCLOCKWISE:
-        emitChangeIf(_flipCounterclockwise());
-        break;
-    }
-
-    // going into a queue of promises so we want to return something positive for a resolve
-    return true;
-  }),
-
-   emitPlayerLost: function () {
-    this.emit(events.PLAYER_LOST);
-   }
-}, EventEmitter);
-
-function emitChangeIf (val) {
-  if (val) PieceStore.emitChange();
-}
 
 function randomNumber (under) {
   return Math.floor(Math.random() * under);
@@ -26205,29 +26111,52 @@ function getRandomPiece () {
   return PieceTypes[piece];
 }
 
-var initialPosition = (function () {
-  var somePiece = PieceTypes.T;
-  return {
-    x: (AppConstants.GAME_WIDTH / 2) - (somePiece.blocks.length / 2),
-    y: 0
-  }
-}());
+var minimumLength = 5;
+function PieceQueue (minimumLength) {
+  this.minimumLength = minimumLength;
+  this.queue = [];
+  this.fill();
+}
 
-function setUpNewPiece () {
-  // new values for everyone
-  _piece = getRandomPiece();
-  _rotation = 0;
-  _position = _.clone(initialPosition);
-  PieceStore.emitChange();
-  if (!BoardStore.isEmptyPosition(_piece, _rotation, _position)) {
-    PieceStore.emitPlayerLost();
+PieceQueue.prototype.fill = function fill () {
+  while (this.queue.length < this.minimumLength) {
+    this.queue.push(getRandomPiece());
+  }
+};
+
+PieceQueue.prototype.getNext = function getNext () {
+  var next = this.queue.shift();
+  this.fill();
+  return next;
+};
+
+PieceQueue.prototype.getQueue = function getQueue () {
+  return this.queue;
+};
+
+module.exports = PieceQueue;
+
+},{"./piece-types":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/piece-types.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/piece-setter.js":[function(require,module,exports){
+// Closure around a board
+// the returned function will set a piece on that board
+module.exports = function (board) {
+  return function (piece, rotation, position) {
+    var blocks = piece.blocks[rotation];
+
+    for (var x = 0; x < piece.blocks[0].length; x++) {
+      for (var y = 0; y < piece.blocks[0].length; y++) {
+        var block = blocks[y][x];
+        if (block) {
+          var boardX = position.x + x;
+          var boardY = position.y + y;
+          board[boardY][boardX] = piece.className;
+        }
+      }
+    }
   }
 }
 
-setUpNewPiece();
-module.exports = PieceStore;
-
-},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../dispatchers/app-dispatcher":"/Users/brandly/Documents/code/web/tetris-react/src/js/dispatchers/app-dispatcher.js","./board-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/board-store.js","./event-emitter":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/event-emitter.js","./piece-types":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-types.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-types.js":[function(require,module,exports){
+},{}],"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/piece-types.js":[function(require,module,exports){
 
 var I = {
   blocks: [
@@ -26449,11 +26378,357 @@ module.exports = {
   Z: Z
 };
 
-},{}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/score-store.js":[function(require,module,exports){
+},{}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/board-store.js":[function(require,module,exports){
+var AppDispatcher = require('../dispatchers/app-dispatcher');
+var AppConstants = require('../constants/app-constants');
+var EventEmitter = require('../modules/event-emitter');
+var pieceSetter = require('../modules/piece-setter');
+var events = AppConstants.events;
+var states = AppConstants.states;
+var _ = require('lodash');
+
+// Two-dimensional array
+// First dimension is height. Second is width.
+var _gameBoard = (function buildGameBoard () {
+  var board = new Array(AppConstants.GAME_HEIGHT);
+  for (var y = 0; y < board.length; y++) {
+    board[y] = buildGameRow();
+  }
+  return board;
+}());
+
+function buildGameRow () {
+  var row = new Array(AppConstants.GAME_WIDTH);
+  for (var x = 0; x < row.length; x++) {
+    // nothing in it
+    row[x] = false;
+  }
+  return row;
+}
+
+var _setPiece = pieceSetter(_gameBoard);
+
+var BoardStore = _.extend({
+  getBoard: function () {
+    return _gameBoard;
+  },
+
+  setPiece: function (piece, rotation, position) {
+    _setPiece.apply(null, arguments);
+    BoardStore.clearFullLines();
+    BoardStore.emitChange();
+  },
+
+  isEmptyPosition: function (piece, rotation, position) {
+    var blocks = piece.blocks[rotation];
+
+    for (var x = 0; x < piece.blocks[0].length; x++) {
+      for (var y = 0; y < piece.blocks[0].length; y++) {
+        var block = blocks[y][x];
+        var boardX = x + position.x;
+        var boardY = y + position.y;
+
+        // might not be filled, ya know
+        if (block) {
+          // make sure it's on the board
+          if (boardX >= 0 && boardX < AppConstants.GAME_WIDTH && boardY < AppConstants.GAME_HEIGHT) {
+            // make sure it's available
+            if (_gameBoard[boardY][boardX]) {
+              // that square is taken by the board already
+              return false;
+            }
+          } else {
+            // there's a square in the block that's off the board
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  },
+
+  clearFullLines: function () {
+    var linesCleared = 0;
+    for (var y = 0; y < _gameBoard.length; y++) {
+      // it's a full line
+      if (_.every(_gameBoard[y])) {
+        // so rip it out
+        _gameBoard.splice(y, 1);
+        _gameBoard.unshift(buildGameRow());
+        linesCleared += 1;
+      }
+    }
+
+    if (linesCleared) {
+      this.emitClearedLines(linesCleared);
+    }
+  },
+
+  emitClearedLines: function (count) {
+    this.emit(events.LINE_CLEARED, count);
+  }
+}, EventEmitter);
+
+module.exports = BoardStore;
+
+},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../dispatchers/app-dispatcher":"/Users/brandly/Documents/code/web/tetris-react/src/js/dispatchers/app-dispatcher.js","../modules/event-emitter":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/event-emitter.js","../modules/piece-setter":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/piece-setter.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/game-store.js":[function(require,module,exports){
+(function (global){
+var AppDispatcher = require('../dispatchers/app-dispatcher');
+var AppConstants = require('../constants/app-constants');
+var EventEmitter = require('../modules/event-emitter');
+var BoardStore = require('./board-store');
+var PieceStore = require('./piece-store');
+var pieceSetter = require('../modules/piece-setter');
+var _ = require('lodash');
+var states = AppConstants.states;
+var actions = AppConstants.actions;
+
+var _currentState = null;
+var _interval = null;
+
+var GameStore = _.extend({
+  getGameBoard: function () {
+    var gameBoard = _.cloneDeep(BoardStore.getBoard());
+    var pieceData = PieceStore.getPieceData();
+    var setter = pieceSetter(gameBoard);
+    setter(pieceData.piece, pieceData.rotation, pieceData.position);
+    return gameBoard;
+  },
+
+  getCurrentState: function () {
+    return _currentState;
+  },
+
+  start: function () {
+    _interval = global.setInterval(function () {
+      PieceStore.tick();
+    }, 800);
+    _currentState = states.PLAYING;
+    this.emitChange();
+  },
+
+  pause: function () {
+    global.clearInterval(_interval);
+    _currentState = states.PAUSED;
+    this.emitChange();
+  },
+
+  dispatcherIndex: AppDispatcher.register(function (payload) {
+    var action = payload.action;
+    switch (action.actionType) {
+      case actions.PAUSE:
+        GameStore.pause();
+        break;
+
+      case actions.RESUME:
+        GameStore.start();
+        break;
+    }
+
+    return true;
+  })
+}, EventEmitter);
+
+// Game store should emit all changes that occur
+PieceStore.addChangeListener(function () {
+  GameStore.emitChange();
+});
+
+BoardStore.addChangeListener(function () {
+  GameStore.emitChange();
+});
+
+module.exports = GameStore;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../dispatchers/app-dispatcher":"/Users/brandly/Documents/code/web/tetris-react/src/js/dispatchers/app-dispatcher.js","../modules/event-emitter":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/event-emitter.js","../modules/piece-setter":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/piece-setter.js","./board-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/board-store.js","./piece-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-store.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-store.js":[function(require,module,exports){
+var AppDispatcher = require('../dispatchers/app-dispatcher');
+var AppConstants = require('../constants/app-constants');
+var PieceTypes = require('../modules/piece-types');
+var BoardStore = require('./board-store')
+var EventEmitter = require('../modules/event-emitter');
+var PieceQueue = require('../modules/piece-queue');
+var _ = require('lodash');
+var events = AppConstants.events;
+
+var actions = AppConstants.actions;
+
+// local data
+var _piece, _rotation, _position, _heldPiece;
+
+function _moveLeft () {
+  // compute new position
+  var newPosition = _.clone(_position);
+  newPosition.x -= 1;
+  // ask board if it's valid
+  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+    // if so, set it as the position and return true
+    _position = newPosition;
+    return true;
+  }
+}
+
+function _moveRight () {
+  var newPosition = _.clone(_position);
+  newPosition.x += 1;
+  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+    _position = newPosition;
+    return true;
+  }
+}
+
+function _moveDown () {
+  var newPosition = _.clone(_position);
+  newPosition.y += 1;
+
+  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+    _position = newPosition;
+    return true;
+  } else {
+    _lockInPiece();
+  }
+}
+
+function _hardDrop () {
+  var yPosition = _position.y;
+
+  while (BoardStore.isEmptyPosition(_piece, _rotation, {y: yPosition, x: _position.x})) {
+    yPosition += 1;
+  }
+  // at this point, we just found a non-empty position, so let's step back
+  _position.y = yPosition - 1;
+  _lockInPiece();
+}
+
+function _flipClockwise () {
+  var newRotation = (_rotation + 1) % _piece.blocks.length;
+  if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
+    _rotation = newRotation;
+    return true;
+  }
+}
+
+function _flipCounterclockwise () {
+  var newRotation = _rotation - 1;
+  if (newRotation < 0) newRotation += _piece.blocks.length;
+
+  if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
+    _rotation = newRotation;
+    return true;
+  }
+}
+
+function _lockInPiece () {
+  BoardStore.setPiece(_piece, _rotation, _position);
+  setUpNewPiece();
+}
+
+function _holdPiece () {
+  if (_heldPiece && !BoardStore.isEmptyPosition(_heldPiece, _rotation, _position)) {
+    return false;
+  }
+
+  var previouslyHeldPiece = _heldPiece;
+  _heldPiece = _piece;
+
+  if (previouslyHeldPiece) {
+    _piece = previouslyHeldPiece;
+  } else {
+    setUpNewPiece();
+  }
+
+  return true;
+}
+
+var PieceStore = _.extend({
+  getPieceData: function () {
+    return {
+      piece: _piece,
+      rotation: _rotation,
+      position: _position,
+
+      heldPiece: _heldPiece
+    };
+  },
+
+  tick: function () {
+    emitChangeIf(_moveDown());
+  },
+
+  dispatcherIndex: AppDispatcher.register(function (payload) {
+    var action = payload.action; // this is our action from handleViewAction
+    switch (action.actionType) {
+      case actions.MOVE_DOWN:
+        emitChangeIf(_moveDown());
+        break;
+
+      case actions.MOVE_LEFT:
+        emitChangeIf(_moveLeft());
+        break;
+
+      case actions.MOVE_RIGHT:
+        emitChangeIf(_moveRight());
+        break;
+
+      case actions.HARD_DROP:
+        emitChangeIf(_hardDrop());
+        break;
+
+      case actions.FLIP_CLOCKWISE:
+        emitChangeIf(_flipClockwise());
+        break;
+
+      case actions.FLIP_COUNTERCLOCKWISE:
+        emitChangeIf(_flipCounterclockwise());
+        break;
+
+      case actions.HOLD:
+        emitChangeIf(_holdPiece());
+        break;
+    }
+
+    // going into a queue of promises so we want to return something positive for a resolve
+    return true;
+  }),
+
+   emitPlayerLost: function () {
+    this.emit(events.PLAYER_LOST);
+   }
+}, EventEmitter);
+
+function emitChangeIf (val) {
+  if (val) PieceStore.emitChange();
+}
+
+var queue = new PieceQueue(5);
+
+var initialPosition = (function () {
+  var somePiece = queue.getNext();
+  return {
+    x: (AppConstants.GAME_WIDTH / 2) - (somePiece.blocks.length / 2),
+    y: 0
+  }
+}());
+
+function setUpNewPiece () {
+  // new values for everyone
+  _piece = queue.getNext();
+  _rotation = 0;
+  _position = _.clone(initialPosition);
+  PieceStore.emitChange();
+  if (!BoardStore.isEmptyPosition(_piece, _rotation, _position)) {
+    PieceStore.emitPlayerLost();
+  }
+}
+
+setUpNewPiece();
+module.exports = PieceStore;
+
+},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../dispatchers/app-dispatcher":"/Users/brandly/Documents/code/web/tetris-react/src/js/dispatchers/app-dispatcher.js","../modules/event-emitter":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/event-emitter.js","../modules/piece-queue":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/piece-queue.js","../modules/piece-types":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/piece-types.js","./board-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/board-store.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/score-store.js":[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var BoardStore = require('./board-store');
-var EventEmitter = require('./event-emitter');
+var EventEmitter = require('../modules/event-emitter');
 var _ = require('lodash');
 var events = AppConstants.events;
 
@@ -26488,7 +26763,7 @@ BoardStore.on(events.LINE_CLEARED, function (linesCleared) {
 
 module.exports = ScoreStore;
 
-},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../dispatchers/app-dispatcher":"/Users/brandly/Documents/code/web/tetris-react/src/js/dispatchers/app-dispatcher.js","./board-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/board-store.js","./event-emitter":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/event-emitter.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js":[function(require,module,exports){
+},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../dispatchers/app-dispatcher":"/Users/brandly/Documents/code/web/tetris-react/src/js/dispatchers/app-dispatcher.js","../modules/event-emitter":"/Users/brandly/Documents/code/web/tetris-react/src/js/modules/event-emitter.js","./board-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/board-store.js","lodash":"/Users/brandly/Documents/code/web/tetris-react/node_modules/lodash/dist/lodash.js"}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js":[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
