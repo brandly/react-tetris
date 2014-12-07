@@ -26217,6 +26217,50 @@ var HeldPiece = React.createClass({displayName: 'HeldPiece',
 
 module.exports = HeldPiece;
 
+},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../stores/piece-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-store.js","./piece-view":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/piece-view.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/components/piece-queue.js":[function(require,module,exports){
+/** @jsx REACT.DOM */
+var React = require('react');
+var PieceStore = require('../stores/piece-store');
+var PieceView = require('./piece-view');
+var AppConstants = require('../constants/app-constants');
+var states = AppConstants.states;
+
+function queue () {
+  return {
+    queue: PieceStore.getPieceData().queue
+  };
+}
+
+var PieceQueue = React.createClass({displayName: 'PieceQueue',
+  getInitialState: function () {
+    return queue();
+  },
+
+  componentWillMount: function () {
+    PieceStore.addChangeListener(this._onChange);
+  },
+
+  _onChange: function () {
+    this.setState(queue());
+  },
+
+  render: function () {
+    var pieces = this.state.queue.map(function (piece, i) {
+      return (
+        React.createElement(PieceView, {piece: piece, key: i})
+      );
+    });
+    return (
+      React.createElement("div", null, 
+        React.createElement("h3", null, "QUEUE"), 
+        pieces
+      )
+    )
+  }
+});
+
+module.exports = PieceQueue;
+
 },{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../stores/piece-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/piece-store.js","./piece-view":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/piece-view.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/components/piece-view.js":[function(require,module,exports){
 /** @jsx REACT.DOM */
 var React = require('react');
@@ -26334,6 +26378,7 @@ var Scoreboard = require('./scoreboard');
 var Gameboard = require('./gameboard');
 var GameStore = require('../stores/game-store');
 var HeldPiece = require('./held-piece');
+var PieceQueue = require('./piece-queue');
 var AppConstants = require('../constants/app-constants');
 var states = AppConstants.states;
 
@@ -26358,12 +26403,20 @@ var Tetris = React.createClass({displayName: 'Tetris',
 
   render: function () {
     return (
-      React.createElement("div", null, 
-        React.createElement(Scoreboard, null), 
-        React.createElement(Gameboard, null), 
+      React.createElement("div", {className: "row"}, 
+        React.createElement("div", {className: "col-md-2"}, 
+          React.createElement(HeldPiece, null), 
+          React.createElement(Scoreboard, null)
+        ), 
 
+        React.createElement("div", {className: "col-md-4"}, 
+          React.createElement(Gameboard, null)
+        ), 
 
-        React.createElement(HeldPiece, null)
+        React.createElement("div", {className: "col-md-4"}, 
+          React.createElement(PieceQueue, null)
+        )
+
       )
     )
   }
@@ -26371,7 +26424,7 @@ var Tetris = React.createClass({displayName: 'Tetris',
 
 module.exports = Tetris;
 
-},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../stores/game-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/game-store.js","./gameboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/gameboard.js","./held-piece":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/held-piece.js","./scoreboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/scoreboard.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js":[function(require,module,exports){
+},{"../constants/app-constants":"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js","../stores/game-store":"/Users/brandly/Documents/code/web/tetris-react/src/js/stores/game-store.js","./gameboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/gameboard.js","./held-piece":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/held-piece.js","./piece-queue":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/piece-queue.js","./scoreboard":"/Users/brandly/Documents/code/web/tetris-react/src/js/components/scoreboard.js","react":"/Users/brandly/Documents/code/web/tetris-react/node_modules/react/react.js"}],"/Users/brandly/Documents/code/web/tetris-react/src/js/constants/app-constants.js":[function(require,module,exports){
 
 module.exports = {
   actions: {
@@ -27038,7 +27091,8 @@ var PieceStore = _.extend({
       rotation: _rotation,
       position: _position,
 
-      heldPiece: _heldPiece
+      heldPiece: _heldPiece,
+      queue: queue.getQueue()
     };
   },
 
