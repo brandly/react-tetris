@@ -79,6 +79,10 @@ function _lockInPiece () {
 }
 
 function _holdPiece () {
+  if (_heldPiece && !BoardStore.isEmptyPosition(_heldPiece, _rotation, _position)) {
+    return false;
+  }
+
   var previouslyHeldPiece = _heldPiece;
   _heldPiece = _piece;
 
@@ -87,6 +91,8 @@ function _holdPiece () {
   } else {
     setUpNewPiece();
   }
+
+  return true;
 }
 
 var PieceStore = _.extend({
@@ -132,8 +138,7 @@ var PieceStore = _.extend({
         break;
 
       case actions.HOLD:
-        _holdPiece();
-        PieceStore.emitChange();
+        emitChangeIf(_holdPiece());
         break;
     }
 
