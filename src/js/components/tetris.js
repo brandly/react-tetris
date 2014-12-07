@@ -4,6 +4,7 @@ var Scoreboard = require('./scoreboard');
 // var PauseMenu = require('./pause-menu');
 var Gameboard = require('./gameboard');
 var GameStore = require('../stores/game-store');
+var HeldPiece = require('./held-piece');
 var AppConstants = require('../constants/app-constants');
 var states = AppConstants.states;
 
@@ -32,6 +33,8 @@ var Tetris = React.createClass({
         <Scoreboard />
         <Gameboard />
 
+
+        <HeldPiece />
       </div>
     )
   }

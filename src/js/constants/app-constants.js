@@ -8,7 +8,8 @@ module.exports = {
     FLIP_CLOCKWISE: 'FLIP_CLOCKWISE',
     FLIP_COUNTERCLOCKWISE: 'FLIP_COUNTERCLOCKWISE',
     PAUSE: 'PAUSE',
-    RESUME: 'RESUME'
+    RESUME: 'RESUME',
+    HOLD: 'HOLD'
   },
 
   states: {

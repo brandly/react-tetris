@@ -9,7 +9,7 @@ var events = AppConstants.events;
 var actions = AppConstants.actions;
 
 // local data
-var _piece, _rotation, _position;
+var _piece, _rotation, _position, _heldPiece;
 
 function _moveLeft () {
   // compute new position
@@ -78,9 +78,26 @@ function _lockInPiece () {
   setUpNewPiece();
 }
 
+function _holdPiece () {
+  var previouslyHeldPiece = _heldPiece;
+  _heldPiece = _piece;
+
+  if (previouslyHeldPiece) {
+    _piece = previouslyHeldPiece;
+  } else {
+    setUpNewPiece();
+  }
+}
+
 var PieceStore = _.extend({
   getPieceData: function () {
-    return {piece: _piece, rotation: _rotation, position: _position};
+    return {
+      piece: _piece,
+      rotation: _rotation,
+      position: _position,
+
+      heldPiece: _heldPiece
+    };
   },
 
   tick: function () {
@@ -112,6 +129,11 @@ var PieceStore = _.extend({
 
       case actions.FLIP_COUNTERCLOCKWISE:
         emitChangeIf(_flipCounterclockwise());
+        break;
+
+      case actions.HOLD:
+        _holdPiece();
+        PieceStore.emitChange();
         break;
     }
 

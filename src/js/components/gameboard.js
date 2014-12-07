@@ -5,6 +5,7 @@ var AppActions = require('../actions/app-actions');
 var GameStore = require('../stores/game-store');
 var AppConstants = require('../constants/app-constants');
 var states = AppConstants.states;
+var DetectShift = require('../modules/detect-shift');
 
 function gameBoard () {
   return {
@@ -28,6 +29,9 @@ function bindKeyboardEvents () {
       AppActions.resume();
     }
   });
+
+  // key('a', AppActions.hold);
+  DetectShift.bind(AppActions.hold);
 }
 
 var Gameboard = React.createClass({

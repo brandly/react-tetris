@@ -57,6 +57,12 @@ var AppActions = {
       actionType: actions.RESUME
     });
   },
+
+  hold: function () {
+    AppDispatcher.handleViewAction({
+      actionType: actions.HOLD
+    });
+  }
 };
 
 module.exports = AppActions;
