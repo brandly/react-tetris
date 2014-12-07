@@ -3,6 +3,7 @@ var AppConstants = require('../constants/app-constants');
 var PieceTypes = require('../modules/piece-types');
 var BoardStore = require('./board-store')
 var EventEmitter = require('../modules/event-emitter');
+var PieceQueue = require('../modules/piece-queue');
 var _ = require('lodash');
 var events = AppConstants.events;
 
@@ -155,28 +156,10 @@ function emitChangeIf (val) {
   if (val) PieceStore.emitChange();
 }
 
-function randomNumber (under) {
-  return Math.floor(Math.random() * under);
-}
-
-var piecesBucket = [];
-function getRandomPiece () {
-  if (piecesBucket.length === 0) {
-    // fill the bucket
-    for (var pieceType in PieceTypes) {
-      // 4 is just the number of each type of piece. it's arbitrary, not magic, okay.
-      for (var i = 0; i < 4; i++) {
-        piecesBucket.push(pieceType);
-      }
-    }
-  }
-  var piece = piecesBucket.splice(randomNumber(piecesBucket.length), 1)[0];
-  // might wanna clone
-  return PieceTypes[piece];
-}
+var queue = new PieceQueue(5);
 
 var initialPosition = (function () {
-  var somePiece = PieceTypes.T;
+  var somePiece = queue.getNext();
   return {
     x: (AppConstants.GAME_WIDTH / 2) - (somePiece.blocks.length / 2),
     y: 0
@@ -185,7 +168,7 @@ var initialPosition = (function () {
 
 function setUpNewPiece () {
   // new values for everyone
-  _piece = getRandomPiece();
+  _piece = queue.getNext();
   _rotation = 0;
   _position = _.clone(initialPosition);
   PieceStore.emitChange();
