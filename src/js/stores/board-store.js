@@ -33,7 +33,7 @@ var BoardStore = _.extend({
   },
 
   setPiece: function (piece, rotation, position) {
-    _setPiece.apply(null, arguments);
+    _setPiece(piece.blocks[rotation], position, piece.className);
     BoardStore.clearFullLines();
     BoardStore.emitChange();
   },

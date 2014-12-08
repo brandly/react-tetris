@@ -46,13 +46,7 @@ function _moveDown () {
 }
 
 function _hardDrop () {
-  var yPosition = _position.y;
-
-  while (BoardStore.isEmptyPosition(_piece, _rotation, {y: yPosition, x: _position.x})) {
-    yPosition += 1;
-  }
-  // at this point, we just found a non-empty position, so let's step back
-  _position.y = yPosition - 1;
+  _position.y = _getHardDropY();
   _lockInPiece();
 }
 
@@ -96,12 +90,26 @@ function _holdPiece () {
   return true;
 }
 
+function _getHardDropY () {
+  var yPosition = _position.y;
+
+  while (BoardStore.isEmptyPosition(_piece, _rotation, {y: yPosition, x: _position.x})) {
+    yPosition += 1;
+  }
+  // at this point, we just found a non-empty position, so let's step back
+  return yPosition - 1;
+}
+
 var PieceStore = _.extend({
   getPieceData: function () {
     return {
       piece: _piece,
       rotation: _rotation,
       position: _position,
+      previewPosition: {
+        x: _position.x,
+        y: _getHardDropY()
+      },
 
       heldPiece: _heldPiece,
       queue: queue.getQueue()

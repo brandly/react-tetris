@@ -16,7 +16,12 @@ var GameStore = _.extend({
     var gameBoard = _.cloneDeep(BoardStore.getBoard());
     var pieceData = PieceStore.getPieceData();
     var setter = pieceSetter(gameBoard);
-    setter(pieceData.piece, pieceData.rotation, pieceData.position);
+
+    // set the preview
+    setter(pieceData.piece.blocks[pieceData.rotation], pieceData.previewPosition, 'piece-preview');
+
+    // set the actual piece
+    setter(pieceData.piece.blocks[pieceData.rotation], pieceData.position, pieceData.piece.className);
     return gameBoard;
   },
 

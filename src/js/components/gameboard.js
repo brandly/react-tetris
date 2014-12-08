@@ -30,7 +30,7 @@ function bindKeyboardEvents () {
     }
   });
 
-  // key('a', AppActions.hold);
+  key('c', AppActions.hold);
   DetectShift.bind(AppActions.hold);
 }
 
