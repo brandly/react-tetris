@@ -25730,7 +25730,7 @@ function bindKeyboardEvents () {
     }
   });
 
-  // key('a', AppActions.hold);
+  key('c', AppActions.hold);
   DetectShift.bind(AppActions.hold);
 }
 
@@ -26193,16 +26193,14 @@ module.exports = PieceQueue;
 // Closure around a board
 // the returned function will set a piece on that board
 module.exports = function (board) {
-  return function (piece, rotation, position) {
-    var blocks = piece.blocks[rotation];
-
-    for (var x = 0; x < piece.blocks[0].length; x++) {
-      for (var y = 0; y < piece.blocks[0].length; y++) {
+  return function (blocks, position, className) {
+    for (var x = 0; x < blocks[0].length; x++) {
+      for (var y = 0; y < blocks[0].length; y++) {
         var block = blocks[y][x];
         if (block) {
           var boardX = position.x + x;
           var boardY = position.y + y;
-          board[boardY][boardX] = piece.className;
+          board[boardY][boardX] = className;
         }
       }
     }
@@ -26467,7 +26465,7 @@ var BoardStore = _.extend({
   },
 
   setPiece: function (piece, rotation, position) {
-    _setPiece.apply(null, arguments);
+    _setPiece(piece.blocks[rotation], position, piece.className);
     BoardStore.clearFullLines();
     BoardStore.emitChange();
   },
@@ -26544,7 +26542,12 @@ var GameStore = _.extend({
     var gameBoard = _.cloneDeep(BoardStore.getBoard());
     var pieceData = PieceStore.getPieceData();
     var setter = pieceSetter(gameBoard);
-    setter(pieceData.piece, pieceData.rotation, pieceData.position);
+
+    // set the preview
+    setter(pieceData.piece.blocks[pieceData.rotation], pieceData.previewPosition, 'piece-preview');
+
+    // set the actual piece
+    setter(pieceData.piece.blocks[pieceData.rotation], pieceData.position, pieceData.piece.className);
     return gameBoard;
   },
 
@@ -26643,13 +26646,7 @@ function _moveDown () {
 }
 
 function _hardDrop () {
-  var yPosition = _position.y;
-
-  while (BoardStore.isEmptyPosition(_piece, _rotation, {y: yPosition, x: _position.x})) {
-    yPosition += 1;
-  }
-  // at this point, we just found a non-empty position, so let's step back
-  _position.y = yPosition - 1;
+  _position.y = _getHardDropY();
   _lockInPiece();
 }
 
@@ -26693,12 +26690,26 @@ function _holdPiece () {
   return true;
 }
 
+function _getHardDropY () {
+  var yPosition = _position.y;
+
+  while (BoardStore.isEmptyPosition(_piece, _rotation, {y: yPosition, x: _position.x})) {
+    yPosition += 1;
+  }
+  // at this point, we just found a non-empty position, so let's step back
+  return yPosition - 1;
+}
+
 var PieceStore = _.extend({
   getPieceData: function () {
     return {
       piece: _piece,
       rotation: _rotation,
       position: _position,
+      previewPosition: {
+        x: _position.x,
+        y: _getHardDropY()
+      },
 
       heldPiece: _heldPiece,
       queue: queue.getQueue()
