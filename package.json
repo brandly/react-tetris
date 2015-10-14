@@ -14,5 +14,6 @@
   },
   "scripts": {
     "watch": "watchify src/js/main.js -t reactify -o dist/js/main.js"
-  }
+  },
+  "license": "MIT"
 }
