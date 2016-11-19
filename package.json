@@ -10,7 +10,8 @@
     "react": "^0.12.1",
     "reactify": "^0.17.1",
     "vinyl-source-stream": "^1.0.0",
-    "vinyl-transform": "^1.0.0"
+    "vinyl-transform": "^1.0.0",
+    "watchify": "3.7.0"
   },
   "scripts": {
     "watch": "watchify src/js/main.js -t reactify -o dist/js/main.js"
