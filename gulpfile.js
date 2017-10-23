@@ -22,28 +22,29 @@ function browserifyShare (watch) {
   if (watch) {
     b = watchify(b);
     b.on('update', function(){
+      console.log('updating...');
       bundleShare(b);
     });
   }
 
   // Our source file is here!!! ugh
   // b.add('./src/js/main.js');
-  bundleShare(b);
+  return bundleShare(b);
 }
 
 function bundleShare (b) {
-  b.bundle()
+  return b.bundle()
     .on('error', handleError)
     .pipe(source('main.js'))
     .pipe(gulp.dest('dist/js/'))
 }
 
 gulp.task('browserify', function () {
-  browserifyShare(false);
+  return browserifyShare(false);
 });
 
 gulp.task('watchify', function(){
-  browserifyShare(true);
+  return browserifyShare(true);
 });
 
 gulp.task('copy', function () {
