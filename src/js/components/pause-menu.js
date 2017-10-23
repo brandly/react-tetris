@@ -1,5 +1,4 @@
 var React = require('react');
-var Scoreboard = require('./scoreboard');
 var Gameboard = require('./gameboard');
 var GameStore = require('../stores/game-store');
 var AppConstants = require('../constants/app-constants');

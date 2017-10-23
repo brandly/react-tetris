@@ -9,15 +9,19 @@ class app extends React.Component {
         <Tetris>
           {({
             HeldPiece,
-            Scoreboard,
             Gameboard,
-            PieceQueue
+            PieceQueue,
+            points,
+            linesCleared
           }) => {
             return (
               <div className="row">
                 <div className="col-md-2">
                   <HeldPiece />
-                  <Scoreboard />
+                  <div>
+                    <p>Points: {points}</p>
+                    <p>Lines Cleared: {linesCleared}</p>
+                  </div>
                 </div>
 
                 <div className="col-md-4">
