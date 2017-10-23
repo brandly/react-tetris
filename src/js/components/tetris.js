@@ -1,4 +1,3 @@
-/** @jsx REACT.DOM */
 var React = require('react');
 var Scoreboard = require('./scoreboard');
 // var PauseMenu = require('./pause-menu');
@@ -9,8 +8,8 @@ var PieceQueue = require('./piece-queue');
 var AppConstants = require('../constants/app-constants');
 var states = AppConstants.states;
 
-var Tetris = React.createClass({
-  render: function () {
+class Tetris extends React.Component {
+  render() {
     return this.props.children({
       HeldPiece,
       Scoreboard,
@@ -18,6 +17,6 @@ var Tetris = React.createClass({
       PieceQueue
     });
   }
-});
+}
 
 module.exports = Tetris;

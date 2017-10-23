@@ -1,9 +1,8 @@
-/** @jsx REACT.DOM */
 var React = require('react');
 var Tetris = require('./tetris');
 
-var app = React.createClass({
-  render: function () {
+class app extends React.Component {
+  render() {
     return (
       <div>
         <h1>Tetris</h1>
@@ -35,6 +34,6 @@ var app = React.createClass({
       </div>
     )
   }
-});
+}
 
 module.exports = app;

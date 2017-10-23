@@ -1,4 +1,3 @@
-/** @jsx REACT.DOM */
 var React = require('react');
 var Scoreboard = require('./scoreboard');
 // var PauseMenu = require('./pause-menu');
@@ -17,9 +16,8 @@ function defaultData () {
   return [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
 }
 
-var PieceView = React.createClass({
-
-  render: function () {
+class PieceView extends React.Component {
+  render() {
     var piece = this.props.piece || defaultData();
 
     // TODO: make this not a mess
@@ -61,6 +59,6 @@ var PieceView = React.createClass({
       </table>
     )
   }
-});
+}
 
 module.exports = PieceView;

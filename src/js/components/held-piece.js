@@ -1,4 +1,3 @@
-/** @jsx REACT.DOM */
 var React = require('react');
 var PieceStore = require('../stores/piece-store');
 var PieceView = require('./piece-view');
@@ -11,24 +10,22 @@ function piece () {
   };
 }
 
-var HeldPiece = React.createClass({
-  getInitialState: function () {
-    return piece();
-  },
+class HeldPiece extends React.Component {
+  state = piece();
 
-  componentWillMount: function () {
+  componentWillMount() {
     PieceStore.addChangeListener(this._onChange);
-  },
+  }
 
-  _onChange: function () {
+  _onChange = () => {
     this.setState(piece());
-  },
+  };
 
-  render: function () {
+  render() {
     return (
       <PieceView piece={this.state.piece} />
     )
   }
-});
+}
 
 module.exports = HeldPiece;

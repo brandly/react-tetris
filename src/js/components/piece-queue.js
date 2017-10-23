@@ -1,4 +1,3 @@
-/** @jsx REACT.DOM */
 var React = require('react');
 var PieceStore = require('../stores/piece-store');
 var PieceView = require('./piece-view');
@@ -11,20 +10,18 @@ function queue () {
   };
 }
 
-var PieceQueue = React.createClass({
-  getInitialState: function () {
-    return queue();
-  },
+class PieceQueue extends React.Component {
+  state = queue();
 
-  componentWillMount: function () {
+  componentWillMount() {
     PieceStore.addChangeListener(this._onChange);
-  },
+  }
 
-  _onChange: function () {
+  _onChange = () => {
     this.setState(queue());
-  },
+  };
 
-  render: function () {
+  render() {
     var pieces = this.state.queue.map(function (piece, i) {
       return (
         <PieceView piece={piece} key={i} />
@@ -36,6 +33,6 @@ var PieceQueue = React.createClass({
       </div>
     )
   }
-});
+}
 
 module.exports = PieceQueue;

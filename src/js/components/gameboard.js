@@ -1,4 +1,3 @@
-/** @jsx REACT.DOM */
 var React = require('react');
 var key = require('keymaster');
 var AppActions = require('../actions/app-actions');
@@ -34,22 +33,20 @@ function bindKeyboardEvents () {
   DetectShift.bind(AppActions.hold);
 }
 
-var Gameboard = React.createClass({
-  getInitialState: function () {
-    return gameBoard();
-  },
+class Gameboard extends React.Component {
+  state = gameBoard();
 
-  componentWillMount: function () {
+  componentWillMount() {
     GameStore.addChangeListener(this._onChange);
     bindKeyboardEvents();
     GameStore.start();
-  },
+  }
 
-  _onChange: function () {
+  _onChange = () => {
     this.setState(gameBoard());
-  },
+  };
 
-  render: function () {
+  render() {
     var rows = this.state.gameBoard.map(function (row, i) {
 
       var blocksInRow = row.map(function (block, j) {
@@ -73,6 +70,6 @@ var Gameboard = React.createClass({
       </table>
     )
   }
-});
+}
 
 module.exports = Gameboard;

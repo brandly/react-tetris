@@ -3,6 +3,7 @@ var concat = require('gulp-concat');
 var transform = require('vinyl-transform');
 var browserify = require('browserify');
 var reactify = require('reactify');
+var babelify = require('babelify');
 var source = require("vinyl-source-stream");
 var watchify = require('watchify');
 
@@ -13,11 +14,13 @@ function handleError () {
 }
 
 function browserifyShare (watch) {
-  var b = browserify('./src/js/main.js', {
-    cache: {},
-    packageCache: {},
-    fullPaths: true
-  }).transform(reactify);
+  var props = {
+    entries: ['./src/js/main.js'],
+    debug: true,
+    transform: [babelify, reactify]
+  };
+
+  var b = browserify(props);
 
   if (watch) {
     b = watchify(b);

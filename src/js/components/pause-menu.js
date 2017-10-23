@@ -1,4 +1,3 @@
-/** @jsx REACT.DOM */
 var React = require('react');
 var Scoreboard = require('./scoreboard');
 var Gameboard = require('./gameboard');
@@ -12,26 +11,24 @@ function gameState () {
   };
 }
 
-var PauseMenu = React.createClass({
-  getInitialState: function () {
-    return gameState();
-  },
+class PauseMenu extends React.Component {
+  state = gameState();
 
-  componentDidMount: function () {
+  componentDidMount() {
     GameStore.addChangeListener(this._onChange);
-  },
+  }
 
-  _onChange: function () {
+  _onChange = () => {
     this.setState(gameState());
-  },
+  };
 
-  render: function () {
+  render() {
     return (
       <div className="overlay">
         <h1>hi</h1>
       </div>
     )
   }
-});
+}
 
 module.exports = PauseMenu;

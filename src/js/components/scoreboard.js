@@ -1,4 +1,3 @@
-/** @jsx REACT.DOM */
 var React = require('react');
 var ScoreStore = require('../stores/score-store');
 
@@ -9,24 +8,22 @@ function getScore () {
   };
 }
 
-var Scoreboard = React.createClass({
-  getInitialState: function () {
-    return getScore();
-  },
+class Scoreboard extends React.Component {
+  state = getScore();
 
-  componentWillMount: function () {
+  componentWillMount() {
     ScoreStore.addChangeListener(this._onChange);
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     ScoreStore.removeChangeListener(this._onChange);
-  },
+  }
 
-  _onChange: function () {
+  _onChange = () => {
     this.setState(getScore());
-  },
+  };
 
-  render: function () {
+  render() {
     return (
       <div>
         <p>Points: {this.state.points}</p>
@@ -34,6 +31,6 @@ var Scoreboard = React.createClass({
       </div>
     )
   }
-});
+}
 
 module.exports = Scoreboard;

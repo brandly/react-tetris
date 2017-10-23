@@ -1,20 +1,27 @@
 {
   "dependencies": {
-    "browserify": "^6.3.3",
+    "babelify": "7.3.0",
+    "browserify": "14.5.0",
     "flux": "^2.0.1",
     "gulp": "^3.8.10",
     "gulp-browserify": "^0.5.0",
     "gulp-concat": "^2.4.2",
     "keymaster": "^1.6.2",
     "lodash": "^2.4.1",
-    "react": "^0.12.1",
-    "reactify": "^0.17.1",
+    "react": "16.0.0",
+    "react-dom": "16.0.0",
+    "reactify": "1.1.1",
     "vinyl-source-stream": "^1.0.0",
     "vinyl-transform": "^1.0.0",
-    "watchify": "3.7.0"
+    "watchify": "3.9.0"
   },
   "scripts": {
     "watch": "watchify src/js/main.js -t reactify -o dist/js/main.js"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-react": "6.24.1"
+  }
 }
