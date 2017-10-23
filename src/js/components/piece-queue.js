@@ -32,7 +32,6 @@ var PieceQueue = React.createClass({
     });
     return (
       <div>
-        <h3>QUEUE</h3>
         {pieces}
       </div>
     )

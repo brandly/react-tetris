@@ -26,10 +26,7 @@ var HeldPiece = React.createClass({
 
   render: function () {
     return (
-      <div>
-        <h3>HOLD</h3>
-        <PieceView piece={this.state.piece} />
-      </div>
+      <PieceView piece={this.state.piece} />
     )
   }
 });
