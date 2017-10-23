@@ -24,8 +24,8 @@ const App = () =>
         linesCleared
       }) => {
         return (
-          <div className="row">
-            <div className="col-md-2">
+          <div>
+            <div>
               <HeldPiece />
               <div>
                 <p>Points: {points}</p>
@@ -33,11 +33,11 @@ const App = () =>
               </div>
             </div>
 
-            <div className="col-md-4">
+            <div>
               <Gameboard />
             </div>
 
-            <div className="col-md-4">
+            <div>
               <PieceQueue />
             </div>
           </div>
