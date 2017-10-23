@@ -1,43 +1,38 @@
 var React = require('react');
 var Tetris = require('./tetris');
 
-class app extends React.Component {
-  render() {
-    return (
-      <div>
-        <h1>Tetris</h1>
-        <Tetris>
-          {({
-            HeldPiece,
-            Gameboard,
-            PieceQueue,
-            points,
-            linesCleared
-          }) => {
-            return (
-              <div className="row">
-                <div className="col-md-2">
-                  <HeldPiece />
-                  <div>
-                    <p>Points: {points}</p>
-                    <p>Lines Cleared: {linesCleared}</p>
-                  </div>
-                </div>
-
-                <div className="col-md-4">
-                  <Gameboard />
-                </div>
-
-                <div className="col-md-4">
-                  <PieceQueue />
-                </div>
+const App = () =>
+  <div>
+    <h1>Tetris</h1>
+    <Tetris>
+      {({
+        HeldPiece,
+        Gameboard,
+        PieceQueue,
+        points,
+        linesCleared
+      }) => {
+        return (
+          <div className="row">
+            <div className="col-md-2">
+              <HeldPiece />
+              <div>
+                <p>Points: {points}</p>
+                <p>Lines Cleared: {linesCleared}</p>
               </div>
-            )
-          }}
-        </Tetris>
-      </div>
-    )
-  }
-}
+            </div>
 
-module.exports = app;
+            <div className="col-md-4">
+              <Gameboard />
+            </div>
+
+            <div className="col-md-4">
+              <PieceQueue />
+            </div>
+          </div>
+        )
+      }}
+    </Tetris>
+  </div>
+
+module.exports = App;
