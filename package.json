@@ -1,4 +1,12 @@
 {
+  "name": "react-tetris",
+  "version": "0.0.1",
+  "description": "Embed a game of Tetris in your React app",
+  "main": "./src/js/components/tetris.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brandly/react-tetris"
+  },
   "dependencies": {
     "babelify": "7.3.0",
     "browserify": "14.5.0",
@@ -8,8 +16,6 @@
     "gulp-concat": "^2.4.2",
     "keymaster": "^1.6.2",
     "lodash": "^2.4.1",
-    "react": "16.0.0",
-    "react-dom": "16.0.0",
     "reactify": "1.1.1",
     "vinyl-source-stream": "^1.0.0",
     "vinyl-transform": "^1.0.0",
@@ -18,10 +24,18 @@
   "scripts": {
     "watch": "watchify src/js/main.js -t reactify -o dist/js/main.js"
   },
+  "author": "Matthew Brandly",
   "license": "MIT",
   "devDependencies": {
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-preset-env": "1.6.1",
-    "babel-preset-react": "6.24.1"
-  }
+    "babel-preset-react": "6.24.1",
+    "react": "16.0.0",
+    "react-dom": "16.0.0"
+  },
+  "peerDependencies": {
+    "react": "* || ^16.0.0",
+    "react-dom": "* || ^16.0.0"
+  },
+  "homepage": "https://brandly.github.io/react-tetris/"
 }
