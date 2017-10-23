@@ -16,7 +16,10 @@ function getScore () {
 }
 
 class Tetris extends React.Component {
-  state = getScore();
+  constructor(props) {
+    super(props);
+    this.state = getScore();
+  }
 
   componentWillMount() {
     ScoreStore.addChangeListener(this._onChange);

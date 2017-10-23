@@ -11,7 +11,10 @@ function queue () {
 }
 
 class PieceQueue extends React.Component {
-  state = queue();
+  constructor(props) {
+    super(props);
+    this.state = queue();
+  }
 
   componentWillMount() {
     PieceStore.addChangeListener(this._onChange);

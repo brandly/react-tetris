@@ -11,7 +11,10 @@ function piece () {
 }
 
 class HeldPiece extends React.Component {
-  state = piece();
+  constructor(props) {
+    super(props);
+    this.state = piece();
+  }
 
   componentWillMount() {
     PieceStore.addChangeListener(this._onChange);

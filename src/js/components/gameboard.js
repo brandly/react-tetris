@@ -34,7 +34,10 @@ function bindKeyboardEvents () {
 }
 
 class Gameboard extends React.Component {
-  state = gameBoard();
+  constructor(props) {
+    super(props);
+    this.state = gameBoard();
+  }
 
   componentWillMount() {
     GameStore.addChangeListener(this._onChange);

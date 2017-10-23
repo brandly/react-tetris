@@ -11,7 +11,10 @@ function gameState () {
 }
 
 class PauseMenu extends React.Component {
-  state = gameState();
+  constructor(props) {
+    super(props);
+    this.state = gameState();
+  }
 
   componentDidMount() {
     GameStore.addChangeListener(this._onChange);
