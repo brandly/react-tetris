@@ -1,8 +1,8 @@
-var React = require('react');
-var PieceStore = require('../stores/piece-store');
-var PieceView = require('./piece-view');
-var AppConstants = require('../constants/app-constants');
-var states = AppConstants.states;
+import React from 'react';
+import PieceStore from '../stores/piece-store';
+import PieceView from './piece-view';
+import AppConstants from '../constants/app-constants';
+const { states } = AppConstants;
 
 function piece () {
   return {
@@ -31,4 +31,4 @@ class HeldPiece extends React.Component {
   }
 }
 
-module.exports = HeldPiece;
+export default HeldPiece;

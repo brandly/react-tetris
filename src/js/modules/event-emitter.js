@@ -1,9 +1,8 @@
-var EventEmitter = require('events').EventEmitter;
-var _ = require('lodash');
-var CHANGE_EVENT = 'change';
+import { EventEmitter } from 'events';
+const CHANGE_EVENT = 'change';
 
 // our base emitter
-var EE = _.extend({
+const EE = Object.extend({
   emitChange: function () {
     this.emit(CHANGE_EVENT);
   },
@@ -17,4 +16,4 @@ var EE = _.extend({
   }
 }, EventEmitter.prototype);
 
-module.exports = EE;
+export default EE;

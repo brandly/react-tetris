@@ -25,7 +25,7 @@ function callCallbacks () {
   });
 }
 
-module.exports = {
+export default {
   bind: function (callback) {
     callbacks.push(callback);
   },

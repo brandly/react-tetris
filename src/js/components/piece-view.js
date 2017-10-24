@@ -1,9 +1,9 @@
-var React = require('react');
-// var PauseMenu = require('./pause-menu');
-var Gameboard = require('./gameboard');
-var GameStore = require('../stores/game-store');
-var AppConstants = require('../constants/app-constants');
-var states = AppConstants.states;
+import React from 'react';
+// import PauseMenu from './pause-menu';
+import Gameboard from './gameboard';
+import GameStore from '../stores/game-store';
+import AppConstants from '../constants/app-constants';
+const { states } = AppConstants;
 
 function gameState () {
   return {
@@ -15,7 +15,7 @@ function defaultData () {
   return [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
 }
 
-class PieceView extends React.Component {
+export default class PieceView extends React.Component {
   render() {
     var piece = this.props.piece || defaultData();
 
@@ -59,5 +59,3 @@ class PieceView extends React.Component {
     )
   }
 }
-
-module.exports = PieceView;

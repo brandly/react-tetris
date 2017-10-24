@@ -1,5 +1,5 @@
-var React = require('react');
-var Tetris = require('./tetris');
+import React from 'react';
+import Tetris from './tetris';
 
 const App = () =>
   <div>
@@ -35,4 +35,4 @@ const App = () =>
     </Tetris>
   </div>
 
-module.exports = App;
+export default App;

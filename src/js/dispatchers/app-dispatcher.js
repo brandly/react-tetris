@@ -1,4 +1,4 @@
-var Dispatcher = require('flux').Dispatcher;
+import {Dispatcher} from 'flux';
 
 var AppDispatcher = new Dispatcher();
 
@@ -9,4 +9,4 @@ AppDispatcher.handleViewAction = function (action) {
   });
 };
 
-module.exports = AppDispatcher;
+export default AppDispatcher;

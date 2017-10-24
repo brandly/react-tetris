@@ -1,12 +1,12 @@
-var React = require('react');
-// var PauseMenu = require('./pause-menu');
-var Gameboard = require('./gameboard');
-var GameStore = require('../stores/game-store');
-var ScoreStore = require('../stores/score-store');
-var HeldPiece = require('./held-piece');
-var PieceQueue = require('./piece-queue');
-var AppConstants = require('../constants/app-constants');
-var states = AppConstants.states;
+import React from 'react';
+// import PauseMenu from './pause-menu';
+import Gameboard from './gameboard';
+import GameStore from '../stores/game-store';
+import ScoreStore from '../stores/score-store';
+import HeldPiece from './held-piece';
+import PieceQueue from './piece-queue';
+import AppConstants from '../constants/app-constants';
+const { states } = AppConstants;
 
 function getScore () {
   return {
@@ -15,7 +15,7 @@ function getScore () {
   };
 }
 
-class Tetris extends React.Component {
+export default class Tetris extends React.Component {
   constructor(props) {
     super(props);
     this.state = getScore();
@@ -45,5 +45,3 @@ class Tetris extends React.Component {
     });
   }
 }
-
-module.exports = Tetris;

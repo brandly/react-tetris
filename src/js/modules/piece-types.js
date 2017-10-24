@@ -209,7 +209,7 @@ var Z = {
   className: 'piece-z'
 };
 
-module.exports = {
+export default {
   I: I,
   J: J,
   L: L,

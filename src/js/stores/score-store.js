@@ -1,13 +1,12 @@
-var AppDispatcher = require('../dispatchers/app-dispatcher');
-var AppConstants = require('../constants/app-constants');
-var BoardStore = require('./board-store');
-var EventEmitter = require('../modules/event-emitter');
-var _ = require('lodash');
+import AppDispatcher from '../dispatchers/app-dispatcher';
+import AppConstants from '../constants/app-constants';
+import BoardStore from './board-store';
+import EventEmitter from '../modules/event-emitter';
 var events = AppConstants.events;
 
 var _points = 0, _linesCleared = 0;
 
-var ScoreStore = _.extend({
+var ScoreStore = Object.extend({
   getPoints: function () {
     return _points;
   },
@@ -34,4 +33,4 @@ BoardStore.on(events.LINE_CLEARED, function (linesCleared) {
   }
 });
 
-module.exports = ScoreStore;
+export default ScoreStore;

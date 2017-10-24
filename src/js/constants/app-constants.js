@@ -1,5 +1,5 @@
 
-module.exports = {
+export default {
   actions: {
     HARD_DROP: 'HARD_DROP',
     MOVE_DOWN: 'MOVE_DOWN',

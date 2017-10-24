@@ -1,5 +1,5 @@
-var AppConstants = require('../constants/app-constants');
-var AppDispatcher = require('../dispatchers/app-dispatcher');
+import AppConstants from '../constants/app-constants';
+import AppDispatcher from '../dispatchers/app-dispatcher';
 
 var actions = AppConstants.actions;
 
@@ -65,4 +65,4 @@ var AppActions = {
   }
 };
 
-module.exports = AppActions;
+export default AppActions;

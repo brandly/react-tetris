@@ -1,10 +1,10 @@
-var React = require('react');
-var key = require('keymaster');
-var AppActions = require('../actions/app-actions');
-var GameStore = require('../stores/game-store');
-var AppConstants = require('../constants/app-constants');
-var states = AppConstants.states;
-var DetectShift = require('../modules/detect-shift');
+import React from 'react';
+import key from 'keymaster';
+import AppActions from '../actions/app-actions';
+import GameStore from '../stores/game-store';
+import AppConstants from '../constants/app-constants';
+import DetectShift from '../modules/detect-shift';
+const { states } = AppConstants;
 
 function gameBoard () {
   return {
@@ -33,7 +33,7 @@ function bindKeyboardEvents () {
   DetectShift.bind(AppActions.hold);
 }
 
-class Gameboard extends React.Component {
+export default class Gameboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = gameBoard();
@@ -74,5 +74,3 @@ class Gameboard extends React.Component {
     )
   }
 }
-
-module.exports = Gameboard;

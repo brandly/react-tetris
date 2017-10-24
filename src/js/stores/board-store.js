@@ -1,10 +1,9 @@
-var AppDispatcher = require('../dispatchers/app-dispatcher');
-var AppConstants = require('../constants/app-constants');
-var EventEmitter = require('../modules/event-emitter');
-var pieceSetter = require('../modules/piece-setter');
-var events = AppConstants.events;
-var states = AppConstants.states;
-var _ = require('lodash');
+import AppDispatcher from '../dispatchers/app-dispatcher';
+import AppConstants from '../constants/app-constants';
+import EventEmitter from '../modules/event-emitter';
+import pieceSetter from '../modules/piece-setter';
+import _ from 'lodash';
+const { events, states } = AppConstants;
 
 // Two-dimensional array
 // First dimension is height. Second is width.
@@ -27,7 +26,7 @@ function buildGameRow () {
 
 var _setPiece = pieceSetter(_gameBoard);
 
-var BoardStore = _.extend({
+var BoardStore = Object.extend({
   getBoard: function () {
     return _gameBoard;
   },
@@ -88,4 +87,4 @@ var BoardStore = _.extend({
   }
 }, EventEmitter);
 
-module.exports = BoardStore;
+export default BoardStore;

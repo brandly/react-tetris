@@ -1,4 +1,4 @@
-var PieceTypes = require('./piece-types');
+import PieceTypes from './piece-types';
 
 function randomNumber (under) {
   return Math.floor(Math.random() * under);
@@ -43,4 +43,4 @@ PieceQueue.prototype.getQueue = function getQueue () {
   return this.queue;
 };
 
-module.exports = PieceQueue;
+export default PieceQueue;

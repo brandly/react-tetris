@@ -1,10 +1,10 @@
-var AppDispatcher = require('../dispatchers/app-dispatcher');
-var AppConstants = require('../constants/app-constants');
-var PieceTypes = require('../modules/piece-types');
-var BoardStore = require('./board-store')
-var EventEmitter = require('../modules/event-emitter');
-var PieceQueue = require('../modules/piece-queue');
-var _ = require('lodash');
+import AppDispatcher from '../dispatchers/app-dispatcher';
+import AppConstants from '../constants/app-constants';
+import PieceTypes from '../modules/piece-types';
+import BoardStore from './board-store';
+import EventEmitter from '../modules/event-emitter';
+import PieceQueue from '../modules/piece-queue';
+import _ from 'lodash';
 var events = AppConstants.events;
 
 var actions = AppConstants.actions;
@@ -100,7 +100,7 @@ function _getHardDropY () {
   return yPosition - 1;
 }
 
-var PieceStore = _.extend({
+var PieceStore = Object.extend({
   getPieceData: function () {
     return {
       piece: _piece,
@@ -187,4 +187,4 @@ function setUpNewPiece () {
 }
 
 setUpNewPiece();
-module.exports = PieceStore;
+export default PieceStore;

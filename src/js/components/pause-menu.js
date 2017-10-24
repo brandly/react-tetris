@@ -4,7 +4,7 @@ var GameStore = require('../stores/game-store');
 var AppConstants = require('../constants/app-constants');
 var states = AppConstants.states;
 
-function gameState () {
+function gameState () {a
   return {
     gameState: GameStore.getCurrentState()
   };

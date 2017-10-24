@@ -1,8 +1,8 @@
-var React = require('react');
-var PieceStore = require('../stores/piece-store');
-var PieceView = require('./piece-view');
-var AppConstants = require('../constants/app-constants');
-var states = AppConstants.states;
+import React from 'react';
+import PieceStore from '../stores/piece-store';
+import PieceView from './piece-view';
+import AppConstants from '../constants/app-constants';
+const { states } = AppConstants;
 
 function queue () {
   return {
@@ -10,7 +10,7 @@ function queue () {
   };
 }
 
-class PieceQueue extends React.Component {
+export default class PieceQueue extends React.Component {
   constructor(props) {
     super(props);
     this.state = queue();
@@ -37,5 +37,3 @@ class PieceQueue extends React.Component {
     )
   }
 }
-
-module.exports = PieceQueue;
