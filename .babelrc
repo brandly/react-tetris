@@ -1,5 +1,5 @@
 {
-  "plugins": ["transform-class-properties", "external-helpers"],
+  "plugins": ["transform-class-properties"],
   "presets": [
     ["env", {
       "targets": {

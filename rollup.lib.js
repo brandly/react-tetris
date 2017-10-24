@@ -15,7 +15,7 @@ export default {
   plugins: [
     babel({
       exclude: 'node_modules/**',
-      externalHelpers: true
+      plugins: ['external-helpers']
     }),
     resolve({
       browser: true,
