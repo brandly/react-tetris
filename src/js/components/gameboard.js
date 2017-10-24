@@ -4,6 +4,7 @@ import AppActions from '../actions/app-actions';
 import GameStore from '../stores/game-store';
 import AppConstants from '../constants/app-constants';
 import DetectShift from '../modules/detect-shift';
+
 const { states } = AppConstants;
 
 function gameBoard() {
@@ -21,7 +22,7 @@ function bindKeyboardEvents() {
   key('x', AppActions.flipClockwise);
   key('up', AppActions.flipClockwise);
 
-  key('p', function() {
+  key('p', () => {
     if (GameStore.getCurrentState() === states.PLAYING) {
       AppActions.pause();
     } else {
@@ -50,9 +51,9 @@ export default class Gameboard extends React.Component {
   };
 
   render() {
-    var rows = this.state.gameBoard.map(function(row, i) {
-      var blocksInRow = row.map(function(block, j) {
-        var classString = 'game-block ' + (block || 'block-empty');
+    const rows = this.state.gameBoard.map((row, i) => {
+      const blocksInRow = row.map((block, j) => {
+        const classString = `game-block ${  block || 'block-empty'}`;
         return <td key={j} className={classString} />;
       });
 

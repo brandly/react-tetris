@@ -11,16 +11,19 @@
     "flux": "^2.0.1",
     "gulp": "^3.8.10",
     "keymaster": "^1.6.2",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "prop-types": "15.6.0"
   },
   "scripts": {
     "build:lib": "rollup --config rollup.lib.js",
     "build:app": "rollup --config rollup.app.js",
-    "watch": "npm run build:app -- --watch"
+    "watch": "npm run build:app -- --watch",
+    "lint": "eslint src/"
   },
   "author": "Matthew Brandly",
   "license": "MIT",
   "devDependencies": {
+    "babel-eslint": "8.0.1",
     "babel-plugin-external-helpers": "6.22.0",
     "babel-plugin-lodash": "3.2.11",
     "babel-plugin-transform-class-properties": "6.24.1",
@@ -28,8 +31,15 @@
     "babel-preset-react": "6.24.1",
     "babelify": "7.3.0",
     "browserify": "14.5.0",
+    "eslint": "4.9.0",
+    "eslint-config-airbnb": "16.1.0",
+    "eslint-config-prettier": "2.6.0",
+    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-jsx-a11y": "6.0.2",
+    "eslint-plugin-react": "7.4.0",
     "gulp-browserify": "^0.5.0",
     "gulp-concat": "^2.4.2",
+    "prettier": "1.7.4",
     "react": "16.0.0",
     "react-dom": "16.0.0",
     "reactify": "1.1.1",

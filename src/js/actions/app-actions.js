@@ -1,64 +1,64 @@
 import AppConstants from '../constants/app-constants';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 
-var actions = AppConstants.actions;
+const { actions } = AppConstants;
 
-var AppActions = {
-  moveDown: function(piece) {
+const AppActions = {
+  moveDown(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.MOVE_DOWN,
-      piece: piece
+      piece
     });
   },
 
-  moveLeft: function(piece) {
+  moveLeft(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.MOVE_LEFT,
-      piece: piece
+      piece
     });
   },
 
-  moveRight: function(piece) {
+  moveRight(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.MOVE_RIGHT,
-      piece: piece
+      piece
     });
   },
 
-  hardDrop: function(piece) {
+  hardDrop(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.HARD_DROP,
-      piece: piece
+      piece
     });
   },
 
-  flipClockwise: function(piece) {
+  flipClockwise(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.FLIP_CLOCKWISE,
-      piece: piece
+      piece
     });
   },
 
-  flipCounterclockwise: function(piece) {
+  flipCounterclockwise(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.FLIP_COUNTERCLOCKWISE,
-      piece: piece
+      piece
     });
   },
 
-  pause: function() {
+  pause() {
     AppDispatcher.handleViewAction({
       actionType: actions.PAUSE
     });
   },
 
-  resume: function() {
+  resume() {
     AppDispatcher.handleViewAction({
       actionType: actions.RESUME
     });
   },
 
-  hold: function() {
+  hold() {
     AppDispatcher.handleViewAction({
       actionType: actions.HOLD
     });

@@ -1,51 +1,51 @@
-import AppDispatcher from '../dispatchers/app-dispatcher';
+import _ from 'lodash';
 import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
 import pieceSetter from '../modules/piece-setter';
-import _ from 'lodash';
-const { events, states } = AppConstants;
+
+const { events } = AppConstants;
 
 // Two-dimensional array
 // First dimension is height. Second is width.
-var _gameBoard = (function buildGameBoard() {
-  var board = new Array(AppConstants.GAME_HEIGHT);
-  for (var y = 0; y < board.length; y++) {
+const _gameBoard = (function buildGameBoard() {
+  const board = new Array(AppConstants.GAME_HEIGHT);
+  for (let y = 0; y < board.length; y++) {
     board[y] = buildGameRow();
   }
   return board;
 })();
 
 function buildGameRow() {
-  var row = new Array(AppConstants.GAME_WIDTH);
-  for (var x = 0; x < row.length; x++) {
+  const row = new Array(AppConstants.GAME_WIDTH);
+  for (let x = 0; x < row.length; x++) {
     // nothing in it
     row[x] = false;
   }
   return row;
 }
 
-var _setPiece = pieceSetter(_gameBoard);
+const _setPiece = pieceSetter(_gameBoard);
 
-var BoardStore = _.extend(
+const BoardStore = _.extend(
   {
-    getBoard: function() {
+    getBoard() {
       return _gameBoard;
     },
 
-    setPiece: function(piece, rotation, position) {
+    setPiece(piece, rotation, position) {
       _setPiece(piece.blocks[rotation], position, piece.className);
       BoardStore.clearFullLines();
       BoardStore.emitChange();
     },
 
-    isEmptyPosition: function(piece, rotation, position) {
-      var blocks = piece.blocks[rotation];
+    isEmptyPosition(piece, rotation, position) {
+      const blocks = piece.blocks[rotation];
 
-      for (var x = 0; x < piece.blocks[0].length; x++) {
-        for (var y = 0; y < piece.blocks[0].length; y++) {
-          var block = blocks[y][x];
-          var boardX = x + position.x;
-          var boardY = y + position.y;
+      for (let x = 0; x < piece.blocks[0].length; x++) {
+        for (let y = 0; y < piece.blocks[0].length; y++) {
+          const block = blocks[y][x];
+          const boardX = x + position.x;
+          const boardY = y + position.y;
 
           // might not be filled, ya know
           if (block) {
@@ -70,9 +70,9 @@ var BoardStore = _.extend(
       return true;
     },
 
-    clearFullLines: function() {
-      var linesCleared = 0;
-      for (var y = 0; y < _gameBoard.length; y++) {
+    clearFullLines() {
+      let linesCleared = 0;
+      for (let y = 0; y < _gameBoard.length; y++) {
         // it's a full line
         if (_.every(_gameBoard[y])) {
           // so rip it out
@@ -87,7 +87,7 @@ var BoardStore = _.extend(
       }
     },
 
-    emitClearedLines: function(count) {
+    emitClearedLines(count) {
       this.emit(events.LINE_CLEARED, count);
     }
   },

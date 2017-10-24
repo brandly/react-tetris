@@ -4,23 +4,22 @@ function randomNumber(under) {
   return Math.floor(Math.random() * under);
 }
 
-var piecesBucket = [];
+const piecesBucket = [];
 function getRandomPiece() {
   if (piecesBucket.length === 0) {
     // fill the bucket
-    for (var pieceType in PieceTypes) {
+    Object.keys(PieceTypes).forEach(pieceType => {
       // 4 is just the number of each type of piece. it's arbitrary, not magic, okay.
-      for (var i = 0; i < 4; i++) {
+      for (let i = 0; i < 4; i++) {
         piecesBucket.push(pieceType);
       }
-    }
+    });
   }
-  var piece = piecesBucket.splice(randomNumber(piecesBucket.length), 1)[0];
+  const piece = piecesBucket.splice(randomNumber(piecesBucket.length), 1)[0];
   // might wanna clone
   return PieceTypes[piece];
 }
 
-var minimumLength = 5;
 function PieceQueue(minimumLength) {
   this.minimumLength = minimumLength;
   this.queue = [];
@@ -34,7 +33,7 @@ PieceQueue.prototype.fill = function fill() {
 };
 
 PieceQueue.prototype.getNext = function getNext() {
-  var next = this.queue.shift();
+  const next = this.queue.shift();
   this.fill();
   return next;
 };

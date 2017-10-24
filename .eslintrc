@@ -1,0 +1,15 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb",
+    "prettier"
+  ],
+  "rules": {
+    "react/jsx-filename-extension": 0,
+    "no-underscore-dangle": 0,
+    "no-use-before-define": 0,
+    "default-case": 0,
+    "no-plusplus": 0,
+    "react/no-array-index-key": 0
+  }
+}

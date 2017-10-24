@@ -1,11 +1,7 @@
-var React = require('react');
-var Gameboard = require('./gameboard');
-var GameStore = require('../stores/game-store');
-var AppConstants = require('../constants/app-constants');
-var states = AppConstants.states;
+const React = require('react');
+const GameStore = require('../stores/game-store');
 
 function gameState() {
-  a;
   return {
     gameState: GameStore.getCurrentState()
   };

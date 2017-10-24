@@ -1,11 +1,11 @@
 import { Dispatcher } from 'flux';
 
-var AppDispatcher = new Dispatcher();
+const AppDispatcher = new Dispatcher();
 
-AppDispatcher.handleViewAction = function(action) {
+AppDispatcher.handleViewAction = function handleViewAction(action) {
   this.dispatch({
     source: 'VIEW_ACTION',
-    action: action
+    action
   });
 };
 

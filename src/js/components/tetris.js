@@ -1,12 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // import PauseMenu from './pause-menu';
 import Gameboard from './gameboard';
-import GameStore from '../stores/game-store';
 import ScoreStore from '../stores/score-store';
 import HeldPiece from './held-piece';
 import PieceQueue from './piece-queue';
-import AppConstants from '../constants/app-constants';
-const { states } = AppConstants;
 
 function getScore() {
   return {
@@ -16,6 +14,10 @@ function getScore() {
 }
 
 export default class Tetris extends React.Component {
+  static propTypes = {
+    children: PropTypes.func.isRequired
+  };
+
   constructor(props) {
     super(props);
     this.state = getScore();

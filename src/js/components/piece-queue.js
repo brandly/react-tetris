@@ -1,8 +1,6 @@
 import React from 'react';
 import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
-import AppConstants from '../constants/app-constants';
-const { states } = AppConstants;
 
 function queue() {
   return {
@@ -25,9 +23,9 @@ export default class PieceQueue extends React.Component {
   };
 
   render() {
-    var pieces = this.state.queue.map(function(piece, i) {
-      return <PieceView piece={piece} key={i} />;
-    });
+    const pieces = this.state.queue.map((piece, i) => (
+      <PieceView piece={piece} key={i} />
+    ));
     return <div>{pieces}</div>;
   }
 }

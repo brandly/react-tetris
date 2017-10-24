@@ -1,19 +1,20 @@
 import { EventEmitter } from 'events';
 import _ from 'lodash';
+
 const CHANGE_EVENT = 'change';
 
 // our base emitter
 const EE = _.extend(
   {
-    emitChange: function() {
+    emitChange() {
       this.emit(CHANGE_EVENT);
     },
 
-    addChangeListener: function(callback) {
+    addChangeListener(callback) {
       this.on(CHANGE_EVENT, callback);
     },
 
-    removeChangeListener: function(callback) {
+    removeChangeListener(callback) {
       this.removeListener(CHANGE_EVENT, callback);
     }
   },

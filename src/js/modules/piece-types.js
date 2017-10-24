@@ -1,5 +1,5 @@
 
-var I = {
+const I = {
   blocks: [
     [
       [0, 1, 0, 0],
@@ -29,7 +29,7 @@ var I = {
   className: 'piece-i'
 };
 
-var J = {
+const J = {
   blocks: [
     [
       [0, 1, 0, 0],
@@ -59,7 +59,7 @@ var J = {
   className: 'piece-j'
 };
 
-var L = {
+const L = {
   blocks: [
     [
       [0, 1, 0, 0],
@@ -89,7 +89,7 @@ var L = {
   className: 'piece-l'
 };
 
-var O = {
+const O = {
   blocks: [
     [
       [1, 1, 0, 0],
@@ -119,7 +119,7 @@ var O = {
   className: 'piece-o'
 };
 
-var S = {
+const S = {
   blocks: [
     [
       [0, 0, 0, 0],
@@ -149,7 +149,7 @@ var S = {
   className: 'piece-s'
 };
 
-var T = {
+const T = {
   blocks: [
     [
       [0, 0, 0, 0],
@@ -179,7 +179,7 @@ var T = {
   className: 'piece-t'
 };
 
-var Z = {
+const Z = {
   blocks: [
     [
       [0, 0, 0, 0],
@@ -210,11 +210,11 @@ var Z = {
 };
 
 export default {
-  I: I,
-  J: J,
-  L: L,
-  O: O,
-  S: S,
-  T: T,
-  Z: Z
+  I,
+  J,
+  L,
+  O,
+  S,
+  T,
+  Z
 };

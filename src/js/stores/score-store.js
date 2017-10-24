@@ -1,40 +1,40 @@
 import _ from 'lodash';
-import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
 import BoardStore from './board-store';
 import EventEmitter from '../modules/event-emitter';
-var events = AppConstants.events;
 
-var _points = 0,
-  _linesCleared = 0;
+const { events } = AppConstants;
 
-var ScoreStore = _.extend(
+let points = 0;
+let linesCleared = 0;
+
+const ScoreStore = _.extend(
   {
-    getPoints: function() {
-      return _points;
+    getPoints() {
+      return points;
     },
 
-    getLinesCleared: function() {
-      return _linesCleared;
+    getLinesCleared() {
+      return linesCleared;
     },
 
-    addPoints: function(additional) {
-      _points += additional;
+    addPoints(additional) {
+      points += additional;
       this.emitChange();
     }
   },
   EventEmitter
 );
 
-var pointsPerLine = 100;
-BoardStore.on(events.LINE_CLEARED, function(linesCleared) {
-  _linesCleared += linesCleared;
+const pointsPerLine = 100;
+BoardStore.on(events.LINE_CLEARED, additionalLines => {
+  linesCleared += additionalLines;
 
   // what's this called?
-  if (linesCleared === 4) {
+  if (additionalLines === 4) {
     ScoreStore.addPoints(pointsPerLine * 10);
   } else {
-    ScoreStore.addPoints(linesCleared * pointsPerLine);
+    ScoreStore.addPoints(additionalLines * pointsPerLine);
   }
 });
 

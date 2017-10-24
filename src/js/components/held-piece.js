@@ -1,8 +1,6 @@
 import React from 'react';
 import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
-import AppConstants from '../constants/app-constants';
-const { states } = AppConstants;
 
 function piece() {
   return {

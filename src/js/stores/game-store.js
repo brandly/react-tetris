@@ -1,22 +1,22 @@
+import _ from 'lodash';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
 import BoardStore from './board-store';
 import PieceStore from './piece-store';
 import pieceSetter from '../modules/piece-setter';
-import _ from 'lodash';
-var states = AppConstants.states;
-var actions = AppConstants.actions;
 
-var _currentState = null;
-var _interval = null;
+const { states, actions } = AppConstants;
 
-var GameStore = _.extend(
+let _currentState = null;
+let _interval = null;
+
+const GameStore = _.extend(
   {
-    getGameBoard: function() {
-      var gameBoard = _.cloneDeep(BoardStore.getBoard());
-      var pieceData = PieceStore.getPieceData();
-      var setter = pieceSetter(gameBoard);
+    getGameBoard() {
+      const gameBoard = _.cloneDeep(BoardStore.getBoard());
+      const pieceData = PieceStore.getPieceData();
+      const setter = pieceSetter(gameBoard);
 
       // set the preview
       setter(
@@ -34,26 +34,26 @@ var GameStore = _.extend(
       return gameBoard;
     },
 
-    getCurrentState: function() {
+    getCurrentState() {
       return _currentState;
     },
 
-    start: function() {
-      _interval = global.setInterval(function() {
+    start() {
+      _interval = global.setInterval(() => {
         PieceStore.tick();
       }, 800);
       _currentState = states.PLAYING;
       this.emitChange();
     },
 
-    pause: function() {
+    pause() {
       global.clearInterval(_interval);
       _currentState = states.PAUSED;
       this.emitChange();
     },
 
-    dispatcherIndex: AppDispatcher.register(function(payload) {
-      var action = payload.action;
+    dispatcherIndex: AppDispatcher.register(payload => {
+      const { action } = payload;
       switch (action.actionType) {
         case actions.PAUSE:
           GameStore.pause();
@@ -71,11 +71,11 @@ var GameStore = _.extend(
 );
 
 // Game store should emit all changes that occur
-PieceStore.addChangeListener(function() {
+PieceStore.addChangeListener(() => {
   GameStore.emitChange();
 });
 
-BoardStore.addChangeListener(function() {
+BoardStore.addChangeListener(() => {
   GameStore.emitChange();
 });
 

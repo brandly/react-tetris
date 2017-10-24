@@ -1,20 +1,21 @@
+import _ from 'lodash';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import PieceTypes from '../modules/piece-types';
 import BoardStore from './board-store';
 import EventEmitter from '../modules/event-emitter';
 import PieceQueue from '../modules/piece-queue';
-import _ from 'lodash';
-var events = AppConstants.events;
 
-var actions = AppConstants.actions;
+const { events, actions } = AppConstants;
 
 // local data
-var _piece, _rotation, _position, _heldPiece;
+let _piece;
+let _rotation;
+let _position;
+let _heldPiece;
 
 function _moveLeft() {
   // compute new position
-  var newPosition = _.clone(_position);
+  const newPosition = _.clone(_position);
   newPosition.x -= 1;
   // ask board if it's valid
   if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
@@ -22,27 +23,29 @@ function _moveLeft() {
     _position = newPosition;
     return true;
   }
+  return false;
 }
 
 function _moveRight() {
-  var newPosition = _.clone(_position);
+  const newPosition = _.clone(_position);
   newPosition.x += 1;
   if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     _position = newPosition;
     return true;
   }
+  return false;
 }
 
 function _moveDown() {
-  var newPosition = _.clone(_position);
+  const newPosition = _.clone(_position);
   newPosition.y += 1;
 
   if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     _position = newPosition;
     return true;
-  } else {
-    _lockInPiece();
   }
+  _lockInPiece();
+  return false;
 }
 
 function _hardDrop() {
@@ -51,21 +54,23 @@ function _hardDrop() {
 }
 
 function _flipClockwise() {
-  var newRotation = (_rotation + 1) % _piece.blocks.length;
+  const newRotation = (_rotation + 1) % _piece.blocks.length;
   if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
     _rotation = newRotation;
     return true;
   }
+  return false;
 }
 
 function _flipCounterclockwise() {
-  var newRotation = _rotation - 1;
+  let newRotation = _rotation - 1;
   if (newRotation < 0) newRotation += _piece.blocks.length;
 
   if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
     _rotation = newRotation;
     return true;
   }
+  return false;
 }
 
 function _lockInPiece() {
@@ -81,7 +86,7 @@ function _holdPiece() {
     return false;
   }
 
-  var previouslyHeldPiece = _heldPiece;
+  const previouslyHeldPiece = _heldPiece;
   _heldPiece = _piece;
 
   if (previouslyHeldPiece) {
@@ -94,7 +99,7 @@ function _holdPiece() {
 }
 
 function _getHardDropY() {
-  var yPosition = _position.y;
+  let yPosition = _position.y;
 
   while (
     BoardStore.isEmptyPosition(_piece, _rotation, {
@@ -108,9 +113,9 @@ function _getHardDropY() {
   return yPosition - 1;
 }
 
-var PieceStore = _.extend(
+const PieceStore = _.extend(
   {
-    getPieceData: function() {
+    getPieceData() {
       return {
         piece: _piece,
         rotation: _rotation,
@@ -125,12 +130,12 @@ var PieceStore = _.extend(
       };
     },
 
-    tick: function() {
+    tick() {
       emitChangeIf(_moveDown());
     },
 
-    dispatcherIndex: AppDispatcher.register(function(payload) {
-      var action = payload.action; // this is our action from handleViewAction
+    dispatcherIndex: AppDispatcher.register(payload => {
+      const { action } = payload; // this is our action from handleViewAction
       switch (action.actionType) {
         case actions.MOVE_DOWN:
           emitChangeIf(_moveDown());
@@ -165,7 +170,7 @@ var PieceStore = _.extend(
       return true;
     }),
 
-    emitPlayerLost: function() {
+    emitPlayerLost() {
       this.emit(events.PLAYER_LOST);
     }
   },
@@ -176,10 +181,10 @@ function emitChangeIf(val) {
   if (val) PieceStore.emitChange();
 }
 
-var queue = new PieceQueue(5);
+const queue = new PieceQueue(5);
 
-var initialPosition = (function() {
-  var somePiece = queue.getNext();
+const initialPosition = (() => {
+  const somePiece = queue.getNext();
   return {
     x: AppConstants.GAME_WIDTH / 2 - somePiece.blocks.length / 2,
     y: 0
