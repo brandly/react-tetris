@@ -1,17 +1,11 @@
 import React from 'react';
 import Tetris from './tetris';
 
-const App = () =>
+const App = () => (
   <div>
     <h1>Tetris</h1>
     <Tetris>
-      {({
-        HeldPiece,
-        Gameboard,
-        PieceQueue,
-        points,
-        linesCleared
-      }) => {
+      {({ HeldPiece, Gameboard, PieceQueue, points, linesCleared }) => {
         return (
           <div className="row">
             <div className="col-md-2">
@@ -30,9 +24,10 @@ const App = () =>
               <PieceQueue />
             </div>
           </div>
-        )
+        );
       }}
     </Tetris>
   </div>
+);
 
 export default App;

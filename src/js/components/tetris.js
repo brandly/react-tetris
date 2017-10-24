@@ -8,7 +8,7 @@ import PieceQueue from './piece-queue';
 import AppConstants from '../constants/app-constants';
 const { states } = AppConstants;
 
-function getScore () {
+function getScore() {
   return {
     points: ScoreStore.getPoints(),
     linesCleared: ScoreStore.getLinesCleared()
@@ -34,7 +34,7 @@ export default class Tetris extends React.Component {
   };
 
   render() {
-    const { points, linesCleared } = this.state
+    const { points, linesCleared } = this.state;
 
     return this.props.children({
       HeldPiece,

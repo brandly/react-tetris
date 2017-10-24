@@ -1,4 +1,3 @@
-
 export default {
   actions: {
     HARD_DROP: 'HARD_DROP',

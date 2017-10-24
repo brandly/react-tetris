@@ -6,13 +6,13 @@ import AppConstants from '../constants/app-constants';
 import DetectShift from '../modules/detect-shift';
 const { states } = AppConstants;
 
-function gameBoard () {
+function gameBoard() {
   return {
     gameBoard: GameStore.getGameBoard()
   };
 }
 
-function bindKeyboardEvents () {
+function bindKeyboardEvents() {
   key('down', AppActions.moveDown);
   key('left', AppActions.moveLeft);
   key('right', AppActions.moveRight);
@@ -21,7 +21,7 @@ function bindKeyboardEvents () {
   key('x', AppActions.flipClockwise);
   key('up', AppActions.flipClockwise);
 
-  key('p', function () {
+  key('p', function() {
     if (GameStore.getCurrentState() === states.PLAYING) {
       AppActions.pause();
     } else {
@@ -50,27 +50,18 @@ export default class Gameboard extends React.Component {
   };
 
   render() {
-    var rows = this.state.gameBoard.map(function (row, i) {
-
-      var blocksInRow = row.map(function (block, j) {
+    var rows = this.state.gameBoard.map(function(row, i) {
+      var blocksInRow = row.map(function(block, j) {
         var classString = 'game-block ' + (block || 'block-empty');
-        return (
-          <td key={j} className={classString}></td>
-        );
+        return <td key={j} className={classString} />;
       });
 
-      return (
-        <tr key={i}>
-          {blocksInRow}
-        </tr>
-      );
+      return <tr key={i}>{blocksInRow}</tr>;
     });
     return (
       <table className="game-board">
-        <tbody>
-          {rows}
-        </tbody>
+        <tbody>{rows}</tbody>
       </table>
-    )
+    );
   }
 }

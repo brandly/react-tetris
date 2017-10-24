@@ -1,11 +1,11 @@
 import PieceTypes from './piece-types';
 
-function randomNumber (under) {
+function randomNumber(under) {
   return Math.floor(Math.random() * under);
 }
 
 var piecesBucket = [];
-function getRandomPiece () {
+function getRandomPiece() {
   if (piecesBucket.length === 0) {
     // fill the bucket
     for (var pieceType in PieceTypes) {
@@ -21,25 +21,25 @@ function getRandomPiece () {
 }
 
 var minimumLength = 5;
-function PieceQueue (minimumLength) {
+function PieceQueue(minimumLength) {
   this.minimumLength = minimumLength;
   this.queue = [];
   this.fill();
 }
 
-PieceQueue.prototype.fill = function fill () {
+PieceQueue.prototype.fill = function fill() {
   while (this.queue.length < this.minimumLength) {
     this.queue.push(getRandomPiece());
   }
 };
 
-PieceQueue.prototype.getNext = function getNext () {
+PieceQueue.prototype.getNext = function getNext() {
   var next = this.queue.shift();
   this.fill();
   return next;
 };
 
-PieceQueue.prototype.getQueue = function getQueue () {
+PieceQueue.prototype.getQueue = function getQueue() {
   return this.queue;
 };
 

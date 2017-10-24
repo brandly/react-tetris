@@ -4,61 +4,61 @@ import AppDispatcher from '../dispatchers/app-dispatcher';
 var actions = AppConstants.actions;
 
 var AppActions = {
-  moveDown: function (piece) {
+  moveDown: function(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.MOVE_DOWN,
       piece: piece
     });
   },
 
-  moveLeft: function (piece) {
+  moveLeft: function(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.MOVE_LEFT,
       piece: piece
     });
   },
 
-  moveRight: function (piece) {
+  moveRight: function(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.MOVE_RIGHT,
       piece: piece
     });
   },
 
-  hardDrop: function (piece) {
+  hardDrop: function(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.HARD_DROP,
       piece: piece
     });
   },
 
-  flipClockwise: function (piece) {
+  flipClockwise: function(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.FLIP_CLOCKWISE,
       piece: piece
     });
   },
 
-  flipCounterclockwise: function (piece) {
+  flipCounterclockwise: function(piece) {
     AppDispatcher.handleViewAction({
       actionType: actions.FLIP_COUNTERCLOCKWISE,
       piece: piece
     });
   },
 
-  pause: function () {
+  pause: function() {
     AppDispatcher.handleViewAction({
       actionType: actions.PAUSE
     });
   },
 
-  resume: function () {
+  resume: function() {
     AppDispatcher.handleViewAction({
       actionType: actions.RESUME
     });
   },
 
-  hold: function () {
+  hold: function() {
     AppDispatcher.handleViewAction({
       actionType: actions.HOLD
     });

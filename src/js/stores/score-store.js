@@ -5,25 +5,29 @@ import BoardStore from './board-store';
 import EventEmitter from '../modules/event-emitter';
 var events = AppConstants.events;
 
-var _points = 0, _linesCleared = 0;
+var _points = 0,
+  _linesCleared = 0;
 
-var ScoreStore = _.extend({
-  getPoints: function () {
-    return _points;
+var ScoreStore = _.extend(
+  {
+    getPoints: function() {
+      return _points;
+    },
+
+    getLinesCleared: function() {
+      return _linesCleared;
+    },
+
+    addPoints: function(additional) {
+      _points += additional;
+      this.emitChange();
+    }
   },
-
-  getLinesCleared: function () {
-    return _linesCleared;
-  },
-
-  addPoints: function (additional) {
-    _points += additional;
-    this.emitChange();
-  }
-}, EventEmitter);
+  EventEmitter
+);
 
 var pointsPerLine = 100;
-BoardStore.on(events.LINE_CLEARED, function (linesCleared) {
+BoardStore.on(events.LINE_CLEARED, function(linesCleared) {
   _linesCleared += linesCleared;
 
   // what's this called?

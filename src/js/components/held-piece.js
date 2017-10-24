@@ -4,7 +4,7 @@ import PieceView from './piece-view';
 import AppConstants from '../constants/app-constants';
 const { states } = AppConstants;
 
-function piece () {
+function piece() {
   return {
     piece: PieceStore.getPieceData().heldPiece
   };
@@ -25,9 +25,7 @@ class HeldPiece extends React.Component {
   };
 
   render() {
-    return (
-      <PieceView piece={this.state.piece} />
-    )
+    return <PieceView piece={this.state.piece} />;
   }
 }
 

@@ -5,14 +5,14 @@ import GameStore from '../stores/game-store';
 import AppConstants from '../constants/app-constants';
 const { states } = AppConstants;
 
-function gameState () {
+function gameState() {
   return {
     gameState: GameStore.getCurrentState()
   };
 }
 
-function defaultData () {
-  return [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+function defaultData() {
+  return [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 }
 
 export default class PieceView extends React.Component {
@@ -22,15 +22,14 @@ export default class PieceView extends React.Component {
     // TODO: make this not a mess
     var blocks;
     if (this.props.piece) {
-      blocks = this.props.piece.blocks[0]
+      blocks = this.props.piece.blocks[0];
     } else {
       blocks = defaultData();
     }
 
     var self = this;
-    var rows = blocks.map(function (row, i) {
-
-      var blocksInRow = row.map(function (block, j) {
+    var rows = blocks.map(function(row, i) {
+      var blocksInRow = row.map(function(block, j) {
         var classString = 'game-block ';
 
         if (block) {
@@ -39,23 +38,15 @@ export default class PieceView extends React.Component {
           classString += 'block-empty';
         }
 
-        return (
-          <td key={j} className={classString}></td>
-        );
+        return <td key={j} className={classString} />;
       });
 
-      return (
-        <tr key={i}>
-          {blocksInRow}
-        </tr>
-      );
+      return <tr key={i}>{blocksInRow}</tr>;
     });
     return (
       <table className="game-board">
-        <tbody>
-          {rows}
-        </tbody>
+        <tbody>{rows}</tbody>
       </table>
-    )
+    );
   }
 }
