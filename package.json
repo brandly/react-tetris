@@ -16,7 +16,7 @@
   "scripts": {
     "build:lib": "rollup --config rollup.lib.js",
     "build:app": "rollup --config rollup.app.js",
-    "watch": "watchify src/js/main.js -t reactify -o dist/js/main.js"
+    "watch": "npm run build:app -- --watch"
   },
   "author": "Matthew Brandly",
   "license": "MIT",
