@@ -1,8 +1,9 @@
 import { EventEmitter } from 'events';
+import _ from 'lodash';
 const CHANGE_EVENT = 'change';
 
 // our base emitter
-const EE = Object.extend({
+const EE = _.extend({
   emitChange: function () {
     this.emit(CHANGE_EVENT);
   },

@@ -100,7 +100,7 @@ function _getHardDropY () {
   return yPosition - 1;
 }
 
-var PieceStore = Object.extend({
+var PieceStore = _.extend({
   getPieceData: function () {
     return {
       piece: _piece,

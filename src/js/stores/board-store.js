@@ -26,7 +26,7 @@ function buildGameRow () {
 
 var _setPiece = pieceSetter(_gameBoard);
 
-var BoardStore = Object.extend({
+var BoardStore = _.extend({
   getBoard: function () {
     return _gameBoard;
   },

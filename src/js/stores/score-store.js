@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
 import BoardStore from './board-store';
@@ -6,7 +7,7 @@ var events = AppConstants.events;
 
 var _points = 0, _linesCleared = 0;
 
-var ScoreStore = Object.extend({
+var ScoreStore = _.extend({
   getPoints: function () {
     return _points;
   },

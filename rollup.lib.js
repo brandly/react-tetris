@@ -8,7 +8,7 @@ export default {
   input: 'src/js/components/tetris.js',
   output: {
     file: 'lib/index.js',
-    format: 'iife'
+    format: 'cjs'
   },
   name: 'Tetris',
   external: ['react', 'react-dom'],
@@ -21,7 +21,9 @@ export default {
       browser: true,
       preferBuiltins: true
     }),
-    commonjs(),
+    commonjs({
+      ignore: ['react', 'react-dom']
+    }),
     globals(),
     builtins()
   ]

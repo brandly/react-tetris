@@ -11,9 +11,9 @@ var actions = AppConstants.actions;
 var _currentState = null;
 var _interval = null;
 
-var GameStore = Object.extend({
+var GameStore = _.extend({
   getGameBoard: function () {
-    var gameBoard = cloneDeep(BoardStore.getBoard());
+    var gameBoard = _.cloneDeep(BoardStore.getBoard());
     var pieceData = PieceStore.getPieceData();
     var setter = pieceSetter(gameBoard);
 
