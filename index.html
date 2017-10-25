@@ -13,9 +13,19 @@
       .game-block {
         margin: 0;
         padding: 0;
-        width: 1.5em;
-        height: 1.5em;
+        width: 21px;
+        height: 21px;
         border: 1px solid #ddd;
+      }
+      .piece-view {
+        margin-bottom: 12px;
+      }
+      .piece-view:first-child {
+        margin-top: 4px;
+      }
+      .piece-view .game-block {
+        width: 18px;
+        height: 18px;
       }
       .piece-i {
         background-color: #ec858b;
@@ -45,6 +55,6 @@
   </head>
   <body>
     <div id="main" class="container"></div>
-    <script src="js/main.js"></script>
+    <script src="main.js"></script>
   </body>
 </html>
