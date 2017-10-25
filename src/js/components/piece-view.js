@@ -22,7 +22,7 @@ const PieceView = props => {
     return <tr key={i}>{blocksInRow}</tr>;
   });
   return (
-    <table className="game-board">
+    <table className="piece-view">
       <tbody>{rows}</tbody>
     </table>
   );

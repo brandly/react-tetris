@@ -19,7 +19,16 @@ export default {
       browser: true,
       preferBuiltins: true
     }),
-    commonjs(),
+    commonjs({
+      namedExports: {
+        'node_modules/react/index.js': [
+          'Children',
+          'Component',
+          'PropTypes',
+          'createElement'
+        ]
+      }
+    }),
     globals(),
     builtins()
   ]

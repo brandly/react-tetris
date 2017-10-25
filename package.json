@@ -49,6 +49,7 @@
     "rollup-plugin-node-builtins": "2.1.2",
     "rollup-plugin-node-globals": "1.1.0",
     "rollup-plugin-node-resolve": "3.0.0",
+    "styled-components": "2.2.2",
     "vinyl-source-stream": "^1.0.0",
     "vinyl-transform": "^1.0.0",
     "watchify": "3.9.0"
