@@ -7,7 +7,7 @@ import globals from 'rollup-plugin-node-globals';
 export default {
   input: 'src/js/main.js',
   output: {
-    file: 'dist/js/main.js',
+    file: 'dist/main.js',
     format: 'iife'
   },
   name: 'Tetris',

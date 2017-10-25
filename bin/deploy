@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+set -u
+
+bin="./node_modules/.bin"
+gh_pages_dir="./gh-pages"
+destination="$gh_pages_dir/"
+
+function main {
+  npm run build
+  clean_gh
+  mkdir -p "$destination/"
+  uglify_js_into_gh
+  copy_html_into_gh
+  commit_and_push_to_gh
+}
+
+function clean_gh {
+  rm -rf "${destination:?}/*" 2> /dev/null
+}
+
+function uglify_js_into_gh {
+  echo "Uglify..."
+  "$bin/uglifyjs" --compress --mangle -- dist/main.js > "$destination/main.js"
+}
+
+function copy_html_into_gh {
+  cp dist/*.html "$destination"
+}
+
+function commit_and_push_to_gh {
+  current_commit_hash=$(get_current_commit_hash)
+  current_branch_name=$(get_current_branch_name)
+
+  echo "deploying branch $current_branch_name at $current_commit_hash"
+
+  (
+    cd "$gh_pages_dir"
+    git add .
+    git commit -m "deploying branch $current_branch_name at $current_commit_hash"
+    git push
+  )
+}
+
+function get_current_commit_hash {
+  git rev-parse --short HEAD
+}
+
+function get_current_branch_name {
+  git name-rev --name-only HEAD
+}
+
+main

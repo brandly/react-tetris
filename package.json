@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "flux": "^2.0.1",
-    "gulp": "^3.8.10",
     "keymaster": "^1.6.2",
     "lodash": "^2.4.1",
     "prop-types": "15.6.0"
@@ -18,7 +17,10 @@
     "build:lib": "rollup --config rollup.lib.js",
     "build:app": "rollup --config rollup.app.js",
     "watch": "npm run build:app -- --watch",
-    "lint": "eslint src/"
+    "build": "npm run clean && npm run build:lib && npm run build:app && npm run html",
+    "html": "cp src/index.html dist/",
+    "lint": "eslint src/",
+    "clean": "rm -rf dist/*"
   },
   "author": "Matthew Brandly",
   "license": "MIT",
@@ -29,20 +31,15 @@
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-preset-env": "1.6.1",
     "babel-preset-react": "6.24.1",
-    "babelify": "7.3.0",
-    "browserify": "14.5.0",
     "eslint": "4.9.0",
     "eslint-config-airbnb": "16.1.0",
     "eslint-config-prettier": "2.6.0",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jsx-a11y": "6.0.2",
     "eslint-plugin-react": "7.4.0",
-    "gulp-browserify": "^0.5.0",
-    "gulp-concat": "^2.4.2",
     "prettier": "1.7.4",
     "react": "16.0.0",
     "react-dom": "16.0.0",
-    "reactify": "1.1.1",
     "rollup": "0.50.0",
     "rollup-plugin-babel": "3.0.2",
     "rollup-plugin-commonjs": "8.2.4",
@@ -50,9 +47,7 @@
     "rollup-plugin-node-globals": "1.1.0",
     "rollup-plugin-node-resolve": "3.0.0",
     "styled-components": "2.2.2",
-    "vinyl-source-stream": "^1.0.0",
-    "vinyl-transform": "^1.0.0",
-    "watchify": "3.9.0"
+    "uglify-js": "3.1.5"
   },
   "peerDependencies": {
     "react": "* || ^16.0.0",
