@@ -1,7 +1,7 @@
 import React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
 import styled from 'styled-components';
-import Tetris from './tetris';
+import Tetris from '../src/js/components/tetris';
 
 const Container = styled.div`
   margin: 24px auto 0;
@@ -42,7 +42,7 @@ const MiddleColumn = Column.extend`
   width: 200px;
 `;
 
-const App = () => (
+const GamePanel = () => (
   <Container>
     <Tetris>
       {({ HeldPiece, Gameboard, PieceQueue, points, linesCleared }) => (
@@ -98,4 +98,4 @@ const Digits = ({ children, count = 4 }) => {
     .map((digit, index) => <Digit key={index}>{digit}</Digit>);
 };
 
-export default App;
+export default GamePanel;

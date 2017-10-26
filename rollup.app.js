@@ -5,7 +5,7 @@ import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
 
 export default {
-  input: 'src/js/main.js',
+  input: 'app/main.js',
   output: {
     file: 'dist/main.js',
     format: 'iife'

@@ -19,7 +19,7 @@
     "watch": "npm run build:app -- --watch",
     "build": "npm run clean && npm run build:lib && npm run build:app && npm run html",
     "html": "cp src/index.html dist/",
-    "lint": "eslint src/",
+    "lint": "eslint src/ app/",
     "clean": "rm -rf dist/*"
   },
   "author": "Matthew Brandly",
