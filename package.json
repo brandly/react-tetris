@@ -20,7 +20,8 @@
     "build": "npm run clean && npm run build:lib && npm run build:app && npm run html",
     "html": "cp src/index.html dist/",
     "lint": "eslint src/ app/",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -rf dist/*",
+    "test": "npm run lint"
   },
   "author": "Matthew Brandly",
   "license": "MIT",
