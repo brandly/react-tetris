@@ -2,6 +2,8 @@
 
 > Embed a game of Tetris in your React app
 
+[![Build Status](https://travis-ci.org/brandly/react-tetris.svg?branch=master)](https://travis-ci.org/brandly/react-tetris)
+
 ```shell
 $ npm install --save react-tetris
 ```
