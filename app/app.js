@@ -2,6 +2,7 @@ import React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
 import styled from 'styled-components';
 import GamePanel from './GamePanel';
+import TypedShell from './TypedShell';
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -51,26 +52,13 @@ const SubTitle = styled.h2`
   font-size: 18px;
 `;
 
-const Shell = styled.div`
-  display: inline-block;
-  margin: 18px 0;
-  font-family: Consolas, 'Andale Mono WT', 'Andale Mono', 'Lucida Console',
-    'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono',
-    'Liberation Mono', 'Nimbus Mono L', Monaco, 'Courier New', Courier,
-    monospace;
-  border-radius: 5px;
-  background: #fff;
-  border: 1px solid #eaeaea;
-  padding: 12px 18px;
-`;
-
 const App = () => (
   <Container>
     <LeftHalf>
       <Heading>
         <Title>react tetris</Title>
         <SubTitle>Embed a game of Tetris in your React app</SubTitle>
-        <Shell>$ npm install --save react-tetris</Shell>
+        <TypedShell>npm install --save react-tetris</TypedShell>
       </Heading>
     </LeftHalf>
     <RightHalf>
