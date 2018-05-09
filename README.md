@@ -25,23 +25,16 @@ const App = () =>
         points,
         linesCleared
       }) => {
+        // Render it however you'd like
         return (
           <div>
+            <HeldPiece />
             <div>
-              <HeldPiece />
-              <div>
-                <p>Points: {points}</p>
-                <p>Lines Cleared: {linesCleared}</p>
-              </div>
+              <p>Points: {points}</p>
+              <p>Lines Cleared: {linesCleared}</p>
             </div>
-
-            <div>
-              <Gameboard />
-            </div>
-
-            <div>
-              <PieceQueue />
-            </div>
+            <Gameboard />
+            <PieceQueue />
           </div>
         )
       }}
