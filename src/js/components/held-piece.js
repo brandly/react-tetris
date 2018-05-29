@@ -18,6 +18,10 @@ class HeldPiece extends React.Component {
     PieceStore.addChangeListener(this._onChange);
   }
 
+  componentWillUnmount() {
+    PieceStore.removeChangeListener(this._onChange);
+  }
+
   _onChange = () => {
     this.setState(piece());
   };

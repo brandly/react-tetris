@@ -13,25 +13,42 @@ function gameBoard() {
   };
 }
 
-function bindKeyboardEvents() {
-  key('down', AppActions.moveDown);
-  key('left', AppActions.moveLeft);
-  key('right', AppActions.moveRight);
-  key('space', AppActions.hardDrop);
-  key('z', AppActions.flipCounterclockwise);
-  key('x', AppActions.flipClockwise);
-  key('up', AppActions.flipClockwise);
-
-  key('p', () => {
+const keyboardMap = {
+  down: AppActions.moveDown,
+  left: AppActions.moveLeft,
+  right: AppActions.moveRight,
+  space: AppActions.hardDrop,
+  z: AppActions.flipCounterclockwise,
+  x: AppActions.flipClockwise,
+  up: AppActions.flipClockwise,
+  p: () => {
     if (GameStore.getCurrentState() === states.PLAYING) {
       AppActions.pause();
     } else {
       AppActions.resume();
     }
-  });
+  },
+  c: AppActions.hold,
+  shift: AppActions.hold
+}
 
-  key('c', AppActions.hold);
-  DetectShift.bind(AppActions.hold);
+function addKeyboardEvents() {
+  Object.keys(keyboardMap).forEach(k => {
+    if (k === 'shift') {
+      DetectShift.bind(keyboardMap[k])
+    } else {
+      key(k, keyboardMap[k])
+    }
+  })
+}
+function removeKeyboardEvents() {
+  Object.keys(keyboardMap).forEach(k => {
+    if (k === 'shift') {
+      DetectShift.unbind(keyboardMap[k])
+    } else {
+      key.unbind(k)
+    }
+  })
 }
 
 export default class Gameboard extends React.Component {
@@ -42,8 +59,14 @@ export default class Gameboard extends React.Component {
 
   componentWillMount() {
     GameStore.addChangeListener(this._onChange);
-    bindKeyboardEvents();
+    addKeyboardEvents();
     GameStore.start();
+  }
+
+  componentWillUnmount() {
+    removeKeyboardEvents();
+    GameStore.pause();
+    GameStore.removeChangeListener(this._onChange);
   }
 
   _onChange = () => {
