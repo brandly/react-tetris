@@ -30,25 +30,25 @@ const keyboardMap = {
   },
   c: AppActions.hold,
   shift: AppActions.hold
-}
+};
 
 function addKeyboardEvents() {
   Object.keys(keyboardMap).forEach(k => {
     if (k === 'shift') {
-      DetectShift.bind(keyboardMap[k])
+      DetectShift.bind(keyboardMap[k]);
     } else {
-      key(k, keyboardMap[k])
+      key(k, keyboardMap[k]);
     }
-  })
+  });
 }
 function removeKeyboardEvents() {
   Object.keys(keyboardMap).forEach(k => {
     if (k === 'shift') {
-      DetectShift.unbind(keyboardMap[k])
+      DetectShift.unbind(keyboardMap[k]);
     } else {
-      key.unbind(k)
+      key.unbind(k);
     }
-  })
+  });
 }
 
 export default class Gameboard extends React.Component {
@@ -76,7 +76,7 @@ export default class Gameboard extends React.Component {
   render() {
     const rows = this.state.gameBoard.map((row, i) => {
       const blocksInRow = row.map((block, j) => {
-        const classString = `game-block ${  block || 'block-empty'}`;
+        const classString = `game-block ${block || 'block-empty'}`;
         return <td key={j} className={classString} />;
       });
 
