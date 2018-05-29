@@ -10,7 +10,7 @@
   "dependencies": {
     "flux": "^2.0.1",
     "keymaster": "^1.6.2",
-    "lodash": "^2.4.1",
+    "lodash": "^4.17.10",
     "prop-types": "15.6.0"
   },
   "scripts": {
