@@ -10,21 +10,17 @@ $ npm install --save react-tetris
 
 [view demo](https://brandly.github.io/react-tetris/)
 
+## usage
+
 ```js
 const React = require('react');
 const Tetris = require('react-tetris');
 
-const App = () =>
+const App = () => (
   <div>
     <h1>Tetris</h1>
     <Tetris>
-      {({
-        HeldPiece,
-        Gameboard,
-        PieceQueue,
-        points,
-        linesCleared
-      }) => {
+      {({ HeldPiece, Gameboard, PieceQueue, points, linesCleared }) => {
         // Render it however you'd like
         return (
           <div>
@@ -36,10 +32,11 @@ const App = () =>
             <Gameboard />
             <PieceQueue />
           </div>
-        )
+        );
       }}
     </Tetris>
   </div>
+);
 ```
 
 include some styles
@@ -76,4 +73,12 @@ include some styles
 .piece-preview {
   background-color: #eee;
 }
+```
+
+## dev
+
+```shell
+$ npm run build
+$ npm run watch
+$ npm test
 ```
