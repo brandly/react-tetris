@@ -33,7 +33,7 @@
     "babel-plugin-external-helpers": "6.22.0",
     "babel-plugin-lodash": "3.2.11",
     "babel-plugin-transform-class-properties": "6.24.1",
-    "eslint": "4.9.0",
+    "eslint": "4.18.2",
     "eslint-config-airbnb": "16.1.0",
     "eslint-config-prettier": "2.6.0",
     "eslint-plugin-import": "2.8.0",
