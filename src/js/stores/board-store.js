@@ -3,12 +3,12 @@ import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
 import pieceSetter from '../modules/piece-setter';
 
-const { events } = AppConstants;
+const { events, GAME_HEIGHT, GAME_WIDTH } = AppConstants;
 
 // Two-dimensional array
 // First dimension is height. Second is width.
 const _gameBoard = (function buildGameBoard() {
-  const board = new Array(AppConstants.GAME_HEIGHT);
+  const board = new Array(GAME_HEIGHT);
   for (let y = 0; y < board.length; y++) {
     board[y] = buildGameRow();
   }
@@ -16,7 +16,7 @@ const _gameBoard = (function buildGameBoard() {
 })();
 
 function buildGameRow() {
-  const row = new Array(AppConstants.GAME_WIDTH);
+  const row = new Array(GAME_WIDTH);
   for (let x = 0; x < row.length; x++) {
     // nothing in it
     row[x] = false;
@@ -50,11 +50,7 @@ const BoardStore = _.extend(
           // might not be filled, ya know
           if (block) {
             // make sure it's on the board
-            if (
-              boardX >= 0 &&
-              boardX < AppConstants.GAME_WIDTH &&
-              boardY < AppConstants.GAME_HEIGHT
-            ) {
+            if (boardX >= 0 && boardX < GAME_WIDTH && boardY < GAME_HEIGHT) {
               // make sure it's available
               if (_gameBoard[boardY][boardX]) {
                 // that square is taken by the board already
