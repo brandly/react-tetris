@@ -6,7 +6,7 @@ import BoardStore from './board-store';
 import PieceStore from './piece-store';
 import pieceSetter from '../modules/piece-setter';
 
-const { states, actions } = AppConstants;
+const { states, actions, events } = AppConstants;
 
 let _currentState = null;
 let _interval = null;
@@ -14,6 +14,9 @@ let _interval = null;
 const GameStore = _.extend(
   {
     getGameBoard() {
+      if (_currentState === states.LOST) {
+        return BoardStore.getBoard();
+      }
       const gameBoard = _.cloneDeep(BoardStore.getBoard());
       const pieceData = PieceStore.getPieceData();
       const setter = pieceSetter(gameBoard);
@@ -39,16 +42,26 @@ const GameStore = _.extend(
     },
 
     start() {
-      _interval = global.setInterval(() => {
-        PieceStore.tick();
-      }, 800);
-      _currentState = states.PLAYING;
-      this.emitChange();
+      if (_currentState !== states.LOST) {
+        _interval = global.setInterval(() => {
+          PieceStore.tick();
+        }, 800);
+        _currentState = states.PLAYING;
+        this.emitChange();
+      }
     },
 
     pause() {
+      if (_currentState === states.PLAYING) {
+        global.clearInterval(_interval);
+        _currentState = states.PAUSED;
+        this.emitChange();
+      }
+    },
+
+    onLost() {
       global.clearInterval(_interval);
-      _currentState = states.PAUSED;
+      _currentState = states.LOST;
       this.emitChange();
     },
 
@@ -69,6 +82,10 @@ const GameStore = _.extend(
   },
   EventEmitter
 );
+
+PieceStore.on(events.PLAYER_LOST, () => {
+  GameStore.onLost();
+});
 
 // Game store should emit all changes that occur
 PieceStore.addChangeListener(() => {

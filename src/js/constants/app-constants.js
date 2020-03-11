@@ -14,7 +14,7 @@ export default {
   states: {
     PAUSED: 'PAUSED',
     PLAYING: 'PLAYING',
-    GAME_RESULT: 'GAME_RESULT'
+    LOST: 'LOST'
   },
 
   events: {
