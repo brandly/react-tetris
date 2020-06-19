@@ -1,6 +1,6 @@
 # react-tetris
 
-[![Build Status](https://travis-ci.org/brandly/react-tetris.svg?branch=master)](https://travis-ci.org/brandly/react-tetris)
+[![Build Status](https://github.com/brandly/react-tetris/workflows/.github/workflows/test.yml/badge.svg)
 
 > Embed a game of Tetris in your React app
 
