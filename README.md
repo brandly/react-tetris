@@ -20,20 +20,18 @@ const App = () => (
   <div>
     <h1>Tetris</h1>
     <Tetris>
-      {({ HeldPiece, Gameboard, PieceQueue, points, linesCleared }) => {
+      {({ HeldPiece, Gameboard, PieceQueue, points, linesCleared }) => (
         // Render it however you'd like
-        return (
+        <div>
+          <HeldPiece />
           <div>
-            <HeldPiece />
-            <div>
-              <p>Points: {points}</p>
-              <p>Lines Cleared: {linesCleared}</p>
-            </div>
-            <Gameboard />
-            <PieceQueue />
+            <p>Points: {points}</p>
+            <p>Lines Cleared: {linesCleared}</p>
           </div>
-        );
-      }}
+          <Gameboard />
+          <PieceQueue />
+        </div>
+      )}
     </Tetris>
   </div>
 );
