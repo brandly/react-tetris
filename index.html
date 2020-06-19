@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Tetris</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .game-block {
+        margin: 0;
+        padding: 0;
+        width: 21px;
+        height: 21px;
+        border: 1px solid #ddd;
+      }
+      .piece-view {
+        margin-bottom: 12px;
+      }
+      .piece-view:first-child {
+        margin-top: 4px;
+      }
+      .piece-view .game-block {
+        width: 18px;
+        height: 18px;
+      }
+      .piece-i {
+        background-color: #ec858b;
+      }
+      .piece-j {
+        background-color: #f1b598;
+      }
+      .piece-l {
+        background-color: #f8efae;
+      }
+      .piece-o {
+        background-color: #b5a677;
+      }
+      .piece-s {
+        background-color: #816e56;
+      }
+      .piece-t {
+        background-color: #b77c72;
+      }
+      .piece-z {
+        background-color: #e3be58;
+      }
+      .piece-preview {
+        background-color: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main"></div>
+    <script src="main.js"></script>
+  </body>
+</html>
