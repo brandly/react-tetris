@@ -52,7 +52,7 @@ const BoardStore = _.extend(
             // make sure it's on the board
             if (boardX >= 0 && boardX < GAME_WIDTH && boardY < GAME_HEIGHT) {
               // make sure it's available
-              if (_gameBoard[boardY][boardX]) {
+              if (!_gameBoard[boardY] || _gameBoard[boardY][boardX]) {
                 // that square is taken by the board already
                 return false;
               }

@@ -8,8 +8,10 @@ export default function createPieceSetter(board) {
         if (block) {
           const boardX = position.x + x;
           const boardY = position.y + y;
-          /* eslint-disable no-param-reassign */
-          board[boardY][boardX] = className;
+          if (board[boardY]) {
+            /* eslint-disable no-param-reassign */
+            board[boardY][boardX] = className;
+          }
         }
       }
     }
