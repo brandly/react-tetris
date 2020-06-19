@@ -33,19 +33,21 @@ export default class TypedShell extends React.PureComponent {
     const wait = Math.random() * 200 + 40;
 
     setTimeout(() => {
-      this.setState({
-        lettersToShow: this.state.lettersToShow + 1
-      });
+      const { children } = this.props;
+      const { lettersToShow } = this.state;
+      this.setState((s) => ({
+        lettersToShow: s.lettersToShow + 1
+      }));
 
-      if (this.state.lettersToShow < this.props.children.length) {
+      if (lettersToShow < children.length) {
         this.addLetters();
       }
     }, wait);
   };
 
   render() {
-    return (
-      <Shell>$ {this.props.children.slice(0, this.state.lettersToShow)}</Shell>
-    );
+    const { children } = this.props;
+    const { lettersToShow } = this.state;
+    return <Shell>$ {children.slice(0, lettersToShow)}</Shell>;
   }
 }

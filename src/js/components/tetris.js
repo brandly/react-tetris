@@ -23,7 +23,7 @@ export default class Tetris extends React.Component {
     this.state = getScore();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     ScoreStore.addChangeListener(this._onChange);
   }
 
@@ -36,9 +36,10 @@ export default class Tetris extends React.Component {
   };
 
   render() {
+    const { children } = this.props;
     const { points, linesCleared } = this.state;
 
-    return this.props.children({
+    return children({
       HeldPiece,
       Gameboard,
       PieceQueue,

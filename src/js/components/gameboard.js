@@ -7,7 +7,7 @@ import DetectShift from '../modules/detect-shift';
 
 const { states } = AppConstants;
 
-function gameBoard() {
+function latestGameBoard() {
   return {
     gameBoard: GameStore.getGameBoard()
   };
@@ -54,10 +54,10 @@ function removeKeyboardEvents() {
 export default class Gameboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = gameBoard();
+    this.state = latestGameBoard();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     GameStore.addChangeListener(this._onChange);
     addKeyboardEvents();
     GameStore.start();
@@ -70,21 +70,23 @@ export default class Gameboard extends React.Component {
   }
 
   _onChange = () => {
-    this.setState(gameBoard());
+    this.setState(latestGameBoard());
   };
 
   render() {
-    const rows = this.state.gameBoard.map((row, i) => {
-      const blocksInRow = row.map((block, j) => {
-        const classString = `game-block ${block || 'block-empty'}`;
-        return <td key={j} className={classString} />;
-      });
-
-      return <tr key={i}>{blocksInRow}</tr>;
-    });
+    const { gameBoard } = this.state;
     return (
       <table className="game-board">
-        <tbody>{rows}</tbody>
+        <tbody>
+          {gameBoard.map((row, i) => {
+            const blocksInRow = row.map((block, j) => {
+              const classString = `game-block ${block || 'block-empty'}`;
+              return <td key={j} className={classString} />;
+            });
+
+            return <tr key={i}>{blocksInRow}</tr>;
+          })}
+        </tbody>
       </table>
     );
   }

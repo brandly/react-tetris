@@ -2,7 +2,7 @@ import React from 'react';
 import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
 
-function piece() {
+function latestPiece() {
   return {
     piece: PieceStore.getPieceData().heldPiece
   };
@@ -11,10 +11,10 @@ function piece() {
 class HeldPiece extends React.Component {
   constructor(props) {
     super(props);
-    this.state = piece();
+    this.state = latestPiece();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     PieceStore.addChangeListener(this._onChange);
   }
 
@@ -23,11 +23,12 @@ class HeldPiece extends React.Component {
   }
 
   _onChange = () => {
-    this.setState(piece());
+    this.setState(latestPiece());
   };
 
   render() {
-    return <PieceView piece={this.state.piece} />;
+    const { piece } = this.state;
+    return <PieceView piece={piece} />;
   }
 }
 

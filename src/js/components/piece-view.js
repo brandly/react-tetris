@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import PauseMenu from './pause-menu';
 
-const PieceView = (props) => {
+const PieceView = ({ piece }) => {
   /* eslint-disable prefer-destructuring */
-  const blocks = props.piece.blocks[0];
+  const blocks = piece.blocks[0];
 
   const rows = blocks.map((row, i) => {
     const blocksInRow = row.map((block, j) => {
       let classString = 'game-block ';
 
       if (block) {
-        classString += props.piece.className;
+        classString += piece.className;
       } else {
         classString += 'block-empty';
       }
@@ -30,6 +30,7 @@ const PieceView = (props) => {
 
 PieceView.propTypes = {
   piece: PropTypes.shape({
+    className: PropTypes.string,
     blocks: PropTypes.arrayOf(
       PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
     )

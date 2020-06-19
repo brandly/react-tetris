@@ -2,7 +2,7 @@ import React from 'react';
 import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
 
-function queue() {
+function latestQueue() {
   return {
     queue: PieceStore.getPieceData().queue
   };
@@ -11,10 +11,10 @@ function queue() {
 export default class PieceQueue extends React.Component {
   constructor(props) {
     super(props);
-    this.state = queue();
+    this.state = latestQueue();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     PieceStore.addChangeListener(this._onChange);
   }
 
@@ -23,13 +23,17 @@ export default class PieceQueue extends React.Component {
   }
 
   _onChange = () => {
-    this.setState(queue());
+    this.setState(latestQueue());
   };
 
   render() {
-    const pieces = this.state.queue.map((piece, i) => (
-      <PieceView piece={piece} key={i} />
-    ));
-    return <div>{pieces}</div>;
+    const { queue } = this.state;
+    return (
+      <div>
+        {queue.map((piece, i) => (
+          <PieceView piece={piece} key={i} />
+        ))}
+      </div>
+    );
   }
 }
