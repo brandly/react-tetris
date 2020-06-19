@@ -137,7 +137,7 @@ const PieceStore = _.extend(
       emitChangeIf(_moveDown());
     },
 
-    dispatcherIndex: AppDispatcher.register(payload => {
+    dispatcherIndex: AppDispatcher.register((payload) => {
       const { action } = payload; // this is our action from handleViewAction
       switch (action.actionType) {
         case actions.MOVE_DOWN:

@@ -65,7 +65,7 @@ const GameStore = _.extend(
       this.emitChange();
     },
 
-    dispatcherIndex: AppDispatcher.register(payload => {
+    dispatcherIndex: AppDispatcher.register((payload) => {
       const { action } = payload;
       switch (action.actionType) {
         case actions.PAUSE:

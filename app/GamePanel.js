@@ -50,13 +50,15 @@ const GamePanel = () => (
           <Score>
             <LeftHalf>
               <p>
-                points<br />
+                points
+                <br />
                 <Digits>{points}</Digits>
               </p>
             </LeftHalf>
             <RightHalf>
               <p>
-                lines<br />
+                lines
+                <br />
                 <Digits>{linesCleared}</Digits>
               </p>
             </RightHalf>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import PauseMenu from './pause-menu';
 
-const PieceView = props => {
+const PieceView = (props) => {
   /* eslint-disable prefer-destructuring */
   const blocks = props.piece.blocks[0];
 
@@ -38,7 +38,14 @@ PieceView.propTypes = {
 
 PieceView.defaultProps = {
   piece: {
-    blocks: [[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]]
+    blocks: [
+      [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ]
+    ]
   }
 };
 

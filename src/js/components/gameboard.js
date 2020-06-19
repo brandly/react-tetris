@@ -33,7 +33,7 @@ const keyboardMap = {
 };
 
 function addKeyboardEvents() {
-  Object.keys(keyboardMap).forEach(k => {
+  Object.keys(keyboardMap).forEach((k) => {
     if (k === 'shift') {
       DetectShift.bind(keyboardMap[k]);
     } else {
@@ -42,7 +42,7 @@ function addKeyboardEvents() {
   });
 }
 function removeKeyboardEvents() {
-  Object.keys(keyboardMap).forEach(k => {
+  Object.keys(keyboardMap).forEach((k) => {
     if (k === 'shift') {
       DetectShift.unbind(keyboardMap[k]);
     } else {

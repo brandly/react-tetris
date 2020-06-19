@@ -27,7 +27,7 @@ const ScoreStore = _.extend(
 );
 
 const pointsPerLine = 100;
-BoardStore.on(events.LINE_CLEARED, additionalLines => {
+BoardStore.on(events.LINE_CLEARED, (additionalLines) => {
   linesCleared += additionalLines;
 
   // what's this called?

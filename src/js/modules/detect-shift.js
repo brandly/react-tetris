@@ -2,7 +2,7 @@
 const callbacks = [];
 let isPressed = false;
 
-document.addEventListener('keydown', e => {
+document.addEventListener('keydown', (e) => {
   if (e.shiftKey && !isPressed) {
     isPressed = e.shiftKey;
     callCallbacks();
@@ -11,7 +11,7 @@ document.addEventListener('keydown', e => {
   return true;
 });
 
-document.addEventListener('keyup', e => {
+document.addEventListener('keyup', (e) => {
   if (!e.shiftKey && isPressed) {
     isPressed = e.shiftKey;
   }
@@ -20,7 +20,7 @@ document.addEventListener('keyup', e => {
 });
 
 function callCallbacks() {
-  callbacks.forEach(callback => {
+  callbacks.forEach((callback) => {
     callback();
   });
 }

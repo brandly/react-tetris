@@ -8,7 +8,7 @@ const piecesBucket = [];
 function getRandomPiece() {
   if (piecesBucket.length === 0) {
     // fill the bucket
-    Object.keys(PieceTypes).forEach(pieceType => {
+    Object.keys(PieceTypes).forEach((pieceType) => {
       // 4 is just the number of each type of piece. it's arbitrary, not magic, okay.
       for (let i = 0; i < 4; i++) {
         piecesBucket.push(pieceType);
