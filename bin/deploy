@@ -7,25 +7,23 @@ gh_pages_dir="./gh-pages"
 destination="$gh_pages_dir/"
 
 function main {
+  clean
   npm run build
-  clean_gh
   mkdir -p "$destination/"
-  uglify_js_into_gh
-  copy_html_into_gh
+  uglify_js
+  cp src/index.html dist/
   commit_and_push_to_gh
 }
 
-function clean_gh {
-  rm -rf "${destination:?}/*" 2> /dev/null
+function clean {
+  rm -rf dist/* 2> /dev/null
 }
 
-function uglify_js_into_gh {
+function uglify_js {
   echo "Uglify..."
-  "$bin/uglifyjs" --compress --mangle -- dist/main.js > "$destination/main.js"
-}
-
-function copy_html_into_gh {
-  cp dist/*.html "$destination"
+  cp dist/main.js dist/tmp.js
+  "$bin/uglifyjs" --compress --mangle -- dist/tmp.js > dist/main.js
+  rm dist/tmp.js
 }
 
 function commit_and_push_to_gh {
@@ -33,13 +31,7 @@ function commit_and_push_to_gh {
   current_branch_name=$(get_current_branch_name)
 
   echo "deploying branch $current_branch_name at $current_commit_hash"
-
-  (
-    cd "$gh_pages_dir"
-    git add .
-    git commit -m "deploying branch $current_branch_name at $current_commit_hash"
-    git push
-  )
+  "$bin/gh-pages" --dist dist/
 }
 
 function get_current_commit_hash {
