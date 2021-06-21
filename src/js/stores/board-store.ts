@@ -2,7 +2,13 @@ import _ from 'lodash';
 import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
 import pieceSetter from '../modules/piece-setter';
-import { Piece, Rotation, getBlocks, BLOCK_HEIGHT, BLOCK_WIDTH } from '../modules/piece-types';
+import {
+  Piece,
+  Rotation,
+  getBlocks,
+  BLOCK_HEIGHT,
+  BLOCK_WIDTH
+} from '../modules/piece-types';
 
 const { events, GAME_HEIGHT, GAME_WIDTH } = AppConstants;
 
@@ -11,7 +17,7 @@ type Coords = {
   y: number;
 };
 
-const serializeCoords = ({x, y}: Coords): string => `${x},${y}`
+const serializeCoords = ({ x, y }: Coords): string => `${x},${y}`;
 
 // Two-dimensional array
 // First dimension is height. Second is width.
@@ -37,18 +43,25 @@ const placePiece = (
 ): GameBoard => {
   const block = getBlocks(piece)[rotation];
 
-  const filledCells: Array<Coords | false> = block
-    .flatMap((row, y) =>
-      row.map((cell, x) =>
-        cell ? { x: x + position.x, y: y + position.y } : false
-      )
-    )
+  const filledCells: Array<Coords | false> = block.reduce(
+    (output, row, y) =>
+      output.concat(
+        row.map((cell, x) =>
+          cell ? { x: x + position.x, y: y + position.y } : false
+        )
+      ),
+    [] as Array<Coords | false>
+  );
 
-  const filled: Set<string> = new Set(filledCells.map(value => value ? serializeCoords(value) : '').filter(Boolean))
+  const filled: Set<string> = new Set(
+    filledCells
+      .map((value) => (value ? serializeCoords(value) : ''))
+      .filter(Boolean)
+  );
 
   return board.map((row, y) =>
     row.map((cell, x) => {
-      return filled.has(serializeCoords({ x, y })) ? piece : cell
+      return filled.has(serializeCoords({ x, y })) ? piece : cell;
     })
   );
 };
@@ -63,7 +76,7 @@ const BoardStore = _.extend(
 
     setPiece(piece: Piece, rotation: Rotation, position: Coords) {
       // _setPiece(getBlocks(piece)[rotation], position, piece.className);
-      _gameBoard = placePiece(_gameBoard, piece, rotation, position)
+      _gameBoard = placePiece(_gameBoard, piece, rotation, position);
       BoardStore.clearFullLines();
       BoardStore.emitChange();
     },

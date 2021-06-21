@@ -1,45 +1,47 @@
-import PieceTypes from './piece-types';
+import { Piece, pieces } from './piece-types';
+
+class PieceQueue {
+  minimumLength: number;
+  queue: Piece[];
+  bucket: Piece[];
+  constructor(minimumLength: number) {
+    this.minimumLength = minimumLength;
+    this.queue = [];
+    this.bucket = [];
+    this.fill();
+  }
+
+  fill() {
+    while (this.queue.length < this.minimumLength) {
+      this.queue.push(this.pullFromBucket());
+    }
+  }
+
+  getNext() {
+    const next = this.queue.shift();
+    this.fill();
+    return next;
+  }
+  getQueue() {
+    return this.queue;
+  }
+
+  pullFromBucket(): Piece {
+    if (this.bucket.length === 0) {
+      // fill the bucket
+      pieces.forEach((piece) => {
+        // 4 is just the number of each type of piece. it's arbitrary, not magic, okay.
+        for (let i = 0; i < 4; i++) {
+          this.bucket.push(piece);
+        }
+      });
+    }
+    return this.bucket.splice(randomNumber(this.bucket.length), 1)[0];
+  }
+}
+
+export default PieceQueue;
 
 function randomNumber(under) {
   return Math.floor(Math.random() * under);
 }
-
-const piecesBucket = [];
-function getRandomPiece() {
-  if (piecesBucket.length === 0) {
-    // fill the bucket
-    Object.keys(PieceTypes).forEach((pieceType) => {
-      // 4 is just the number of each type of piece. it's arbitrary, not magic, okay.
-      for (let i = 0; i < 4; i++) {
-        piecesBucket.push(pieceType);
-      }
-    });
-  }
-  const piece = piecesBucket.splice(randomNumber(piecesBucket.length), 1)[0];
-  // might wanna clone
-  return PieceTypes[piece];
-}
-
-function PieceQueue(minimumLength) {
-  this.minimumLength = minimumLength;
-  this.queue = [];
-  this.fill();
-}
-
-PieceQueue.prototype.fill = function fill() {
-  while (this.queue.length < this.minimumLength) {
-    this.queue.push(getRandomPiece());
-  }
-};
-
-PieceQueue.prototype.getNext = function getNext() {
-  const next = this.queue.shift();
-  this.fill();
-  return next;
-};
-
-PieceQueue.prototype.getQueue = function getQueue() {
-  return this.queue;
-};
-
-export default PieceQueue;
