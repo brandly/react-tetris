@@ -189,7 +189,7 @@ const queue = new PieceQueue(5);
 const initialPosition = (() => {
   const somePiece = queue.getNext();
   return {
-    x: AppConstants.GAME_WIDTH / 2 - somePiece.blocks.length / 2,
+    x: AppConstants.GAME_WIDTH / 2 - AppConstants.BLOCK_WIDTH / 2,
     y: 0
   };
 })();

@@ -22,7 +22,10 @@ export default {
     PLAYER_LOST: 'PLAYER_LOST'
   },
 
-  // dimensions in "blocks"
+  // dimensions in "cells"
   GAME_WIDTH: 10,
-  GAME_HEIGHT: 20
+  GAME_HEIGHT: 20,
+  BLOCK_WIDTH: 4,
+  BLOCK_HEIGHT: 4,
+  ROTATION_COUNT: 4
 };

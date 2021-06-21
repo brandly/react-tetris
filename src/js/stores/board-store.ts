@@ -6,8 +6,6 @@ import {
   Piece,
   Rotation,
   getBlocks,
-  BLOCK_HEIGHT,
-  BLOCK_WIDTH
 } from '../modules/piece-types';
 
 const { events, GAME_HEIGHT, GAME_WIDTH } = AppConstants;
@@ -84,8 +82,8 @@ const BoardStore = _.extend(
     isEmptyPosition(piece: Piece, rotation: Rotation, position: Coords) {
       const blocks = getBlocks(piece)[rotation];
 
-      for (let x = 0; x < BLOCK_WIDTH; x++) {
-        for (let y = 0; y < BLOCK_HEIGHT; y++) {
+      for (let x = 0; x < AppConstants.BLOCK_WIDTH; x++) {
+        for (let y = 0; y < AppConstants.BLOCK_HEIGHT; y++) {
           const block = blocks[y][x];
           const boardX = x + position.x;
           const boardY = y + position.y;
