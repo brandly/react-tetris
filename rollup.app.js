@@ -10,7 +10,6 @@ export default {
     file: 'dist/main.js',
     format: 'iife'
   },
-  name: 'Tetris',
   plugins: [
     babel({
       exclude: 'node_modules/**'
