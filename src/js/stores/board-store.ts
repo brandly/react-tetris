@@ -2,15 +2,11 @@ import _ from 'lodash';
 import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
 import pieceSetter from '../modules/piece-setter';
-import {
-  Piece,
-  Rotation,
-  getBlocks,
-} from '../modules/piece-types';
+import { Piece, Rotation, getBlocks } from '../modules/piece-types';
 
 const { events, GAME_HEIGHT, GAME_WIDTH } = AppConstants;
 
-type Coords = {
+export type Coords = {
   x: number;
   y: number;
 };
@@ -66,69 +62,66 @@ const placePiece = (
 
 let _gameBoard: GameBoard = buildGameBoard();
 
-const BoardStore = _.extend(
-  {
-    getBoard(): GameBoard {
-      return _gameBoard;
-    },
+class BoardStore extends EventEmitter {
+  getBoard(): GameBoard {
+    return _gameBoard;
+  }
 
-    setPiece(piece: Piece, rotation: Rotation, position: Coords) {
-      // _setPiece(getBlocks(piece)[rotation], position, piece.className);
-      _gameBoard = placePiece(_gameBoard, piece, rotation, position);
-      BoardStore.clearFullLines();
-      BoardStore.emitChange();
-    },
+  setPiece(piece: Piece, rotation: Rotation, position: Coords) {
+    // _setPiece(getBlocks(piece)[rotation], position, piece.className);
+    _gameBoard = placePiece(_gameBoard, piece, rotation, position);
+    this.clearFullLines();
+    this.emitChange();
+  }
 
-    isEmptyPosition(piece: Piece, rotation: Rotation, position: Coords) {
-      const blocks = getBlocks(piece)[rotation];
+  isEmptyPosition(piece: Piece, rotation: Rotation, position: Coords) {
+    const blocks = getBlocks(piece)[rotation];
 
-      for (let x = 0; x < AppConstants.BLOCK_WIDTH; x++) {
-        for (let y = 0; y < AppConstants.BLOCK_HEIGHT; y++) {
-          const block = blocks[y][x];
-          const boardX = x + position.x;
-          const boardY = y + position.y;
+    for (let x = 0; x < AppConstants.BLOCK_WIDTH; x++) {
+      for (let y = 0; y < AppConstants.BLOCK_HEIGHT; y++) {
+        const block = blocks[y][x];
+        const boardX = x + position.x;
+        const boardY = y + position.y;
 
-          // might not be filled, ya know
-          if (block) {
-            // make sure it's on the board
-            if (boardX >= 0 && boardX < GAME_WIDTH && boardY < GAME_HEIGHT) {
-              // make sure it's available
-              if (!_gameBoard[boardY] || _gameBoard[boardY][boardX]) {
-                // that square is taken by the board already
-                return false;
-              }
-            } else {
-              // there's a square in the block that's off the board
+        // might not be filled, ya know
+        if (block) {
+          // make sure it's on the board
+          if (boardX >= 0 && boardX < GAME_WIDTH && boardY < GAME_HEIGHT) {
+            // make sure it's available
+            if (!_gameBoard[boardY] || _gameBoard[boardY][boardX]) {
+              // that square is taken by the board already
               return false;
             }
+          } else {
+            // there's a square in the block that's off the board
+            return false;
           }
         }
       }
-      return true;
-    },
-
-    clearFullLines() {
-      let linesCleared = 0;
-      for (let y = 0; y < _gameBoard.length; y++) {
-        // it's a full line
-        if (_.every(_gameBoard[y])) {
-          // so rip it out
-          _gameBoard.splice(y, 1);
-          _gameBoard.unshift(buildGameRow());
-          linesCleared += 1;
-        }
-      }
-
-      if (linesCleared) {
-        this.emitClearedLines(linesCleared);
-      }
-    },
-
-    emitClearedLines(count) {
-      this.emit(events.LINE_CLEARED, count);
     }
-  },
-  EventEmitter
-);
+    return true;
+  }
 
-export default BoardStore;
+  clearFullLines() {
+    let linesCleared = 0;
+    for (let y = 0; y < _gameBoard.length; y++) {
+      // it's a full line
+      if (_.every(_gameBoard[y])) {
+        // so rip it out
+        _gameBoard.splice(y, 1);
+        _gameBoard.unshift(buildGameRow());
+        linesCleared += 1;
+      }
+    }
+
+    if (linesCleared) {
+      this.emitClearedLines(linesCleared);
+    }
+  }
+
+  emitClearedLines(count) {
+    this.emit(events.LINE_CLEARED, count);
+  }
+}
+
+export default new BoardStore();
