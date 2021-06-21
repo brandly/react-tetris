@@ -1,16 +1,20 @@
 import _ from 'lodash';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import BoardStore from './board-store';
+import BoardStore, { Coords } from './board-store';
 import EventEmitter from '../modules/event-emitter';
 import PieceQueue from '../modules/piece-queue';
+import { isRotation, Piece, Rotation } from '../modules/piece-types';
+import { isAssertionExpression } from 'typescript';
+
+declare function assert(value: unknown): asserts value;
 
 const { events, actions } = AppConstants;
 
 // local data
-let _piece;
-let _rotation;
-let _position;
+let _piece: Piece | undefined;
+let _rotation: Rotation | undefined;
+let _position: Coords | undefined;
 let _heldPiece;
 let _hasHeldPiece;
 
@@ -55,7 +59,9 @@ function _hardDrop() {
 }
 
 function _flipClockwise() {
-  const newRotation = (_rotation + 1) % _piece.blocks.length;
+  const newRotation = (_rotation + 1) % AppConstants.ROTATION_COUNT;
+  assert(isRotation(newRotation));
+
   if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
     _rotation = newRotation;
     return true;
@@ -65,7 +71,8 @@ function _flipClockwise() {
 
 function _flipCounterclockwise() {
   let newRotation = _rotation - 1;
-  if (newRotation < 0) newRotation += _piece.blocks.length;
+  if (newRotation < 0) newRotation += AppConstants.ROTATION_COUNT;
+  assert(isRotation(newRotation));
 
   if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
     _rotation = newRotation;
