@@ -2,47 +2,77 @@ import _ from 'lodash';
 import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
 import pieceSetter from '../modules/piece-setter';
+import { Piece, Rotation, getBlocks, BLOCK_HEIGHT, BLOCK_WIDTH } from '../modules/piece-types';
 
 const { events, GAME_HEIGHT, GAME_WIDTH } = AppConstants;
 
+type Coords = {
+  x: number;
+  y: number;
+};
+
+const serializeCoords = ({x, y}: Coords): string => `${x},${y}`
+
 // Two-dimensional array
 // First dimension is height. Second is width.
-const _gameBoard = (function buildGameBoard() {
+type GameBoard = Array<Array<Piece | null>>;
+
+function buildGameBoard(): GameBoard {
   const board = new Array(GAME_HEIGHT);
   for (let y = 0; y < board.length; y++) {
     board[y] = buildGameRow();
   }
   return board;
-})();
-
-function buildGameRow() {
-  const row = new Array(GAME_WIDTH);
-  for (let x = 0; x < row.length; x++) {
-    // nothing in it
-    row[x] = false;
-  }
-  return row;
 }
 
-const _setPiece = pieceSetter(_gameBoard);
+function buildGameRow(): Array<null> {
+  return new Array(GAME_WIDTH).fill(null);
+}
+
+const placePiece = (
+  board: GameBoard,
+  piece: Piece,
+  rotation: Rotation,
+  position: Coords
+): GameBoard => {
+  const block = getBlocks(piece)[rotation];
+
+  const filledCells: Array<Coords | false> = block
+    .flatMap((row, y) =>
+      row.map((cell, x) =>
+        cell ? { x: x + position.x, y: y + position.y } : false
+      )
+    )
+
+  const filled: Set<string> = new Set(filledCells.map(value => value ? serializeCoords(value) : '').filter(Boolean))
+
+  return board.map((row, y) =>
+    row.map((cell, x) => {
+      return filled.has(serializeCoords({ x, y })) ? piece : cell
+    })
+  );
+};
+
+let _gameBoard: GameBoard = buildGameBoard();
 
 const BoardStore = _.extend(
   {
-    getBoard() {
+    getBoard(): GameBoard {
       return _gameBoard;
     },
 
-    setPiece(piece, rotation, position) {
-      _setPiece(piece.blocks[rotation], position, piece.className);
+    setPiece(piece: Piece, rotation: Rotation, position: Coords) {
+      // _setPiece(getBlocks(piece)[rotation], position, piece.className);
+      _gameBoard = placePiece(_gameBoard, piece, rotation, position)
       BoardStore.clearFullLines();
       BoardStore.emitChange();
     },
 
-    isEmptyPosition(piece, rotation, position) {
-      const blocks = piece.blocks[rotation];
+    isEmptyPosition(piece: Piece, rotation: Rotation, position: Coords) {
+      const blocks = getBlocks(piece)[rotation];
 
-      for (let x = 0; x < piece.blocks[0].length; x++) {
-        for (let y = 0; y < piece.blocks[0].length; y++) {
+      for (let x = 0; x < BLOCK_WIDTH; x++) {
+        for (let y = 0; y < BLOCK_HEIGHT; y++) {
           const block = blocks[y][x];
           const boardX = x + position.x;
           const boardY = y + position.y;
