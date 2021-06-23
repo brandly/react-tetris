@@ -2,7 +2,7 @@ import _ from 'lodash';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
-import BoardStore from './board-store';
+import BoardStore, { placePiece } from './board-store';
 import PieceStore from './piece-store';
 import pieceSetter from '../modules/piece-setter';
 
@@ -17,23 +17,35 @@ const GameStore = _.extend(
       if (_currentState === states.LOST) {
         return BoardStore.getBoard();
       }
-      const gameBoard = _.cloneDeep(BoardStore.getBoard());
+      let gameBoard = BoardStore.getBoard();
       const pieceData = PieceStore.getPieceData();
       const setter = pieceSetter(gameBoard);
 
       // set the preview
-      setter(
-        pieceData.piece.blocks[pieceData.rotation],
-        pieceData.previewPosition,
-        'piece-preview'
+      gameBoard = placePiece(
+        gameBoard,
+        pieceData.piece,
+        pieceData.rotation,
+        pieceData.previewPosition
       );
+      // setter(
+      //   pieceData.piece.blocks[pieceData.rotation],
+      //   pieceData.previewPosition,
+      //   'piece-preview'
+      // );
 
       // set the actual piece
-      setter(
-        pieceData.piece.blocks[pieceData.rotation],
-        pieceData.position,
-        pieceData.piece.className
+      gameBoard = placePiece(
+        gameBoard,
+        pieceData.piece,
+        pieceData.rotation,
+        pieceData.position
       );
+      // setter(
+      //   pieceData.piece.blocks[pieceData.rotation],
+      //   pieceData.position,
+      //   pieceData.piece.className
+      // );
       return gameBoard;
     },
 

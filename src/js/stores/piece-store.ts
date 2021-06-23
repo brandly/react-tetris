@@ -6,6 +6,7 @@ import EventEmitter from '../modules/event-emitter';
 import PieceQueue from '../modules/piece-queue';
 import { isRotation, Piece, Rotation } from '../modules/piece-types';
 import { isAssertionExpression } from 'typescript';
+import { Position } from 'acorn';
 
 declare function assert(value: unknown): asserts value;
 
@@ -15,13 +16,12 @@ const { events, actions } = AppConstants;
 let _piece: Piece | undefined;
 let _rotation: Rotation | undefined;
 let _position: Coords | undefined;
-let _heldPiece;
+let _heldPiece: Piece | undefined;
 let _hasHeldPiece;
 
 function _moveLeft() {
   // compute new position
-  const newPosition = _.clone(_position);
-  newPosition.x -= 1;
+  const newPosition = { ..._position, x: _position.x - 1 };
   // ask board if it's valid
   if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     // if so, set it as the position and return true
@@ -32,8 +32,7 @@ function _moveLeft() {
 }
 
 function _moveRight() {
-  const newPosition = _.clone(_position);
-  newPosition.x += 1;
+  const newPosition = { ..._position, x: _position.x + 1 };
   if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     _position = newPosition;
     return true;
@@ -123,28 +122,11 @@ function _getHardDropY() {
   return yPosition - 1;
 }
 
-const PieceStore = _.extend(
-  {
-    getPieceData() {
-      return {
-        piece: _piece,
-        rotation: _rotation,
-        position: _position,
-        previewPosition: {
-          x: _position.x,
-          y: _getHardDropY()
-        },
-
-        heldPiece: _heldPiece,
-        queue: queue.getQueue()
-      };
-    },
-
-    tick() {
-      emitChangeIf(_moveDown());
-    },
-
-    dispatcherIndex: AppDispatcher.register((payload) => {
+class PieceStore extends EventEmitter {
+  dispatcherIndex: string;
+  constructor() {
+    super();
+    this.dispatcherIndex = AppDispatcher.register((payload) => {
       const { action } = payload; // this is our action from handleViewAction
       switch (action.actionType) {
         case actions.MOVE_DOWN:
@@ -178,17 +160,36 @@ const PieceStore = _.extend(
 
       // going into a queue of promises so we want to return something positive for a resolve
       return true;
-    }),
+    });
+  }
+  getPieceData() {
+    return {
+      piece: _piece,
+      rotation: _rotation,
+      position: _position,
+      previewPosition: {
+        x: _position.x,
+        y: _getHardDropY()
+      },
 
-    emitPlayerLost() {
-      this.emit(events.PLAYER_LOST);
-    }
-  },
-  EventEmitter
-);
+      heldPiece: _heldPiece,
+      queue: queue.getQueue()
+    };
+  }
+
+  tick() {
+    emitChangeIf(_moveDown());
+  }
+
+  emitPlayerLost() {
+    this.emit(events.PLAYER_LOST);
+  }
+}
+
+const store = new PieceStore();
 
 function emitChangeIf(val) {
-  if (val) PieceStore.emitChange();
+  if (val) store.emitChange();
 }
 
 const queue = new PieceQueue(5);
@@ -208,10 +209,10 @@ function setUpNewPiece() {
   _position = _.clone(initialPosition);
   _hasHeldPiece = false;
   if (!BoardStore.isEmptyPosition(_piece, _rotation, _position)) {
-    PieceStore.emitPlayerLost();
+    store.emitPlayerLost();
   }
-  PieceStore.emitChange();
+  store.emitChange();
 }
 
 setUpNewPiece();
-export default PieceStore;
+export default store;

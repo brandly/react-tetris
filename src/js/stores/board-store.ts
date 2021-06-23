@@ -29,7 +29,7 @@ function buildGameRow(): Array<null> {
   return new Array(GAME_WIDTH).fill(null);
 }
 
-const placePiece = (
+export const placePiece = (
   board: GameBoard,
   piece: Piece,
   rotation: Rotation,
