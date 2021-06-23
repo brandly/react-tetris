@@ -1,13 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { getBlocks, getClassName, Piece } from '../modules/piece-types';
 // import PauseMenu from './pause-menu';
 
 type Props = {
-  piece: Piece
-}
+  piece: Piece;
+};
 
 const PieceView: React.FC<Props> = ({ piece }) => {
+  // TODO: remove this
+  if (!piece) return null;
   /* eslint-disable prefer-destructuring */
   const blocks = getBlocks(piece)[0];
 

@@ -20,6 +20,9 @@ class PieceQueue {
   getNext() {
     const next = this.queue.shift();
     this.fill();
+    if (!next) {
+      throw new Error('Unexpected missing `next`');
+    }
     return next;
   }
   getQueue() {

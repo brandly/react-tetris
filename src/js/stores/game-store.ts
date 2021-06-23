@@ -4,108 +4,110 @@ import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
 import BoardStore, { placePiece } from './board-store';
 import PieceStore from './piece-store';
-import pieceSetter from '../modules/piece-setter';
 
 const { states, actions, events } = AppConstants;
+type State = 'PAUSED' | 'PLAYING' | 'LOST';
 
-let _currentState = null;
-let _interval = null;
+let _currentState: State | null = null;
+let _interval: number | null = null;
 
-const GameStore = _.extend(
-  {
-    getGameBoard() {
-      if (_currentState === states.LOST) {
-        return BoardStore.getBoard();
-      }
-      let gameBoard = BoardStore.getBoard();
-      const pieceData = PieceStore.getPieceData();
-      const setter = pieceSetter(gameBoard);
-
-      // set the preview
-      gameBoard = placePiece(
-        gameBoard,
-        pieceData.piece,
-        pieceData.rotation,
-        pieceData.previewPosition
-      );
-      // setter(
-      //   pieceData.piece.blocks[pieceData.rotation],
-      //   pieceData.previewPosition,
-      //   'piece-preview'
-      // );
-
-      // set the actual piece
-      gameBoard = placePiece(
-        gameBoard,
-        pieceData.piece,
-        pieceData.rotation,
-        pieceData.position
-      );
-      // setter(
-      //   pieceData.piece.blocks[pieceData.rotation],
-      //   pieceData.position,
-      //   pieceData.piece.className
-      // );
-      return gameBoard;
-    },
-
-    getCurrentState() {
-      return _currentState;
-    },
-
-    start() {
-      if (_currentState !== states.LOST) {
-        _interval = global.setInterval(() => {
-          PieceStore.tick();
-        }, 800);
-        _currentState = states.PLAYING;
-        this.emitChange();
-      }
-    },
-
-    pause() {
-      if (_currentState === states.PLAYING) {
-        global.clearInterval(_interval);
-        _currentState = states.PAUSED;
-        this.emitChange();
-      }
-    },
-
-    onLost() {
-      global.clearInterval(_interval);
-      _currentState = states.LOST;
-      this.emitChange();
-    },
-
-    dispatcherIndex: AppDispatcher.register((payload) => {
+class GameStore extends EventEmitter {
+  dispatcherIndex: string;
+  constructor() {
+    super();
+    this.dispatcherIndex = AppDispatcher.register((payload) => {
       const { action } = payload;
       switch (action.actionType) {
         case actions.PAUSE:
-          GameStore.pause();
+          this.pause();
           break;
 
         case actions.RESUME:
-          GameStore.start();
+          this.start();
           break;
       }
 
       return true;
-    })
-  },
-  EventEmitter
-);
+    });
+  }
+
+  getGameBoard() {
+    if (_currentState === states.LOST) {
+      return BoardStore.getBoard();
+    }
+    let gameBoard = BoardStore.getBoard();
+    const pieceData = PieceStore.getPieceData();
+
+    // set the preview
+    gameBoard = placePiece(
+      gameBoard,
+      pieceData.piece,
+      pieceData.rotation,
+      pieceData.previewPosition
+    );
+    // setter(
+    //   pieceData.piece.blocks[pieceData.rotation],
+    //   pieceData.previewPosition,
+    //   'piece-preview'
+    // );
+
+    // set the actual piece
+    gameBoard = placePiece(
+      gameBoard,
+      pieceData.piece,
+      pieceData.rotation,
+      pieceData.position
+    );
+    // setter(
+    //   pieceData.piece.blocks[pieceData.rotation],
+    //   pieceData.position,
+    //   pieceData.piece.className
+    // );
+    return gameBoard;
+  }
+
+  getCurrentState() {
+    return _currentState;
+  }
+
+  start() {
+    if (_currentState !== states.LOST) {
+      _interval = window.setInterval(() => {
+        PieceStore.tick();
+      }, 800);
+      _currentState = 'PLAYING';
+      this.emitChange();
+    }
+  }
+
+  pause() {
+    if (_currentState === states.PLAYING) {
+      _interval && window.clearInterval(_interval);
+      _currentState = 'PAUSED';
+      this.emitChange();
+    }
+  }
+
+  onLost() {
+    _interval && window.clearInterval(_interval);
+    _currentState = 'LOST';
+    this.emitChange();
+  }
+}
+
+const store = new GameStore();
 
 PieceStore.on(events.PLAYER_LOST, () => {
-  GameStore.onLost();
+  store.onLost();
 });
 
 // Game store should emit all changes that occur
 PieceStore.addChangeListener(() => {
-  GameStore.emitChange();
+  store.emitChange();
 });
 
 BoardStore.addChangeListener(() => {
-  GameStore.emitChange();
+  store.emitChange();
 });
 
-export default GameStore;
+export default store;

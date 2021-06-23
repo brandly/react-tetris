@@ -5,8 +5,6 @@ import BoardStore, { Coords } from './board-store';
 import EventEmitter from '../modules/event-emitter';
 import PieceQueue from '../modules/piece-queue';
 import { isRotation, Piece, Rotation } from '../modules/piece-types';
-import { isAssertionExpression } from 'typescript';
-import { Position } from 'acorn';
 
 declare function assert(value: unknown): asserts value;
 
@@ -15,15 +13,19 @@ const { events, actions } = AppConstants;
 // local data
 let _piece: Piece | undefined;
 let _rotation: Rotation | undefined;
-let _position: Coords | undefined;
+let _position: Coords = { x: 0, y: 0 };
 let _heldPiece: Piece | undefined;
-let _hasHeldPiece;
+let _hasHeldPiece = false;
 
 function _moveLeft() {
   // compute new position
   const newPosition = { ..._position, x: _position.x - 1 };
   // ask board if it's valid
-  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+  if (
+    _piece &&
+    _rotation &&
+    BoardStore.isEmptyPosition(_piece, _rotation, newPosition)
+  ) {
     // if so, set it as the position and return true
     _position = newPosition;
     return true;
@@ -33,7 +35,11 @@ function _moveLeft() {
 
 function _moveRight() {
   const newPosition = { ..._position, x: _position.x + 1 };
-  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+  if (
+    _piece &&
+    _rotation &&
+    BoardStore.isEmptyPosition(_piece, _rotation, newPosition)
+  ) {
     _position = newPosition;
     return true;
   }
@@ -44,7 +50,11 @@ function _moveDown() {
   const newPosition = _.clone(_position);
   newPosition.y += 1;
 
-  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+  if (
+    _piece &&
+    _rotation &&
+    BoardStore.isEmptyPosition(_piece, _rotation, newPosition)
+  ) {
     _position = newPosition;
     return true;
   }
@@ -58,10 +68,14 @@ function _hardDrop() {
 }
 
 function _flipClockwise() {
-  const newRotation = (_rotation + 1) % AppConstants.ROTATION_COUNT;
+  const newRotation = ((_rotation ?? 0) + 1) % AppConstants.ROTATION_COUNT;
   assert(isRotation(newRotation));
 
-  if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
+  if (
+    _piece &&
+    _rotation &&
+    BoardStore.isEmptyPosition(_piece, newRotation, _position)
+  ) {
     _rotation = newRotation;
     return true;
   }
@@ -69,11 +83,15 @@ function _flipClockwise() {
 }
 
 function _flipCounterclockwise() {
-  let newRotation = _rotation - 1;
+  let newRotation = (_rotation ?? 0) - 1;
   if (newRotation < 0) newRotation += AppConstants.ROTATION_COUNT;
   assert(isRotation(newRotation));
 
-  if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
+  if (
+    _piece &&
+    _rotation &&
+    BoardStore.isEmptyPosition(_piece, newRotation, _position)
+  ) {
     _rotation = newRotation;
     return true;
   }
@@ -81,14 +99,17 @@ function _flipCounterclockwise() {
 }
 
 function _lockInPiece() {
-  BoardStore.setPiece(_piece, _rotation, _position);
-  setUpNewPiece();
+  if (_piece && _rotation) {
+    BoardStore.setPiece(_piece, _rotation, _position);
+    setUpNewPiece();
+  }
 }
 
 function _holdPiece() {
   if (_hasHeldPiece) return false;
   if (
     _heldPiece &&
+    _rotation &&
     !BoardStore.isEmptyPosition(_heldPiece, _rotation, _position)
   ) {
     return false;
@@ -111,6 +132,8 @@ function _getHardDropY() {
   let yPosition = _position.y;
 
   while (
+    _piece &&
+    _rotation &&
     BoardStore.isEmptyPosition(_piece, _rotation, {
       y: yPosition,
       x: _position.x
@@ -142,7 +165,7 @@ class PieceStore extends EventEmitter {
           break;
 
         case actions.HARD_DROP:
-          emitChangeIf(_hardDrop());
+          _hardDrop();
           break;
 
         case actions.FLIP_CLOCKWISE:
@@ -188,14 +211,13 @@ class PieceStore extends EventEmitter {
 
 const store = new PieceStore();
 
-function emitChangeIf(val) {
+function emitChangeIf(val: boolean) {
   if (val) store.emitChange();
 }
 
 const queue = new PieceQueue(5);
 
 const initialPosition = (() => {
-  const somePiece = queue.getNext();
   return {
     x: AppConstants.GAME_WIDTH / 2 - AppConstants.BLOCK_WIDTH / 2,
     y: 0

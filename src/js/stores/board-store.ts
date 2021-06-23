@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
-import pieceSetter from '../modules/piece-setter';
 import { Piece, Rotation, getBlocks } from '../modules/piece-types';
 
 const { events, GAME_HEIGHT, GAME_WIDTH } = AppConstants;

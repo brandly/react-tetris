@@ -1,66 +1,63 @@
-import AppConstants from '../constants/app-constants';
 import AppDispatcher from '../dispatchers/app-dispatcher';
-
-const { actions } = AppConstants;
 
 const AppActions = {
   moveDown(piece) {
     AppDispatcher.handleViewAction({
-      actionType: actions.MOVE_DOWN,
+      actionType: 'MOVE_DOWN',
       piece
     });
   },
 
   moveLeft(piece) {
     AppDispatcher.handleViewAction({
-      actionType: actions.MOVE_LEFT,
+      actionType: 'MOVE_LEFT',
       piece
     });
   },
 
   moveRight(piece) {
     AppDispatcher.handleViewAction({
-      actionType: actions.MOVE_RIGHT,
+      actionType: 'MOVE_RIGHT',
       piece
     });
   },
 
   hardDrop(piece) {
     AppDispatcher.handleViewAction({
-      actionType: actions.HARD_DROP,
+      actionType: 'HARD_DROP',
       piece
     });
   },
 
   flipClockwise(piece) {
     AppDispatcher.handleViewAction({
-      actionType: actions.FLIP_CLOCKWISE,
+      actionType: 'FLIP_CLOCKWISE',
       piece
     });
   },
 
   flipCounterclockwise(piece) {
     AppDispatcher.handleViewAction({
-      actionType: actions.FLIP_COUNTERCLOCKWISE,
+      actionType: 'FLIP_COUNTERCLOCKWISE',
       piece
     });
   },
 
   pause() {
     AppDispatcher.handleViewAction({
-      actionType: actions.PAUSE
+      actionType: 'PAUSE'
     });
   },
 
   resume() {
     AppDispatcher.handleViewAction({
-      actionType: actions.RESUME
+      actionType: 'RESUME'
     });
   },
 
   hold() {
     AppDispatcher.handleViewAction({
-      actionType: actions.HOLD
+      actionType: 'HOLD'
     });
   }
 };

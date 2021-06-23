@@ -8,23 +8,22 @@ const { events } = AppConstants;
 let points = 0;
 let linesCleared = 0;
 
-const ScoreStore = _.extend(
-  {
-    getPoints() {
-      return points;
-    },
+class ScoreStore extends EventEmitter {
+  getPoints() {
+    return points;
+  }
 
-    getLinesCleared() {
-      return linesCleared;
-    },
+  getLinesCleared() {
+    return linesCleared;
+  }
 
-    addPoints(additional) {
-      points += additional;
-      this.emitChange();
-    }
-  },
-  EventEmitter
-);
+  addPoints(additional: number): void {
+    points += additional;
+    this.emitChange();
+  }
+}
+
+const store = new ScoreStore();
 
 const pointsPerLine = 100;
 BoardStore.on(events.LINE_CLEARED, (additionalLines) => {
@@ -32,10 +31,10 @@ BoardStore.on(events.LINE_CLEARED, (additionalLines) => {
 
   // what's this called?
   if (additionalLines === 4) {
-    ScoreStore.addPoints(pointsPerLine * 10);
+    store.addPoints(pointsPerLine * 10);
   } else {
-    ScoreStore.addPoints(additionalLines * pointsPerLine);
+    store.addPoints(additionalLines * pointsPerLine);
   }
 });
 
-export default ScoreStore;
+export default store;
