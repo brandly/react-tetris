@@ -33,7 +33,6 @@ export default class HeldPiece extends React.Component<{}, State> {
 
   render() {
     const { piece } = this.state;
-    if (!piece) return null;
     return <PieceView piece={piece} />;
   }
 }
