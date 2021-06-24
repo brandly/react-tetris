@@ -3,7 +3,7 @@ import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';
 import { Piece, Rotation, getBlocks } from '../modules/piece-types';
 
-const { events, GAME_HEIGHT, GAME_WIDTH } = AppConstants;
+const { GAME_HEIGHT, GAME_WIDTH } = AppConstants;
 
 export type Coords = {
   x: number;
@@ -14,7 +14,7 @@ const serializeCoords = ({ x, y }: Coords): string => `${x},${y}`;
 
 // Two-dimensional array
 // First dimension is height. Second is width.
-type GameBoard = Array<Array<Piece | null>>;
+export type GameBoard = Array<Array<Piece | null>>;
 
 function buildGameBoard(): GameBoard {
   const board = new Array(GAME_HEIGHT);
@@ -118,8 +118,8 @@ class BoardStore extends EventEmitter {
     }
   }
 
-  emitClearedLines(count) {
-    this.emit(events.LINE_CLEARED, count);
+  emitClearedLines(count: number) {
+    this.emit('LINE_CLEARED', count);
   }
 }
 

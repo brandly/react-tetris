@@ -6,13 +6,15 @@ import EventEmitter from '../modules/event-emitter';
 import PieceQueue from '../modules/piece-queue';
 import { isRotation, Piece, Rotation } from '../modules/piece-types';
 
-declare function assert(value: unknown): asserts value;
+function assert(value: unknown): asserts value {
+  if (!value) throw new Error('assertion failed');
+}
 
 const { events, actions } = AppConstants;
 
 // local data
 let _piece: Piece | undefined;
-let _rotation: Rotation | undefined;
+let _rotation: Rotation = 0;
 let _position: Coords = { x: 0, y: 0 };
 let _heldPiece: Piece | undefined;
 let _hasHeldPiece = false;
@@ -21,11 +23,7 @@ function _moveLeft() {
   // compute new position
   const newPosition = { ..._position, x: _position.x - 1 };
   // ask board if it's valid
-  if (
-    _piece &&
-    _rotation &&
-    BoardStore.isEmptyPosition(_piece, _rotation, newPosition)
-  ) {
+  if (_piece && BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     // if so, set it as the position and return true
     _position = newPosition;
     return true;
@@ -35,11 +33,7 @@ function _moveLeft() {
 
 function _moveRight() {
   const newPosition = { ..._position, x: _position.x + 1 };
-  if (
-    _piece &&
-    _rotation &&
-    BoardStore.isEmptyPosition(_piece, _rotation, newPosition)
-  ) {
+  if (_piece && BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     _position = newPosition;
     return true;
   }
@@ -50,11 +44,7 @@ function _moveDown() {
   const newPosition = _.clone(_position);
   newPosition.y += 1;
 
-  if (
-    _piece &&
-    _rotation &&
-    BoardStore.isEmptyPosition(_piece, _rotation, newPosition)
-  ) {
+  if (_piece && BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     _position = newPosition;
     return true;
   }
@@ -71,11 +61,7 @@ function _flipClockwise() {
   const newRotation = ((_rotation ?? 0) + 1) % AppConstants.ROTATION_COUNT;
   assert(isRotation(newRotation));
 
-  if (
-    _piece &&
-    _rotation &&
-    BoardStore.isEmptyPosition(_piece, newRotation, _position)
-  ) {
+  if (_piece && BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
     _rotation = newRotation;
     return true;
   }
@@ -87,11 +73,7 @@ function _flipCounterclockwise() {
   if (newRotation < 0) newRotation += AppConstants.ROTATION_COUNT;
   assert(isRotation(newRotation));
 
-  if (
-    _piece &&
-    _rotation &&
-    BoardStore.isEmptyPosition(_piece, newRotation, _position)
-  ) {
+  if (_piece && BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
     _rotation = newRotation;
     return true;
   }
@@ -99,7 +81,7 @@ function _flipCounterclockwise() {
 }
 
 function _lockInPiece() {
-  if (_piece && _rotation) {
+  if (_piece) {
     BoardStore.setPiece(_piece, _rotation, _position);
     setUpNewPiece();
   }
@@ -109,7 +91,6 @@ function _holdPiece() {
   if (_hasHeldPiece) return false;
   if (
     _heldPiece &&
-    _rotation &&
     !BoardStore.isEmptyPosition(_heldPiece, _rotation, _position)
   ) {
     return false;
@@ -133,7 +114,6 @@ function _getHardDropY() {
 
   while (
     _piece &&
-    _rotation &&
     BoardStore.isEmptyPosition(_piece, _rotation, {
       y: yPosition,
       x: _position.x
@@ -151,7 +131,7 @@ class PieceStore extends EventEmitter {
     super();
     this.dispatcherIndex = AppDispatcher.register((payload) => {
       const { action } = payload; // this is our action from handleViewAction
-      switch (action.actionType) {
+      switch (action) {
         case actions.MOVE_DOWN:
           emitChangeIf(_moveDown());
           break;

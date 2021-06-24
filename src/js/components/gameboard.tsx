@@ -4,16 +4,20 @@ import AppActions from '../actions/app-actions';
 import GameStore from '../stores/game-store';
 import AppConstants from '../constants/app-constants';
 import DetectShift from '../modules/detect-shift';
+import { GameBoard } from '../stores/board-store';
+import { getClassName } from '../modules/piece-types';
 
 const { states } = AppConstants;
+type State = { gameBoard: GameBoard };
 
-function latestGameBoard() {
+function latestGameBoard(): State {
   return {
     gameBoard: GameStore.getGameBoard()
   };
 }
 
-const keyboardMap = {
+type KeyboardMap = Record<string, () => void>;
+const keyboardMap: KeyboardMap = {
   down: AppActions.moveDown,
   left: AppActions.moveLeft,
   right: AppActions.moveRight,
@@ -33,7 +37,7 @@ const keyboardMap = {
 };
 
 function addKeyboardEvents() {
-  Object.keys(keyboardMap).forEach((k) => {
+  Object.keys(keyboardMap).forEach((k: keyof KeyboardMap) => {
     if (k === 'shift') {
       DetectShift.bind(keyboardMap[k]);
     } else {
@@ -51,8 +55,8 @@ function removeKeyboardEvents() {
   });
 }
 
-export default class Gameboard extends React.Component {
-  constructor(props) {
+export default class GameboardView extends React.Component<{}, State> {
+  constructor(props: {}) {
     super(props);
     this.state = latestGameBoard();
   }
@@ -74,13 +78,15 @@ export default class Gameboard extends React.Component {
   };
 
   render() {
-    const { gameBoard } = this.state;
+    const { gameBoard } = this.state as State;
     return (
       <table className="game-board">
         <tbody>
           {gameBoard.map((row, i) => {
             const blocksInRow = row.map((block, j) => {
-              const classString = `game-block ${block || 'block-empty'}`;
+              const classString = `game-block ${
+                block ? getClassName(block) : 'block-empty'
+              }`;
               return <td key={j} className={classString} />;
             });
 

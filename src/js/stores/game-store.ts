@@ -17,7 +17,7 @@ class GameStore extends EventEmitter {
     super();
     this.dispatcherIndex = AppDispatcher.register((payload) => {
       const { action } = payload;
-      switch (action.actionType) {
+      switch (action) {
         case actions.PAUSE:
           this.pause();
           break;
@@ -39,30 +39,25 @@ class GameStore extends EventEmitter {
     const pieceData = PieceStore.getPieceData();
 
     // set the preview
-    gameBoard = placePiece(
-      gameBoard,
-      pieceData.piece,
-      pieceData.rotation,
-      pieceData.previewPosition
-    );
-    // setter(
-    //   pieceData.piece.blocks[pieceData.rotation],
-    //   pieceData.previewPosition,
-    //   'piece-preview'
-    // );
+    if (pieceData.piece) {
+      gameBoard = placePiece(
+        gameBoard,
+        pieceData.piece,
+        pieceData.rotation,
+        pieceData.previewPosition
+      );
+    }
 
     // set the actual piece
-    gameBoard = placePiece(
-      gameBoard,
-      pieceData.piece,
-      pieceData.rotation,
-      pieceData.position
-    );
-    // setter(
-    //   pieceData.piece.blocks[pieceData.rotation],
-    //   pieceData.position,
-    //   pieceData.piece.className
-    // );
+    if (pieceData.piece) {
+      gameBoard = placePiece(
+        gameBoard,
+        pieceData.piece,
+        pieceData.rotation,
+        pieceData.position
+      );
+    }
+
     return gameBoard;
   }
 

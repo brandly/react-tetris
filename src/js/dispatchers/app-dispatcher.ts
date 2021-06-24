@@ -1,5 +1,4 @@
 import { Dispatcher } from 'flux';
-import { Piece } from '../modules/piece-types';
 
 class AppDispatcher extends Dispatcher<{
   source: 'VIEW_ACTION';
@@ -17,38 +16,14 @@ class AppDispatcher extends Dispatcher<{
 }
 
 export type Action =
-  | {
-      actionType: 'MOVE_DOWN';
-      piece: Piece;
-    }
-  | {
-      actionType: 'MOVE_LEFT';
-      piece: Piece;
-    }
-  | {
-      actionType: 'MOVE_RIGHT';
-      piece: Piece;
-    }
-  | {
-      actionType: 'HARD_DROP';
-      piece: Piece;
-    }
-  | {
-      actionType: 'FLIP_CLOCKWISE';
-      piece: Piece;
-    }
-  | {
-      actionType: 'FLIP_COUNTERCLOCKWISE';
-      piece: Piece;
-    }
-  | {
-      actionType: 'PAUSE';
-    }
-  | {
-      actionType: 'RESUME';
-    }
-  | {
-      actionType: 'HOLD';
-    };
+  | 'MOVE_DOWN'
+  | 'MOVE_LEFT'
+  | 'MOVE_RIGHT'
+  | 'HARD_DROP'
+  | 'FLIP_CLOCKWISE'
+  | 'FLIP_COUNTERCLOCKWISE'
+  | 'PAUSE'
+  | 'RESUME'
+  | 'HOLD';
 
 export default new AppDispatcher();

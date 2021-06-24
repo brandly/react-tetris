@@ -45,6 +45,6 @@ class PieceQueue {
 
 export default PieceQueue;
 
-function randomNumber(under) {
+function randomNumber(under: number): number {
   return Math.floor(Math.random() * under);
 }

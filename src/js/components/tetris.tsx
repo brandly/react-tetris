@@ -1,24 +1,36 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 // import PauseMenu from './pause-menu';
 import Gameboard from './gameboard';
 import ScoreStore from '../stores/score-store';
 import HeldPiece from './held-piece';
 import PieceQueue from './piece-queue';
 
-function getScore() {
+type RenderFn = (params: {
+  HeldPiece: React.ComponentType;
+  Gameboard: React.ComponentType;
+  PieceQueue: React.ComponentType;
+  points: number;
+  linesCleared: number;
+}) => React.ReactElement;
+
+type Props = {
+  children: RenderFn;
+};
+
+type State = {
+  points: number;
+  linesCleared: number;
+};
+
+function getScore(): State {
   return {
     points: ScoreStore.getPoints(),
     linesCleared: ScoreStore.getLinesCleared()
   };
 }
 
-export default class Tetris extends React.Component {
-  static propTypes = {
-    children: PropTypes.func.isRequired
-  };
-
-  constructor(props) {
+export default class Tetris extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = getScore();
   }

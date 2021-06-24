@@ -1,15 +1,20 @@
 import React from 'react';
+import { Piece } from '../modules/piece-types';
 import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
 
-function latestQueue() {
+type State = {
+  queue: Piece[];
+};
+
+function latestQueue(): State {
   return {
     queue: PieceStore.getPieceData().queue
   };
 }
 
-export default class PieceQueue extends React.Component {
-  constructor(props) {
+export default class PieceQueue extends React.Component<{}, State> {
+  constructor(props: {}) {
     super(props);
     this.state = latestQueue();
   }
@@ -27,7 +32,7 @@ export default class PieceQueue extends React.Component {
   };
 
   render() {
-    const { queue } = this.state;
+    const { queue } = this.state as State;
     return (
       <div>
         {queue.map((piece, i) => (

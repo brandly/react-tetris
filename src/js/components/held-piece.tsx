@@ -1,15 +1,20 @@
 import React from 'react';
+import { Piece } from '../modules/piece-types';
 import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
 
-function latestPiece() {
+type State = {
+  piece: Piece | undefined;
+};
+
+function latestPiece(): State {
   return {
     piece: PieceStore.getPieceData().heldPiece
   };
 }
 
-class HeldPiece extends React.Component {
-  constructor(props) {
+export default class HeldPiece extends React.Component<{}, State> {
+  constructor(props: {}) {
     super(props);
     this.state = latestPiece();
   }
@@ -28,8 +33,7 @@ class HeldPiece extends React.Component {
 
   render() {
     const { piece } = this.state;
+    if (!piece) return null;
     return <PieceView piece={piece} />;
   }
 }
-
-export default HeldPiece;

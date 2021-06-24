@@ -21,7 +21,7 @@
     "html": "cp src/index.html dist/",
     "lint": "eslint src/ app/",
     "clean": "rm -rf dist/*",
-    "test": "npm run lint"
+    "test": "tsc --noEmit && npm run lint"
   },
   "author": "Matthew Brandly",
   "license": "MIT",
@@ -31,6 +31,7 @@
     "@babel/preset-env": "7.10.2",
     "@babel/preset-react": "7.10.1",
     "@rollup/plugin-typescript": "8.2.1",
+    "@types/events": "3.0.0",
     "@types/flux": "3.1.9",
     "@types/lodash": "4.14.170",
     "@types/react": "17.0.11",

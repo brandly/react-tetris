@@ -1,64 +1,40 @@
 import AppDispatcher from '../dispatchers/app-dispatcher';
 
 const AppActions = {
-  moveDown(piece) {
-    AppDispatcher.handleViewAction({
-      actionType: 'MOVE_DOWN',
-      piece
-    });
+  moveDown() {
+    AppDispatcher.handleViewAction('MOVE_DOWN');
   },
 
-  moveLeft(piece) {
-    AppDispatcher.handleViewAction({
-      actionType: 'MOVE_LEFT',
-      piece
-    });
+  moveLeft() {
+    AppDispatcher.handleViewAction('MOVE_LEFT');
   },
 
-  moveRight(piece) {
-    AppDispatcher.handleViewAction({
-      actionType: 'MOVE_RIGHT',
-      piece
-    });
+  moveRight() {
+    AppDispatcher.handleViewAction('MOVE_RIGHT');
   },
 
-  hardDrop(piece) {
-    AppDispatcher.handleViewAction({
-      actionType: 'HARD_DROP',
-      piece
-    });
+  hardDrop() {
+    AppDispatcher.handleViewAction('HARD_DROP');
   },
 
-  flipClockwise(piece) {
-    AppDispatcher.handleViewAction({
-      actionType: 'FLIP_CLOCKWISE',
-      piece
-    });
+  flipClockwise() {
+    AppDispatcher.handleViewAction('FLIP_CLOCKWISE');
   },
 
-  flipCounterclockwise(piece) {
-    AppDispatcher.handleViewAction({
-      actionType: 'FLIP_COUNTERCLOCKWISE',
-      piece
-    });
+  flipCounterclockwise() {
+    AppDispatcher.handleViewAction('FLIP_COUNTERCLOCKWISE');
   },
 
   pause() {
-    AppDispatcher.handleViewAction({
-      actionType: 'PAUSE'
-    });
+    AppDispatcher.handleViewAction('PAUSE');
   },
 
   resume() {
-    AppDispatcher.handleViewAction({
-      actionType: 'RESUME'
-    });
+    AppDispatcher.handleViewAction('RESUME');
   },
 
   hold() {
-    AppDispatcher.handleViewAction({
-      actionType: 'HOLD'
-    });
+    AppDispatcher.handleViewAction('HOLD');
   }
 };
 
