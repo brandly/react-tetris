@@ -206,7 +206,7 @@ export const getBlocks = (piece: Piece) => {
   }
 };
 
-export const getClassName = (piece: Piece) => {
+export const getClassName = (piece: Piece | 'ghost') => {
   switch (piece) {
     case 'I':
       return 'piece-i';
@@ -222,5 +222,10 @@ export const getClassName = (piece: Piece) => {
       return 'piece-t';
     case 'Z':
       return 'piece-z';
+    case 'ghost':
+      return 'piece-preview';
+    default:
+      const exhaustiveCheck: never = piece;
+      throw new Error(`Unhandled piece case: ${exhaustiveCheck}`);
   }
 };

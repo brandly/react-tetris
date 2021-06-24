@@ -14,7 +14,7 @@ const serializeCoords = ({ x, y }: Coords): string => `${x},${y}`;
 
 // Two-dimensional array
 // First dimension is height. Second is width.
-export type GameBoard = Array<Array<Piece | null>>;
+export type GameBoard = Array<Array<Piece | 'ghost' | null>>;
 
 function buildGameBoard(): GameBoard {
   const board = new Array(GAME_HEIGHT);
@@ -32,7 +32,8 @@ export const placePiece = (
   board: GameBoard,
   piece: Piece,
   rotation: Rotation,
-  position: Coords
+  position: Coords,
+  isGhost = false
 ): GameBoard => {
   const block = getBlocks(piece)[rotation];
 
@@ -52,9 +53,11 @@ export const placePiece = (
       .filter(Boolean)
   );
 
+  const value = isGhost ? 'ghost' : piece;
+
   return board.map((row, y) =>
     row.map((cell, x) => {
-      return filled.has(serializeCoords({ x, y })) ? piece : cell;
+      return filled.has(serializeCoords({ x, y })) ? value : cell;
     })
   );
 };

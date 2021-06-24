@@ -44,7 +44,8 @@ class GameStore extends EventEmitter {
         gameBoard,
         pieceData.piece,
         pieceData.rotation,
-        pieceData.previewPosition
+        pieceData.previewPosition,
+        true
       );
     }
 
