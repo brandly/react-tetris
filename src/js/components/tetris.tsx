@@ -17,46 +17,27 @@ type Props = {
   children: RenderFn;
 };
 
-type State = {
-  points: number;
-  linesCleared: number;
-};
+export default function Tetris({ children }: Props) {
+  const [points, setPoints] = React.useState(ScoreStore.getPoints());
+  const [linesCleared, setLinesCleared] = React.useState(
+    ScoreStore.getLinesCleared()
+  );
 
-function getScore(): State {
-  return {
-    points: ScoreStore.getPoints(),
-    linesCleared: ScoreStore.getLinesCleared()
-  };
-}
+  React.useEffect(() => {
+    const onChange = () => {
+      setPoints(ScoreStore.getPoints());
+      setLinesCleared(ScoreStore.getLinesCleared());
+      return () => ScoreStore.removeChangeListener(onChange);
+    };
 
-export default class Tetris extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = getScore();
-  }
+    ScoreStore.addChangeListener(onChange);
+  }, []);
 
-  componentDidMount() {
-    ScoreStore.addChangeListener(this._onChange);
-  }
-
-  componentWillUnmount() {
-    ScoreStore.removeChangeListener(this._onChange);
-  }
-
-  _onChange = () => {
-    this.setState(getScore());
-  };
-
-  render() {
-    const { children } = this.props;
-    const { points, linesCleared } = this.state;
-
-    return children({
-      HeldPiece,
-      Gameboard,
-      PieceQueue,
-      points,
-      linesCleared
-    });
-  }
+  return children({
+    HeldPiece,
+    Gameboard,
+    PieceQueue,
+    points,
+    linesCleared
+  });
 }

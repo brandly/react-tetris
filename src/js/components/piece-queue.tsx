@@ -3,42 +3,29 @@ import { Piece } from '../modules/piece-types';
 import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
 
-type State = {
-  queue: Piece[];
-};
+type State = Piece[];
 
 function latestQueue(): State {
-  return {
-    queue: PieceStore.getPieceData().queue
-  };
+  return PieceStore.getPieceData().queue;
 }
 
-export default class PieceQueue extends React.Component<{}, State> {
-  constructor(props: {}) {
-    super(props);
-    this.state = latestQueue();
-  }
+export default function PieceQueue() {
+  const [queue, setQueue] = React.useState(latestQueue());
 
-  componentDidMount() {
-    PieceStore.addChangeListener(this._onChange);
-  }
+  React.useEffect(() => {
+    const onChange = () => {
+      setQueue(latestQueue());
+    };
 
-  componentWillUnmount() {
-    PieceStore.removeChangeListener(this._onChange);
-  }
+    PieceStore.addChangeListener(onChange);
+    return () => PieceStore.removeChangeListener(onChange);
+  }, []);
 
-  _onChange = () => {
-    this.setState(latestQueue());
-  };
-
-  render() {
-    const { queue } = this.state as State;
-    return (
-      <div>
-        {queue.map((piece, i) => (
-          <PieceView piece={piece} key={i} />
-        ))}
-      </div>
-    );
-  }
+  return (
+    <div>
+      {queue.map((piece, i) => (
+        <PieceView piece={piece} key={i} />
+      ))}
+    </div>
+  );
 }

@@ -1,38 +1,22 @@
 import React from 'react';
-import { Piece } from '../modules/piece-types';
 import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
 
-type State = {
-  piece: Piece | undefined;
-};
-
-function latestPiece(): State {
-  return {
-    piece: PieceStore.getPieceData().heldPiece
-  };
+function latestPiece() {
+  return PieceStore.getPieceData().heldPiece;
 }
 
-export default class HeldPiece extends React.Component<{}, State> {
-  constructor(props: {}) {
-    super(props);
-    this.state = latestPiece();
-  }
+export default function HeldPiece() {
+  const [heldPiece, setHeldPiece] = React.useState(latestPiece());
 
-  componentDidMount() {
-    PieceStore.addChangeListener(this._onChange);
-  }
+  React.useEffect(() => {
+    const onChange = () => {
+      setHeldPiece(latestPiece());
+    };
 
-  componentWillUnmount() {
-    PieceStore.removeChangeListener(this._onChange);
-  }
+    PieceStore.addChangeListener(onChange);
+    return () => PieceStore.removeChangeListener(onChange);
+  }, []);
 
-  _onChange = () => {
-    this.setState(latestPiece());
-  };
-
-  render() {
-    const { piece } = this.state;
-    return <PieceView piece={piece} />;
-  }
+  return <PieceView piece={heldPiece} />;
 }

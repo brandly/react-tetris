@@ -12,13 +12,16 @@ class PieceQueue {
   }
 
   fill() {
-    while (this.queue.length < this.minimumLength) {
-      this.queue.push(this.pullFromBucket());
+    const local: Piece[] = [];
+    while (local.length + this.queue.length < this.minimumLength) {
+      local.push(this.pullFromBucket());
     }
+    this.queue = this.queue.concat(local);
   }
 
   getNext() {
-    const next = this.queue.shift();
+    const next = this.queue[0];
+    this.queue = this.queue.slice(1);
     this.fill();
     if (!next) {
       throw new Error('Unexpected missing `next`');
