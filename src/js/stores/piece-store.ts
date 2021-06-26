@@ -1,25 +1,29 @@
 import _ from 'lodash';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import BoardStore from './board-store';
+import BoardStore, { Coords } from './board-store';
 import EventEmitter from '../modules/event-emitter';
 import PieceQueue from '../modules/piece-queue';
+import { isRotation, Piece, Rotation } from '../modules/piece-types';
+
+function assert(value: unknown): asserts value {
+  if (!value) throw new Error('assertion failed');
+}
 
 const { events, actions } = AppConstants;
 
 // local data
-let _piece;
-let _rotation;
-let _position;
-let _heldPiece;
-let _hasHeldPiece;
+let _piece: Piece | undefined;
+let _rotation: Rotation = 0;
+let _position: Coords = { x: 0, y: 0 };
+let _heldPiece: Piece | undefined;
+let _hasHeldPiece = false;
 
 function _moveLeft() {
   // compute new position
-  const newPosition = _.clone(_position);
-  newPosition.x -= 1;
+  const newPosition = { ..._position, x: _position.x - 1 };
   // ask board if it's valid
-  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+  if (_piece && BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     // if so, set it as the position and return true
     _position = newPosition;
     return true;
@@ -28,9 +32,8 @@ function _moveLeft() {
 }
 
 function _moveRight() {
-  const newPosition = _.clone(_position);
-  newPosition.x += 1;
-  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+  const newPosition = { ..._position, x: _position.x + 1 };
+  if (_piece && BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     _position = newPosition;
     return true;
   }
@@ -41,7 +44,7 @@ function _moveDown() {
   const newPosition = _.clone(_position);
   newPosition.y += 1;
 
-  if (BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
+  if (_piece && BoardStore.isEmptyPosition(_piece, _rotation, newPosition)) {
     _position = newPosition;
     return true;
   }
@@ -55,8 +58,10 @@ function _hardDrop() {
 }
 
 function _flipClockwise() {
-  const newRotation = (_rotation + 1) % _piece.blocks.length;
-  if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
+  const newRotation = ((_rotation ?? 0) + 1) % AppConstants.ROTATION_COUNT;
+  assert(isRotation(newRotation));
+
+  if (_piece && BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
     _rotation = newRotation;
     return true;
   }
@@ -64,10 +69,11 @@ function _flipClockwise() {
 }
 
 function _flipCounterclockwise() {
-  let newRotation = _rotation - 1;
-  if (newRotation < 0) newRotation += _piece.blocks.length;
+  let newRotation = (_rotation ?? 0) - 1;
+  if (newRotation < 0) newRotation += AppConstants.ROTATION_COUNT;
+  assert(isRotation(newRotation));
 
-  if (BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
+  if (_piece && BoardStore.isEmptyPosition(_piece, newRotation, _position)) {
     _rotation = newRotation;
     return true;
   }
@@ -75,8 +81,10 @@ function _flipCounterclockwise() {
 }
 
 function _lockInPiece() {
-  BoardStore.setPiece(_piece, _rotation, _position);
-  setUpNewPiece();
+  if (_piece) {
+    BoardStore.setPiece(_piece, _rotation, _position);
+    setUpNewPiece();
+  }
 }
 
 function _holdPiece() {
@@ -105,6 +113,7 @@ function _getHardDropY() {
   let yPosition = _position.y;
 
   while (
+    _piece &&
     BoardStore.isEmptyPosition(_piece, _rotation, {
       y: yPosition,
       x: _position.x
@@ -116,30 +125,13 @@ function _getHardDropY() {
   return yPosition - 1;
 }
 
-const PieceStore = _.extend(
-  {
-    getPieceData() {
-      return {
-        piece: _piece,
-        rotation: _rotation,
-        position: _position,
-        previewPosition: {
-          x: _position.x,
-          y: _getHardDropY()
-        },
-
-        heldPiece: _heldPiece,
-        queue: queue.getQueue()
-      };
-    },
-
-    tick() {
-      emitChangeIf(_moveDown());
-    },
-
-    dispatcherIndex: AppDispatcher.register((payload) => {
+class PieceStore extends EventEmitter {
+  dispatcherIndex: string;
+  constructor() {
+    super();
+    this.dispatcherIndex = AppDispatcher.register((payload) => {
       const { action } = payload; // this is our action from handleViewAction
-      switch (action.actionType) {
+      switch (action) {
         case actions.MOVE_DOWN:
           emitChangeIf(_moveDown());
           break;
@@ -153,7 +145,7 @@ const PieceStore = _.extend(
           break;
 
         case actions.HARD_DROP:
-          emitChangeIf(_hardDrop());
+          _hardDrop();
           break;
 
         case actions.FLIP_CLOCKWISE:
@@ -171,25 +163,43 @@ const PieceStore = _.extend(
 
       // going into a queue of promises so we want to return something positive for a resolve
       return true;
-    }),
+    });
+  }
+  getPieceData() {
+    return {
+      piece: _piece,
+      rotation: _rotation,
+      position: _position,
+      previewPosition: {
+        x: _position.x,
+        y: _getHardDropY()
+      },
 
-    emitPlayerLost() {
-      this.emit(events.PLAYER_LOST);
-    }
-  },
-  EventEmitter
-);
+      heldPiece: _heldPiece,
+      queue: queue.getQueue()
+    };
+  }
 
-function emitChangeIf(val) {
-  if (val) PieceStore.emitChange();
+  tick() {
+    emitChangeIf(_moveDown());
+  }
+
+  emitPlayerLost() {
+    this.emit(events.PLAYER_LOST);
+  }
+}
+
+const store = new PieceStore();
+
+function emitChangeIf(val: boolean) {
+  if (val) store.emitChange();
 }
 
 const queue = new PieceQueue(5);
 
 const initialPosition = (() => {
-  const somePiece = queue.getNext();
   return {
-    x: AppConstants.GAME_WIDTH / 2 - somePiece.blocks.length / 2,
+    x: AppConstants.GAME_WIDTH / 2 - AppConstants.BLOCK_WIDTH / 2,
     y: 0
   };
 })();
@@ -201,10 +211,10 @@ function setUpNewPiece() {
   _position = _.clone(initialPosition);
   _hasHeldPiece = false;
   if (!BoardStore.isEmptyPosition(_piece, _rotation, _position)) {
-    PieceStore.emitPlayerLost();
+    store.emitPlayerLost();
   }
-  PieceStore.emitChange();
+  store.emitChange();
 }
 
 setUpNewPiece();
-export default PieceStore;
+export default store;

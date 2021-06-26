@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2019", "dom"],
+    "typeRoots": ["./src/js/types"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true
+  }
+}

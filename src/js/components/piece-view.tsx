@@ -1,17 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { getBlocks, getClassName, Piece } from '../modules/piece-types';
 // import PauseMenu from './pause-menu';
 
-const PieceView = ({ piece }) => {
+type Props = {
+  piece?: Piece;
+};
+
+const defaultBlock = [
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0]
+] as const;
+
+const PieceView: React.FC<Props> = ({ piece }) => {
   /* eslint-disable prefer-destructuring */
-  const blocks = piece.blocks[0];
+  const blocks = piece ? getBlocks(piece)[0] : defaultBlock;
 
   const rows = blocks.map((row, i) => {
     const blocksInRow = row.map((block, j) => {
       let classString = 'game-block ';
 
-      if (block) {
-        classString += piece.className;
+      if (piece && block) {
+        classString += getClassName(piece);
       } else {
         classString += 'block-empty';
       }
@@ -26,28 +37,6 @@ const PieceView = ({ piece }) => {
       <tbody>{rows}</tbody>
     </table>
   );
-};
-
-PieceView.propTypes = {
-  piece: PropTypes.shape({
-    className: PropTypes.string,
-    blocks: PropTypes.arrayOf(
-      PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
-    )
-  })
-};
-
-PieceView.defaultProps = {
-  piece: {
-    blocks: [
-      [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-      ]
-    ]
-  }
 };
 
 export default PieceView;

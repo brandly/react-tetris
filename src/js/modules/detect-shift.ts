@@ -1,5 +1,7 @@
 /* global document */
-const callbacks = [];
+
+type Callback = () => void;
+const callbacks: Callback[] = [];
 let isPressed = false;
 
 document.addEventListener('keydown', (e) => {
@@ -26,11 +28,11 @@ function callCallbacks() {
 }
 
 export default {
-  bind(callback) {
+  bind(callback: Callback) {
     callbacks.push(callback);
   },
 
-  unbind(callback) {
+  unbind(callback: Callback) {
     const index = callbacks.indexOf(callback);
     if (index !== -1) {
       callbacks.splice(index, 1);
