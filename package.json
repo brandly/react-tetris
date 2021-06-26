@@ -21,7 +21,7 @@
     "html": "cp src/index.html dist/",
     "lint": "eslint src/ app/",
     "clean": "rm -rf dist/*",
-    "test": "tsc --noEmit && npm run lint"
+    "test": "tsc --noEmit"
   },
   "author": "Matthew Brandly",
   "license": "MIT",
