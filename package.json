@@ -19,9 +19,9 @@
     "watch": "npm run build:app -- --watch",
     "build": "npm run clean && npm run build:lib && npm run build:app && npm run html",
     "html": "cp src/index.html dist/",
-    "lint": "eslint src/ app/",
+    "lint": "eslint . --ext .ts,.tsx",
     "clean": "rm -rf dist/*",
-    "test": "tsc --noEmit"
+    "test": "tsc --noEmit && npm run lint"
   },
   "author": "Matthew Brandly",
   "license": "MIT",
@@ -35,6 +35,8 @@
     "@types/flux": "3.1.9",
     "@types/lodash": "4.14.170",
     "@types/react": "17.0.11",
+    "@typescript-eslint/eslint-plugin": "4.28.0",
+    "@typescript-eslint/parser": "4.28.0",
     "babel-eslint": "10.1.0",
     "babel-plugin-lodash": "3.3.4",
     "babel-plugin-transform-class-properties": "6.24.1",

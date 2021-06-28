@@ -9,7 +9,7 @@ function latestQueue(): State {
   return PieceStore.getPieceData().queue;
 }
 
-export default function PieceQueue() {
+export default function PieceQueue(): JSX.Element {
   const [queue, setQueue] = React.useState(latestQueue());
 
   React.useEffect(() => {

@@ -52,7 +52,7 @@ function removeKeyboardEvents() {
   });
 }
 
-export default function GameboardView() {
+export default function GameboardView(): JSX.Element {
   React.useEffect(() => {
     const onChange = () => {
       setGameBoard(latestGameBoard());

@@ -52,7 +52,7 @@ interface Keymaster {
   filter(event: FilterEvent): void;
 }
 
-declare var key: Keymaster;
+declare let key: Keymaster;
 
 declare module 'keymaster' {
   export = key;

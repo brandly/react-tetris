@@ -7,7 +7,7 @@ export type Rotation = 0 | 1 | 2 | 3;
 export const isRotation = (num: number): num is Rotation =>
   num >= 0 && num < appConstants.ROTATION_COUNT;
 
-export const getBlocks = (piece: Piece) => {
+export const getBlocks = (piece: Piece): number[][][] => {
   switch (piece) {
     case 'I':
       return [
@@ -200,13 +200,14 @@ export const getBlocks = (piece: Piece) => {
         ]
       ];
 
-    default:
+    default: {
       const exhaustiveCheck: never = piece;
       throw new Error(`Unhandled color case: ${exhaustiveCheck}`);
+    }
   }
 };
 
-export const getClassName = (piece: Piece | 'ghost') => {
+export const getClassName = (piece: Piece | 'ghost'): string => {
   switch (piece) {
     case 'I':
       return 'piece-i';
@@ -224,8 +225,9 @@ export const getClassName = (piece: Piece | 'ghost') => {
       return 'piece-z';
     case 'ghost':
       return 'piece-preview';
-    default:
+    default: {
       const exhaustiveCheck: never = piece;
       throw new Error(`Unhandled piece case: ${exhaustiveCheck}`);
+    }
   }
 };

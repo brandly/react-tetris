@@ -1,5 +1,4 @@
 import { EventEmitter as Base } from 'events';
-import _ from 'lodash';
 
 const CHANGE_EVENT = 'change';
 
@@ -7,15 +6,15 @@ type Callback = () => void;
 
 // our base emitter
 class EventEmitter extends Base {
-  emitChange() {
+  emitChange(): void {
     this.emit(CHANGE_EVENT);
   }
 
-  addChangeListener(callback: Callback) {
+  addChangeListener(callback: Callback): void {
     this.on(CHANGE_EVENT, callback);
   }
 
-  removeChangeListener(callback: Callback) {
+  removeChangeListener(callback: Callback): void {
     this.removeListener(CHANGE_EVENT, callback);
   }
 }

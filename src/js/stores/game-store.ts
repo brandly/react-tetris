@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
 import EventEmitter from '../modules/event-emitter';

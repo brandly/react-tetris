@@ -17,7 +17,7 @@ type Props = {
   children: RenderFn;
 };
 
-export default function Tetris({ children }: Props) {
+export default function Tetris({ children }: Props): JSX.Element {
   const [points, setPoints] = React.useState(ScoreStore.getPoints());
   const [linesCleared, setLinesCleared] = React.useState(
     ScoreStore.getLinesCleared()

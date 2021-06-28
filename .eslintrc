@@ -1,18 +1,9 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
   "extends": [
-    "airbnb",
-    "prettier"
-  ],
-  "rules": {
-    "react/jsx-filename-extension": 0,
-    "no-underscore-dangle": 0,
-    "no-use-before-define": 0,
-    "default-case": 0,
-    "no-plusplus": 0,
-    "react/no-array-index-key": 0,
-    "react/static-property-placement": 0,
-    "react/state-in-constructor": 0,
-    "react/jsx-one-expression-per-line": 0,
-  }
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ]
 }

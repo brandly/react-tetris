@@ -11,7 +11,7 @@ class PieceQueue {
     this.fill();
   }
 
-  fill() {
+  fill(): void {
     const local: Piece[] = [];
     while (local.length + this.queue.length < this.minimumLength) {
       local.push(this.pullFromBucket());
@@ -19,7 +19,7 @@ class PieceQueue {
     this.queue = this.queue.concat(local);
   }
 
-  getNext() {
+  getNext(): Piece {
     const next = this.queue[0];
     this.queue = this.queue.slice(1);
     this.fill();
@@ -28,7 +28,7 @@ class PieceQueue {
     }
     return next;
   }
-  getQueue() {
+  getQueue(): Piece[] {
     return this.queue;
   }
 

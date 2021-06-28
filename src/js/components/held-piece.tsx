@@ -6,7 +6,7 @@ function latestPiece() {
   return PieceStore.getPieceData().heldPiece;
 }
 
-export default function HeldPiece() {
+export default function HeldPiece(): JSX.Element {
   const [heldPiece, setHeldPiece] = React.useState(latestPiece());
 
   React.useEffect(() => {

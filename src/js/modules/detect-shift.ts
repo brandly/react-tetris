@@ -28,11 +28,11 @@ function callCallbacks() {
 }
 
 export default {
-  bind(callback: Callback) {
+  bind(callback: Callback): void {
     callbacks.push(callback);
   },
 
-  unbind(callback: Callback) {
+  unbind(callback: Callback): void {
     const index = callbacks.indexOf(callback);
     if (index !== -1) {
       callbacks.splice(index, 1);

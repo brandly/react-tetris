@@ -13,7 +13,7 @@ const defaultBlock = [
   [0, 0, 0, 0]
 ] as const;
 
-const PieceView: React.FC<Props> = ({ piece }) => {
+const PieceView: React.FC<Props> = ({ piece }): JSX.Element => {
   /* eslint-disable prefer-destructuring */
   const blocks = piece ? getBlocks(piece)[0] : defaultBlock;
 

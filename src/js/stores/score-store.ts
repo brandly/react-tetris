@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import AppConstants from '../constants/app-constants';
 import BoardStore from './board-store';
 import EventEmitter from '../modules/event-emitter';

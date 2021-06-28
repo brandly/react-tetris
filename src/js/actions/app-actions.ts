@@ -1,39 +1,39 @@
 import AppDispatcher from '../dispatchers/app-dispatcher';
 
 const AppActions = {
-  moveDown() {
+  moveDown(): void {
     AppDispatcher.handleViewAction('MOVE_DOWN');
   },
 
-  moveLeft() {
+  moveLeft(): void {
     AppDispatcher.handleViewAction('MOVE_LEFT');
   },
 
-  moveRight() {
+  moveRight(): void {
     AppDispatcher.handleViewAction('MOVE_RIGHT');
   },
 
-  hardDrop() {
+  hardDrop(): void {
     AppDispatcher.handleViewAction('HARD_DROP');
   },
 
-  flipClockwise() {
+  flipClockwise(): void {
     AppDispatcher.handleViewAction('FLIP_CLOCKWISE');
   },
 
-  flipCounterclockwise() {
+  flipCounterclockwise(): void {
     AppDispatcher.handleViewAction('FLIP_COUNTERCLOCKWISE');
   },
 
-  pause() {
+  pause(): void {
     AppDispatcher.handleViewAction('PAUSE');
   },
 
-  resume() {
+  resume(): void {
     AppDispatcher.handleViewAction('RESUME');
   },
 
-  hold() {
+  hold(): void {
     AppDispatcher.handleViewAction('HOLD');
   }
 };
