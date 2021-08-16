@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useEffect, useReducer } from 'react';
 // import PauseMenu from './pause-menu';
 import Gameboard from './gameboard';
-import ScoreStore from '../stores/score-store';
+import { update, initialGame } from '../stores/game-store';
 import HeldPiece from './held-piece';
 import PieceQueue from './piece-queue';
 
 type RenderFn = (params: {
-  HeldPiece: React.ComponentType;
-  Gameboard: React.ComponentType;
-  PieceQueue: React.ComponentType;
+  // HeldPiece: React.ComponentType;
+  // Gameboard: React.ComponentType;
+  // PieceQueue: React.ComponentType;
   points: number;
   linesCleared: number;
 }) => React.ReactElement;
@@ -17,27 +17,27 @@ type Props = {
   children: RenderFn;
 };
 
-export default function Tetris({ children }: Props): JSX.Element {
-  const [points, setPoints] = React.useState(ScoreStore.getPoints());
-  const [linesCleared, setLinesCleared] = React.useState(
-    ScoreStore.getLinesCleared()
-  );
+const Tetris = (props: Props) => {
+  const [game, dispatch] = useReducer(update, initialGame);
 
-  React.useEffect(() => {
-    const onChange = () => {
-      setPoints(ScoreStore.getPoints());
-      setLinesCleared(ScoreStore.getLinesCleared());
-      return () => ScoreStore.removeChangeListener(onChange);
+  useEffect(() => {
+    let interval: number | undefined;
+    if (game.state === 'PLAYING') {
+      interval = window.setInterval(() => {
+        dispatch({ type: 'TICK' });
+      }, 800);
+    }
+
+    return () => {
+      window.clearInterval(interval);
     };
+  }, [game.state]);
 
-    ScoreStore.addChangeListener(onChange);
-  }, []);
-
-  return children({
-    HeldPiece,
-    Gameboard,
-    PieceQueue,
-    points,
-    linesCleared
+  return props.children({
+    // HeldPiece,
+    // Gameboard,
+    // PieceQueue,
+    points: game.points,
+    linesCleared: game.lines
   });
-}
+};
