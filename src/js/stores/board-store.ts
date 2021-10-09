@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import AppConstants from '../constants/app-constants';
-import { Piece, Rotation, getBlocks } from '../modules/piece-types';
+import { Piece, Rotation, getBlocks, isRotation } from '../modules/piece-types';
 
 const { GAME_HEIGHT, GAME_WIDTH } = AppConstants;
 
+export { Piece };
 export type Coords = {
   x: number;
   y: number;
@@ -120,3 +121,132 @@ export function isEmptyPosition(
   }
   return true;
 }
+
+function assert(value: unknown): asserts value {
+  if (!value) throw new Error('assertion failed');
+}
+
+function tryMove(move: (pp: PositionedPiece) => PositionedPiece) {
+  return function (
+    gameBoard: GameBoard,
+    positionedPiece: PositionedPiece
+  ): PositionedPiece | undefined {
+    const updatedPiece = move(positionedPiece);
+
+    if (isEmptyPosition(gameBoard, updatedPiece)) {
+      return updatedPiece;
+    }
+  };
+}
+
+export const moveLeft = tryMove((positionedPiece: PositionedPiece) => {
+  const newPosition = {
+    ...positionedPiece.position,
+    x: positionedPiece.position.x - 1
+  };
+
+  return { ...positionedPiece, position: newPosition };
+});
+
+export const moveRight = tryMove((positionedPiece: PositionedPiece) => {
+  const newPosition = {
+    ...positionedPiece.position,
+    x: positionedPiece.position.x + 1
+  };
+
+  return { ...positionedPiece, position: newPosition };
+});
+
+export const moveDown = tryMove((positionedPiece: PositionedPiece) => {
+  const newPosition = {
+    ...positionedPiece.position,
+    y: positionedPiece.position.y + 1
+  };
+
+  return { ...positionedPiece, position: newPosition };
+});
+
+// TODO:
+// function _hardDrop() {
+//   _position.y = _getHardDropY();
+//   _lockInPiece();
+// }
+
+export const flipClockwise = tryMove((positionedPiece: PositionedPiece) => {
+  const rotation =
+    ((positionedPiece.rotation ?? 0) + 1) % AppConstants.ROTATION_COUNT;
+  assert(isRotation(rotation));
+  return { ...positionedPiece, rotation };
+});
+
+export const flipCounterclockwise = tryMove(
+  (positionedPiece: PositionedPiece) => {
+    let rotation = (positionedPiece.rotation ?? 0) - 1;
+    if (rotation < 0) rotation += AppConstants.ROTATION_COUNT;
+    assert(isRotation(rotation));
+    return { ...positionedPiece, rotation };
+  }
+);
+
+// function _lockInPiece() {
+//   if (_piece) {
+//     setPiece(_piece, _rotation, _position);
+//     setUpNewPiece();
+//   }
+// }
+
+// TODO: needs to happen at Game level
+// function _holdPiece() {
+//   if (_heldPiece) return false;
+//   if (_heldPiece && !isEmptyPosition(_heldPiece, _rotation, _position)) {
+//     return false;
+//   }
+
+//   const previouslyHeldPiece = _heldPiece;
+//   _heldPiece = _piece;
+
+//   if (previouslyHeldPiece) {
+//     _piece = previouslyHeldPiece;
+//   } else {
+//     setUpNewPiece();
+//   }
+
+//   return true;
+// }
+
+// function _getHardDropY() {
+//   let yPosition = _position.y;
+
+//   while (
+//     _piece &&
+//     isEmptyPosition(_piece, _rotation, {
+//       y: yPosition,
+//       x: _position.x
+//     })
+//   ) {
+//     yPosition += 1;
+//   }
+//   // at this point, we just found a non-empty position, so let's step back
+//   return yPosition - 1;
+// }
+
+// const queue = new PieceQueue(5);
+
+// const initialPosition = {
+//   x: AppConstants.GAME_WIDTH / 2 - AppConstants.BLOCK_WIDTH / 2,
+//   y: 0
+// };
+
+// function setUpNewPiece() {
+//   // new values for everyone
+//   _piece = queue.getNext();
+//   _rotation = 0;
+//   _position = _.clone(initialPosition);
+//   _heldPiece = undefined;
+//   if (!isEmptyPosition(_piece, _rotation, _position)) {
+//     store.emitPlayerLost();
+//   }
+//   store.emitChange();
+// }
+
+// setUpNewPiece();

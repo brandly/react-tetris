@@ -1,6 +1,7 @@
 import {
   GameBoard,
   PositionedPiece,
+  Piece,
   buildGameBoard,
   addPieceToBoard
 } from './board-store';
@@ -11,6 +12,7 @@ type Game = {
   state: State;
   board: GameBoard;
   piece: PositionedPiece | undefined;
+  heldPiece: Piece | undefined;
   points: number;
   lines: number;
 };
@@ -37,10 +39,9 @@ export const initialGame: Game = {
   points: 0,
   lines: 0,
   board: buildGameBoard(),
-  piece: undefined
+  piece: undefined,
+  heldPiece: undefined
 };
-
-//////
 
 // Good display of merging piece + board
 export function viewGameBoard(game: Game): GameBoard {
