@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import BoardStore, { Coords } from './board-store';
+import { Coords } from './board-store';
 import EventEmitter from '../modules/event-emitter';
 import PieceQueue from '../modules/piece-queue';
 import { isRotation, Piece, Rotation } from '../modules/piece-types';

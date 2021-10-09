@@ -1,15 +1,16 @@
-import AppDispatcher from '../dispatchers/app-dispatcher';
-import AppConstants from '../constants/app-constants';
-import EventEmitter from '../modules/event-emitter';
-import BoardStore, { placePiece } from './board-store';
-import PieceStore from './piece-store';
+import {
+  GameBoard,
+  PositionedPiece,
+  buildGameBoard,
+  addPieceToBoard
+} from './board-store';
 
 type State = 'PAUSED' | 'PLAYING' | 'LOST';
 
 type Game = {
   state: State;
-  // board: Board;
-  // piece: Piece;
+  board: GameBoard;
+  piece: PositionedPiece | undefined;
   points: number;
   lines: number;
 };
@@ -34,39 +35,36 @@ export const update = (game: Game, action: Action): Game => {
 export const initialGame: Game = {
   state: 'PLAYING',
   points: 0,
-  lines: 0
+  lines: 0,
+  board: buildGameBoard(),
+  piece: undefined
 };
 
 //////
 
 // Good display of merging piece + board
-// function getGameBoard() {
-//   if (_currentState === states.LOST) {
-//     return BoardStore.getBoard();
-//   }
-//   let gameBoard = BoardStore.getBoard();
-//   const pieceData = PieceStore.getPieceData();
+export function viewGameBoard(game: Game): GameBoard {
+  if (game.state === 'LOST') {
+    return game.board;
+  }
 
-//   // set the preview
-//   if (pieceData.piece) {
-//     gameBoard = placePiece(
-//       gameBoard,
-//       pieceData.piece,
-//       pieceData.rotation,
-//       pieceData.previewPosition,
-//       true
-//     );
-//   }
+  let gameBoard = game.board;
 
-//   // set the actual piece
-//   if (pieceData.piece) {
-//     gameBoard = placePiece(
-//       gameBoard,
-//       pieceData.piece,
-//       pieceData.rotation,
-//       pieceData.position
-//     );
-//   }
+  // set the preview
+  // if (pieceData.piece) {
+  //   gameBoard = placePiece(
+  //     gameBoard,
+  //     pieceData.piece,
+  //     pieceData.rotation,
+  //     pieceData.previewPosition,
+  //     true
+  //   );
+  // }
 
-//   return gameBoard;
-// }
+  // set the actual piece
+  if (game.piece) {
+    gameBoard = addPieceToBoard(gameBoard, game.piece);
+  }
+
+  return gameBoard;
+}
