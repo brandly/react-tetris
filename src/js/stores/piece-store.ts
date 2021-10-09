@@ -17,7 +17,6 @@ let _piece: Piece | undefined;
 let _rotation: Rotation = 0;
 let _position: Coords = { x: 0, y: 0 };
 let _heldPiece: Piece | undefined;
-let _hasHeldPiece = false;
 
 function _moveLeft() {
   // compute new position
@@ -88,7 +87,7 @@ function _lockInPiece() {
 }
 
 function _holdPiece() {
-  if (_hasHeldPiece) return false;
+  if (_heldPiece) return false;
   if (
     _heldPiece &&
     !BoardStore.isEmptyPosition(_heldPiece, _rotation, _position)
@@ -98,7 +97,6 @@ function _holdPiece() {
 
   const previouslyHeldPiece = _heldPiece;
   _heldPiece = _piece;
-  _hasHeldPiece = true;
 
   if (previouslyHeldPiece) {
     _piece = previouslyHeldPiece;
@@ -209,7 +207,7 @@ function setUpNewPiece() {
   _piece = queue.getNext();
   _rotation = 0;
   _position = _.clone(initialPosition);
-  _hasHeldPiece = false;
+  _heldPiece = undefined;
   if (!BoardStore.isEmptyPosition(_piece, _rotation, _position)) {
     store.emitPlayerLost();
   }
