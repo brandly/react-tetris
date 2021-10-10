@@ -195,25 +195,6 @@ export const flipCounterclockwise = tryMove(
 //   }
 // }
 
-// TODO: needs to happen at Game level
-// function _holdPiece() {
-//   if (_heldPiece) return false;
-//   if (_heldPiece && !isEmptyPosition(_heldPiece, _rotation, _position)) {
-//     return false;
-//   }
-
-//   const previouslyHeldPiece = _heldPiece;
-//   _heldPiece = _piece;
-
-//   if (previouslyHeldPiece) {
-//     _piece = previouslyHeldPiece;
-//   } else {
-//     setUpNewPiece();
-//   }
-
-//   return true;
-// }
-
 // function _getHardDropY() {
 //   let yPosition = _position.y;
 

@@ -3,7 +3,8 @@ import {
   PositionedPiece,
   Piece,
   buildGameBoard,
-  addPieceToBoard
+  addPieceToBoard,
+  isEmptyPosition
 } from './board-store';
 
 type State = 'PAUSED' | 'PLAYING' | 'LOST';
@@ -17,10 +18,10 @@ type Game = {
   lines: number;
 };
 
-type Action = { type: 'PAUSE' } | { type: 'RESUME' } | { type: 'TICK' };
+type Action = 'PAUSE' | 'RESUME' | 'TICK' | 'HOLD';
 
 export const update = (game: Game, action: Action): Game => {
-  switch (action.type) {
+  switch (action) {
     case 'PAUSE': {
       return game.state === 'PLAYING' ? { ...game, state: 'PAUSED' } : game;
     }
@@ -30,6 +31,34 @@ export const update = (game: Game, action: Action): Game => {
     case 'TICK': {
       // TODO: advance game
       return game;
+    }
+    // HARD_DROP
+    // MOVE_DOWN
+    // MOVE_LEFT
+    // MOVE_RIGHT
+    // FLIP_CLOCKWISE
+    // FLIP_COUNTERCLOCKWISE
+    case 'HOLD': {
+      // TODO:
+      // if (_hasHeldPiece) return game;
+      if (!game.piece) return game;
+
+      // Ensure the held piece will fit on the board
+      if (
+        game.heldPiece &&
+        // game.piece &&
+        !isEmptyPosition(game.board, { ...game.piece, piece: game.heldPiece })
+      ) {
+        return game;
+      }
+
+      const newPiece = game.heldPiece ?? setUpNewPiece();
+
+      return {
+        ...game,
+        heldPiece: game.piece.piece, // hmm
+        piece: { ...game.piece, piece: newPiece }
+      };
     }
   }
 };
