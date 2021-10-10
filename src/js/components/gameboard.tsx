@@ -1,7 +1,7 @@
 import React from 'react';
 // import key from 'keymaster';
 // import AppActions from '../actions/app-actions';
-// import GameStore from '../stores/game-store';
+import { viewGameBoard } from '../stores/game-store';
 // import AppConstants from '../constants/app-constants';
 // import DetectShift from '../modules/detect-shift';
 import { getClassName } from '../modules/piece-types';
@@ -57,7 +57,8 @@ export default function GameboardView(): JSX.Element {
   //   };
   // }, []);
 
-  const { board } = React.useContext(Context);
+  const game = React.useContext(Context);
+  const board = viewGameBoard(game);
 
   return (
     <table className="game-board">
