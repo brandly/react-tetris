@@ -1,7 +1,7 @@
 import React from 'react';
 // import PauseMenu from './pause-menu';
 import Gameboard from './gameboard';
-import { update, initialGame } from '../stores/game-store';
+import { update, getInitialGame } from '../stores/game-store';
 import HeldPiece from './held-piece';
 import PieceQueue from './piece-queue';
 import { Context } from '../context';
@@ -20,7 +20,7 @@ type Props = {
 
 // Tetris should be a provider?
 export default function Tetris(props: Props): JSX.Element {
-  const [game, dispatch] = React.useReducer(update, initialGame);
+  const [game, dispatch] = React.useReducer(update, getInitialGame());
 
   React.useEffect(() => {
     let interval: number | undefined;

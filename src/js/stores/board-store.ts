@@ -214,13 +214,6 @@ export const flipCounterclockwise = tryMove(
 //   return yPosition - 1;
 // }
 
-// const queue = new PieceQueue(5);
-
-// const initialPosition = {
-//   x: AppConstants.GAME_WIDTH / 2 - AppConstants.BLOCK_WIDTH / 2,
-//   y: 0
-// };
-
 // function setUpNewPiece() {
 //   // new values for everyone
 //   _piece = queue.getNext();

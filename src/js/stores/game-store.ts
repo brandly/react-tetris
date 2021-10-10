@@ -12,6 +12,7 @@ import {
   moveRight,
   setPiece
 } from './board-store';
+import AppConstants from '../constants/app-constants';
 import * as PieceQueue from '../modules/piece-queue';
 
 type State = 'PAUSED' | 'PLAYING' | 'LOST';
@@ -19,7 +20,7 @@ type State = 'PAUSED' | 'PLAYING' | 'LOST';
 export type Game = {
   state: State;
   board: GameBoard;
-  piece: PositionedPiece | undefined;
+  piece: PositionedPiece;
   heldPiece: Piece | undefined;
   queue: PieceQueue.PieceQueue;
   points: number;
@@ -53,7 +54,14 @@ export const update = (game: Game, action: Action): Game => {
       const updated = applyMove(moveDown, game);
       if (game.piece && game.piece === updated.piece) {
         const [board, linesCleared] = setPiece(game.board, game.piece);
-        return { ...updated, board, lines: game.lines + linesCleared };
+        const next = PieceQueue.getNext(game.queue);
+        return {
+          ...updated,
+          board,
+          piece: initializePiece(next.piece),
+          queue: next.queue,
+          lines: game.lines + linesCleared
+        };
       } else {
         return updated;
       }
@@ -97,6 +105,19 @@ export const update = (game: Game, action: Action): Game => {
   }
 };
 
+const initialPosition = {
+  x: AppConstants.GAME_WIDTH / 2 - AppConstants.BLOCK_WIDTH / 2,
+  y: 0
+};
+
+const initializePiece = (piece: Piece): PositionedPiece => {
+  return {
+    position: initialPosition,
+    piece,
+    rotation: 0
+  };
+};
+
 const applyMove = (
   move: (
     board: GameBoard,
@@ -108,14 +129,18 @@ const applyMove = (
   return afterFlip ? { ...game, piece: afterFlip } : game;
 };
 
-export const initialGame: Game = {
-  state: 'PLAYING',
-  points: 0,
-  lines: 0,
-  board: buildGameBoard(),
-  piece: undefined,
-  heldPiece: undefined,
-  queue: PieceQueue.create(5)
+export const getInitialGame = (): Game => {
+  const queue = PieceQueue.create(5);
+  const next = PieceQueue.getNext(queue);
+  return {
+    state: 'PLAYING',
+    points: 0,
+    lines: 0,
+    board: buildGameBoard(),
+    piece: initializePiece(next.piece),
+    heldPiece: undefined,
+    queue: next.queue
+  };
 };
 
 // Good display of merging piece + board
