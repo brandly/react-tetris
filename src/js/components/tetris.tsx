@@ -1,6 +1,6 @@
 import React from 'react';
 // import PauseMenu from './pause-menu';
-// import Gameboard from './gameboard';
+import Gameboard from './gameboard';
 import { update, initialGame } from '../stores/game-store';
 import HeldPiece from './held-piece';
 // import PieceQueue from './piece-queue';
@@ -8,7 +8,7 @@ import { Context } from '../context';
 
 type RenderFn = (params: {
   HeldPiece: React.ComponentType;
-  // Gameboard: React.ComponentType;
+  Gameboard: React.ComponentType;
   // PieceQueue: React.ComponentType;
   points: number;
   linesCleared: number;
@@ -39,7 +39,7 @@ export default function Tetris(props: Props) {
     <Context.Provider value={game}>
       {props.children({
         HeldPiece,
-        // Gameboard,
+        Gameboard,
         // PieceQueue,
         points: game.points,
         linesCleared: game.lines

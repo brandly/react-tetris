@@ -1,11 +1,12 @@
 import React from 'react';
 import key from 'keymaster';
 import AppActions from '../actions/app-actions';
-import GameStore from '../stores/game-store';
+// import GameStore from '../stores/game-store';
 import AppConstants from '../constants/app-constants';
 import DetectShift from '../modules/detect-shift';
 import { GameBoard } from '../stores/board-store';
 import { getClassName } from '../modules/piece-types';
+import { Context } from '../context';
 
 const { states } = AppConstants;
 
@@ -54,27 +55,19 @@ function removeKeyboardEvents() {
 
 export default function GameboardView(): JSX.Element {
   React.useEffect(() => {
-    const onChange = () => {
-      setGameBoard(latestGameBoard());
-    };
-
-    GameStore.addChangeListener(onChange);
     addKeyboardEvents();
-    GameStore.start();
 
     return () => {
       removeKeyboardEvents();
-      GameStore.pause();
-      GameStore.removeChangeListener(onChange);
     };
   }, []);
 
-  const [gameBoard, setGameBoard] = React.useState(latestGameBoard);
+  const { board } = React.useContext(Context);
 
   return (
     <table className="game-board">
       <tbody>
-        {gameBoard.map((row, i) => {
+        {board.map((row, i) => {
           const blocksInRow = row.map((block, j) => {
             const classString = `game-block ${
               block ? getClassName(block) : 'block-empty'
