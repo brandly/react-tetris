@@ -14,7 +14,7 @@ import {
 
 type State = 'PAUSED' | 'PLAYING' | 'LOST';
 
-type Game = {
+export type Game = {
   state: State;
   board: GameBoard;
   piece: PositionedPiece | undefined;

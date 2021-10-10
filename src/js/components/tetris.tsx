@@ -2,11 +2,12 @@ import React from 'react';
 // import PauseMenu from './pause-menu';
 // import Gameboard from './gameboard';
 import { update, initialGame } from '../stores/game-store';
-// import HeldPiece from './held-piece';
+import HeldPiece from './held-piece';
 // import PieceQueue from './piece-queue';
+import { Context } from '../context';
 
 type RenderFn = (params: {
-  // HeldPiece: React.ComponentType;
+  HeldPiece: React.ComponentType;
   // Gameboard: React.ComponentType;
   // PieceQueue: React.ComponentType;
   points: number;
@@ -16,8 +17,6 @@ type RenderFn = (params: {
 type Props = {
   children: RenderFn;
 };
-
-const Context = React.createContext(initialGame);
 
 // Tetris should be a provider?
 export default function Tetris(props: Props) {
@@ -39,7 +38,7 @@ export default function Tetris(props: Props) {
   return (
     <Context.Provider value={game}>
       {props.children({
-        // HeldPiece,
+        HeldPiece,
         // Gameboard,
         // PieceQueue,
         points: game.points,
