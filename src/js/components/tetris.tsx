@@ -3,13 +3,13 @@ import React from 'react';
 import Gameboard from './gameboard';
 import { update, initialGame } from '../stores/game-store';
 import HeldPiece from './held-piece';
-// import PieceQueue from './piece-queue';
+import PieceQueue from './piece-queue';
 import { Context } from '../context';
 
 type RenderFn = (params: {
   HeldPiece: React.ComponentType;
   Gameboard: React.ComponentType;
-  // PieceQueue: React.ComponentType;
+  PieceQueue: React.ComponentType;
   points: number;
   linesCleared: number;
 }) => React.ReactElement;
@@ -19,7 +19,7 @@ type Props = {
 };
 
 // Tetris should be a provider?
-export default function Tetris(props: Props) {
+export default function Tetris(props: Props): JSX.Element {
   const [game, dispatch] = React.useReducer(update, initialGame);
 
   React.useEffect(() => {
@@ -40,7 +40,7 @@ export default function Tetris(props: Props) {
       {props.children({
         HeldPiece,
         Gameboard,
-        // PieceQueue,
+        PieceQueue,
         points: game.points,
         linesCleared: game.lines
       })}

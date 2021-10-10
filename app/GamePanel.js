@@ -45,7 +45,7 @@ const MiddleColumn = Column.extend`
 const GamePanel = () => (
   <Container>
     <Tetris>
-      {({ Gameboard, HeldPiece, points, linesCleared }) => (
+      {({ Gameboard, HeldPiece, PieceQueue,points, linesCleared }) => (
         <div>
           <Score>
             <LeftHalf>
@@ -72,11 +72,9 @@ const GamePanel = () => (
           <Gameboard />
           </MiddleColumn>
           
-          {/*
           <RightColumn>
           <PieceQueue />
           </RightColumn>
-          */}
         </div>
       )}
     </Tetris>

@@ -12,6 +12,7 @@ import {
   moveRight,
   setPiece
 } from './board-store';
+import * as PieceQueue from '../modules/piece-queue';
 
 type State = 'PAUSED' | 'PLAYING' | 'LOST';
 
@@ -20,6 +21,7 @@ export type Game = {
   board: GameBoard;
   piece: PositionedPiece | undefined;
   heldPiece: Piece | undefined;
+  queue: PieceQueue.PieceQueue;
   points: number;
   lines: number;
 };
@@ -82,14 +84,14 @@ export const update = (game: Game, action: Action): Game => {
         return game;
       }
 
-      // TODO:
-      // const newPiece = game.heldPiece ?? setUpNewPiece();
-      const newPiece = game.heldPiece ?? 'I';
+      const next = PieceQueue.getNext(game.queue);
+      const newPiece = game.heldPiece ?? next.piece;
 
       return {
         ...game,
         heldPiece: game.piece.piece, // hmm
-        piece: { ...game.piece, piece: newPiece }
+        piece: { ...game.piece, piece: newPiece },
+        queue: newPiece === next.piece ? next.queue : game.queue
       };
     }
   }
@@ -112,7 +114,8 @@ export const initialGame: Game = {
   lines: 0,
   board: buildGameBoard(),
   piece: undefined,
-  heldPiece: undefined
+  heldPiece: undefined,
+  queue: PieceQueue.create(5)
 };
 
 // Good display of merging piece + board

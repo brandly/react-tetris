@@ -1,49 +1,63 @@
 import { Piece, pieces } from './piece-types';
 
-class PieceQueue {
+export type PieceQueue = {
   minimumLength: number;
   queue: Piece[];
   bucket: Piece[];
-  constructor(minimumLength: number) {
-    this.minimumLength = minimumLength;
-    this.queue = [];
-    this.bucket = [];
-    this.fill();
+};
+
+export function create(minimumLength: number): PieceQueue {
+  return fill({
+    minimumLength,
+    queue: [],
+    bucket: []
+  });
+}
+
+function fill(pieceQueue: PieceQueue): PieceQueue {
+  const local: Piece[] = [];
+  let bucket = pieceQueue.bucket;
+  while (local.length + pieceQueue.queue.length < pieceQueue.minimumLength) {
+    const [piece, updatedBucket] = pullFromBucket(bucket);
+    local.push(piece);
+    bucket = updatedBucket;
   }
 
-  fill(): void {
-    const local: Piece[] = [];
-    while (local.length + this.queue.length < this.minimumLength) {
-      local.push(this.pullFromBucket());
-    }
-    this.queue = this.queue.concat(local);
-  }
+  return {
+    ...pieceQueue,
+    queue: pieceQueue.queue.concat(local)
+  };
+}
 
-  getNext(): Piece {
-    const next = this.queue[0];
-    this.queue = this.queue.slice(1);
-    this.fill();
-    if (!next) {
-      throw new Error('Unexpected missing `next`');
-    }
-    return next;
+export function getNext(
+  pieceQueue: PieceQueue
+): { piece: Piece; queue: PieceQueue } {
+  if (!pieceQueue.queue.length) {
+    throw new Error('Unexpected empty queue');
   }
-  getQueue(): Piece[] {
-    return this.queue;
-  }
+  const next = pieceQueue.queue[0];
+  const queue = pieceQueue.queue.slice(1);
+  return {
+    piece: next,
+    queue: fill({
+      ...pieceQueue,
+      queue
+    })
+  };
+}
 
-  pullFromBucket(): Piece {
-    if (this.bucket.length === 0) {
-      // fill the bucket
-      pieces.forEach((piece) => {
-        // 4 is just the number of each type of piece. it's arbitrary, not magic, okay.
-        for (let i = 0; i < 4; i++) {
-          this.bucket.push(piece);
-        }
-      });
-    }
-    return this.bucket.splice(randomNumber(this.bucket.length), 1)[0];
+function pullFromBucket(bucket: Piece[]): [Piece, Piece[]] {
+  const local = bucket.slice(0);
+  if (local.length === 0) {
+    // fill the bucket
+    pieces.forEach((piece) => {
+      // 4 is just the number of each type of piece. it's arbitrary, not magic, okay.
+      for (let i = 0; i < 4; i++) {
+        local.push(piece);
+      }
+    });
   }
+  return [local.splice(randomNumber(local.length), 1)[0], local];
 }
 
 export default PieceQueue;
