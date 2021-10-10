@@ -4,7 +4,12 @@ import {
   Piece,
   buildGameBoard,
   addPieceToBoard,
-  isEmptyPosition
+  isEmptyPosition,
+  flipClockwise,
+  flipCounterclockwise,
+  moveDown,
+  moveLeft,
+  moveRight
 } from './board-store';
 
 type State = 'PAUSED' | 'PLAYING' | 'LOST';
@@ -18,7 +23,16 @@ type Game = {
   lines: number;
 };
 
-type Action = 'PAUSE' | 'RESUME' | 'TICK' | 'HOLD';
+type Action =
+  | 'PAUSE'
+  | 'RESUME'
+  | 'TICK'
+  | 'HOLD'
+  | 'MOVE_DOWN'
+  | 'MOVE_LEFT'
+  | 'MOVE_RIGHT'
+  | 'FLIP_CLOCKWISE'
+  | 'FLIP_COUNTERCLOCKWISE';
 
 export const update = (game: Game, action: Action): Game => {
   switch (action) {
@@ -32,12 +46,24 @@ export const update = (game: Game, action: Action): Game => {
       // TODO: advance game
       return game;
     }
-    // HARD_DROP
-    // MOVE_DOWN
-    // MOVE_LEFT
-    // MOVE_RIGHT
-    // FLIP_CLOCKWISE
-    // FLIP_COUNTERCLOCKWISE
+    // case 'HARD_DROP': {
+    //   return applyMove(hardDrop, game);
+    // }
+    case 'MOVE_DOWN': {
+      return applyMove(moveDown, game);
+    }
+    case 'MOVE_LEFT': {
+      return applyMove(moveLeft, game);
+    }
+    case 'MOVE_RIGHT': {
+      return applyMove(moveRight, game);
+    }
+    case 'FLIP_CLOCKWISE': {
+      return applyMove(flipClockwise, game);
+    }
+    case 'FLIP_COUNTERCLOCKWISE': {
+      return applyMove(flipCounterclockwise, game);
+    }
     case 'HOLD': {
       // TODO:
       // if (_hasHeldPiece) return game;
@@ -61,6 +87,17 @@ export const update = (game: Game, action: Action): Game => {
       };
     }
   }
+};
+
+const applyMove = (
+  move: (
+    board: GameBoard,
+    piece: PositionedPiece
+  ) => PositionedPiece | undefined,
+  game: Game
+): Game => {
+  const afterFlip = game.piece ? move(game.board, game.piece) : game.piece;
+  return afterFlip ? { ...game, piece: afterFlip } : game;
 };
 
 export const initialGame: Game = {
