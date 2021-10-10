@@ -9,7 +9,8 @@ import {
   flipCounterclockwise,
   moveDown,
   moveLeft,
-  moveRight
+  moveRight,
+  setPiece
 } from './board-store';
 
 type State = 'PAUSED' | 'PLAYING' | 'LOST';
@@ -42,15 +43,18 @@ export const update = (game: Game, action: Action): Game => {
     case 'RESUME': {
       return game.state === 'PAUSED' ? { ...game, state: 'PLAYING' } : game;
     }
-    case 'TICK': {
-      // TODO: advance game
-      return game;
-    }
     // case 'HARD_DROP': {
     //   return applyMove(hardDrop, game);
     // }
+    case 'TICK':
     case 'MOVE_DOWN': {
-      return applyMove(moveDown, game);
+      const updated = applyMove(moveDown, game);
+      if (game.piece && game.piece === updated.piece) {
+        const [board, linesCleared] = setPiece(game.board, game.piece);
+        return { ...updated, board, lines: game.lines + linesCleared };
+      } else {
+        return updated;
+      }
     }
     case 'MOVE_LEFT': {
       return applyMove(moveLeft, game);

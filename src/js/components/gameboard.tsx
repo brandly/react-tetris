@@ -4,15 +4,10 @@ import AppActions from '../actions/app-actions';
 // import GameStore from '../stores/game-store';
 import AppConstants from '../constants/app-constants';
 import DetectShift from '../modules/detect-shift';
-import { GameBoard } from '../stores/board-store';
 import { getClassName } from '../modules/piece-types';
 import { Context } from '../context';
 
 const { states } = AppConstants;
-
-function latestGameBoard(): GameBoard {
-  return GameStore.getGameBoard();
-}
 
 type KeyboardMap = Record<string, () => void>;
 const keyboardMap: KeyboardMap = {

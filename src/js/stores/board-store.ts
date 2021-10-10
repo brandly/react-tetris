@@ -67,7 +67,10 @@ export type PositionedPiece = {
   position: Coords;
 };
 
-export function setPiece(board: GameBoard, positionedPiece: PositionedPiece) {
+export function setPiece(
+  board: GameBoard,
+  positionedPiece: PositionedPiece
+): [GameBoard, number] {
   const _board = addPieceToBoard(board, positionedPiece);
   // TODO: purify
   // TODO: communicate number of lines cleared
