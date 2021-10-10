@@ -78,7 +78,9 @@ export const update = (game: Game, action: Action): Game => {
         return game;
       }
 
-      const newPiece = game.heldPiece ?? setUpNewPiece();
+      // TODO:
+      // const newPiece = game.heldPiece ?? setUpNewPiece();
+      const newPiece = game.heldPiece ?? 'I';
 
       return {
         ...game,

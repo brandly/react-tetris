@@ -1,9 +1,9 @@
-import React, { useEffect, useReducer } from 'react';
+import React from 'react';
 // import PauseMenu from './pause-menu';
-import Gameboard from './gameboard';
+// import Gameboard from './gameboard';
 import { update, initialGame } from '../stores/game-store';
-import HeldPiece from './held-piece';
-import PieceQueue from './piece-queue';
+// import HeldPiece from './held-piece';
+// import PieceQueue from './piece-queue';
 
 type RenderFn = (params: {
   // HeldPiece: React.ComponentType;
@@ -17,14 +17,17 @@ type Props = {
   children: RenderFn;
 };
 
-const Tetris = (props: Props) => {
-  const [game, dispatch] = useReducer(update, initialGame);
+const Context = React.createContext(initialGame);
 
-  useEffect(() => {
+// Tetris should be a provider?
+export default function Tetris(props: Props) {
+  const [game, dispatch] = React.useReducer(update, initialGame);
+
+  React.useEffect(() => {
     let interval: number | undefined;
     if (game.state === 'PLAYING') {
       interval = window.setInterval(() => {
-        dispatch({ type: 'TICK' });
+        dispatch('TICK');
       }, 800);
     }
 
@@ -33,11 +36,15 @@ const Tetris = (props: Props) => {
     };
   }, [game.state]);
 
-  return props.children({
-    // HeldPiece,
-    // Gameboard,
-    // PieceQueue,
-    points: game.points,
-    linesCleared: game.lines
-  });
-};
+  return (
+    <Context.Provider value={game}>
+      {props.children({
+        // HeldPiece,
+        // Gameboard,
+        // PieceQueue,
+        points: game.points,
+        linesCleared: game.lines
+      })}
+    </Context.Provider>
+  );
+}

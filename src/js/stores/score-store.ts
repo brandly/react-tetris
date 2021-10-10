@@ -1,8 +1,4 @@
-import AppConstants from '../constants/app-constants';
-import BoardStore from './board-store';
 import EventEmitter from '../modules/event-emitter';
-
-const { events } = AppConstants;
 
 let points = 0;
 let linesCleared = 0;
@@ -25,7 +21,7 @@ class ScoreStore extends EventEmitter {
 const store = new ScoreStore();
 
 const pointsPerLine = 100;
-BoardStore.on(events.LINE_CLEARED, (additionalLines) => {
+export const withLines = (additionalLines: number) => {
   linesCleared += additionalLines;
 
   // what's this called?
@@ -34,6 +30,6 @@ BoardStore.on(events.LINE_CLEARED, (additionalLines) => {
   } else {
     store.addPoints(additionalLines * pointsPerLine);
   }
-});
+};
 
 export default store;
