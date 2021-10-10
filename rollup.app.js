@@ -4,6 +4,7 @@ import babel from 'rollup-plugin-babel';
 import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
 import typescript from '@rollup/plugin-typescript';
+import replace from '@rollup/plugin-replace';
 
 export default {
   input: 'app/main.js',
@@ -12,6 +13,7 @@ export default {
     format: 'iife'
   },
   plugins: [
+    replace({ 'process.env.NODE_ENV': JSON.stringify('development') }),
     typescript(),
     babel({
       exclude: 'node_modules/**'
