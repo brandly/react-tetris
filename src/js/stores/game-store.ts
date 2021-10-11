@@ -55,11 +55,13 @@ export const update = (game: Game, action: Action): Game => {
       return game.state === 'PAUSED' ? { ...game, state: 'PLAYING' } : game;
     }
     case 'HARD_DROP': {
+      if (game.state !== 'PLAYING') return game;
       const piece = hardDrop(game.board, game.piece);
       return lockInPiece({ ...game, piece });
     }
     case 'TICK':
     case 'MOVE_DOWN': {
+      if (game.state !== 'PLAYING') return game;
       const updated = applyMove(moveDown, game);
       if (game.piece === updated.piece) {
         return lockInPiece(updated);
@@ -80,6 +82,7 @@ export const update = (game: Game, action: Action): Game => {
       return applyMove(flipCounterclockwise, game);
     }
     case 'HOLD': {
+      if (game.state !== 'PLAYING') return game;
       if (game.heldPiece && !game.heldPiece.available) return game;
 
       // Ensure the held piece will fit on the board
@@ -154,6 +157,7 @@ const applyMove = (
   ) => PositionedPiece | undefined,
   game: Game
 ): Game => {
+  if (game.state !== 'PLAYING') return game;
   const afterFlip = move(game.board, game.piece);
   return afterFlip ? { ...game, piece: afterFlip } : game;
 };
