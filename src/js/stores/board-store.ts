@@ -169,12 +169,6 @@ export const moveDown = tryMove((positionedPiece: PositionedPiece) => {
   return { ...positionedPiece, position: newPosition };
 });
 
-// TODO:
-// function _hardDrop() {
-//   _position.y = _getHardDropY();
-//   _lockInPiece();
-// }
-
 export const flipClockwise = tryMove((positionedPiece: PositionedPiece) => {
   const rotation =
     ((positionedPiece.rotation ?? 0) + 1) % AppConstants.ROTATION_COUNT;
@@ -191,27 +185,25 @@ export const flipCounterclockwise = tryMove(
   }
 );
 
+export function hardDrop(
+  gameBoard: GameBoard,
+  positionedPiece: PositionedPiece
+): PositionedPiece {
+  const position = { ...positionedPiece.position };
+
+  while (isEmptyPosition(gameBoard, { ...positionedPiece, position })) {
+    position.y += 1;
+  }
+  // at this point, we just found a non-empty position, so let's step back
+  position.y -= 1;
+  return { ...positionedPiece, position };
+}
+
 // function _lockInPiece() {
 //   if (_piece) {
 //     setPiece(_piece, _rotation, _position);
 //     setUpNewPiece();
 //   }
-// }
-
-// function _getHardDropY() {
-//   let yPosition = _position.y;
-
-//   while (
-//     _piece &&
-//     isEmptyPosition(_piece, _rotation, {
-//       y: yPosition,
-//       x: _position.x
-//     })
-//   ) {
-//     yPosition += 1;
-//   }
-//   // at this point, we just found a non-empty position, so let's step back
-//   return yPosition - 1;
 // }
 
 // function setUpNewPiece() {

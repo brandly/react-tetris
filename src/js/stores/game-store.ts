@@ -10,7 +10,8 @@ import {
   moveDown,
   moveLeft,
   moveRight,
-  setPiece
+  setPiece,
+  hardDrop
 } from './board-store';
 import AppConstants from '../constants/app-constants';
 import * as PieceQueue from '../modules/piece-queue';
@@ -152,20 +153,10 @@ export function viewGameBoard(game: Game): GameBoard {
   let gameBoard = game.board;
 
   // set the preview
-  // if (pieceData.piece) {
-  //   gameBoard = placePiece(
-  //     gameBoard,
-  //     pieceData.piece,
-  //     pieceData.rotation,
-  //     pieceData.previewPosition,
-  //     true
-  //   );
-  // }
+  gameBoard = addPieceToBoard(gameBoard, hardDrop(gameBoard, game.piece), true);
 
   // set the actual piece
-  if (game.piece) {
-    gameBoard = addPieceToBoard(gameBoard, game.piece);
-  }
+  gameBoard = addPieceToBoard(gameBoard, game.piece);
 
   return gameBoard;
 }
