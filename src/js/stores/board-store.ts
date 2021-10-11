@@ -73,7 +73,6 @@ export function setPiece(
 ): [GameBoard, number] {
   const _board = addPieceToBoard(board, positionedPiece);
   // TODO: purify
-  // TODO: communicate number of lines cleared
   const linesCleared = clearFullLines(_board);
   return [_board, linesCleared];
 }

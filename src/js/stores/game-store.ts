@@ -18,11 +18,13 @@ import * as PieceQueue from '../modules/piece-queue';
 
 export type State = 'PAUSED' | 'PLAYING' | 'LOST';
 
+type HeldPiece = { available: boolean; piece: Piece };
+
 export type Game = {
   state: State;
   board: GameBoard;
   piece: PositionedPiece;
-  heldPiece: Piece | undefined;
+  heldPiece: HeldPiece | undefined;
   queue: PieceQueue.PieceQueue;
   points: number;
   lines: number;
@@ -78,23 +80,25 @@ export const update = (game: Game, action: Action): Game => {
       return applyMove(flipCounterclockwise, game);
     }
     case 'HOLD': {
-      // TODO:
-      // if (_hasHeldPiece) return game;
+      if (game.heldPiece && !game.heldPiece.available) return game;
 
       // Ensure the held piece will fit on the board
       if (
         game.heldPiece &&
-        !isEmptyPosition(game.board, { ...game.piece, piece: game.heldPiece })
+        !isEmptyPosition(game.board, {
+          ...game.piece,
+          piece: game.heldPiece.piece
+        })
       ) {
         return game;
       }
 
       const next = PieceQueue.getNext(game.queue);
-      const newPiece = game.heldPiece ?? next.piece;
+      const newPiece = game.heldPiece?.piece ?? next.piece;
 
       return {
         ...game,
-        heldPiece: game.piece.piece, // hmm
+        heldPiece: { piece: game.piece.piece, available: false }, // hmm
         piece: { ...game.piece, piece: newPiece },
         queue: newPiece === next.piece ? next.queue : game.queue
       };
@@ -111,6 +115,9 @@ const lockInPiece = (game: Game): Game => {
     state: isEmptyPosition(board, piece) ? game.state : 'LOST',
     board,
     piece,
+    heldPiece: game.heldPiece
+      ? { ...game.heldPiece, available: true }
+      : undefined,
     queue: next.queue,
     lines: game.lines + linesCleared,
     points: game.points + addScore(linesCleared)
