@@ -1,6 +1,5 @@
 import React from 'react';
 import key from 'keymaster';
-// import PauseMenu from './pause-menu';
 import Gameboard from './gameboard';
 import { update, getInitialGame, State } from '../stores/game-store';
 import HeldPiece from './held-piece';

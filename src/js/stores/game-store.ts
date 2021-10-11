@@ -147,7 +147,7 @@ const applyMove = (
   ) => PositionedPiece | undefined,
   game: Game
 ): Game => {
-  const afterFlip = game.piece ? move(game.board, game.piece) : game.piece;
+  const afterFlip = move(game.board, game.piece);
   return afterFlip ? { ...game, piece: afterFlip } : game;
 };
 
@@ -173,7 +173,5 @@ export function viewGameBoard(game: Game): GameBoard {
   gameBoard = addPieceToBoard(gameBoard, hardDrop(gameBoard, game.piece), true);
 
   // set the actual piece
-  gameBoard = addPieceToBoard(gameBoard, game.piece);
-
-  return gameBoard;
+  return addPieceToBoard(gameBoard, game.piece);
 }
