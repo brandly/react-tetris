@@ -16,7 +16,7 @@ import {
 import AppConstants from '../constants/app-constants';
 import * as PieceQueue from '../modules/piece-queue';
 
-type State = 'PAUSED' | 'PLAYING' | 'LOST';
+export type State = 'PAUSED' | 'PLAYING' | 'LOST';
 
 export type Game = {
   state: State;
@@ -38,10 +38,14 @@ type Action =
   | 'MOVE_LEFT'
   | 'MOVE_RIGHT'
   | 'FLIP_CLOCKWISE'
-  | 'FLIP_COUNTERCLOCKWISE';
+  | 'FLIP_COUNTERCLOCKWISE'
+  | 'RESET';
 
 export const update = (game: Game, action: Action): Game => {
   switch (action) {
+    case 'RESET': {
+      return getInitialGame();
+    }
     case 'PAUSE': {
       return game.state === 'PLAYING' ? { ...game, state: 'PAUSED' } : game;
     }

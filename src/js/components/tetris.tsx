@@ -2,7 +2,7 @@ import React from 'react';
 import key from 'keymaster';
 // import PauseMenu from './pause-menu';
 import Gameboard from './gameboard';
-import { update, getInitialGame } from '../stores/game-store';
+import { update, getInitialGame, State } from '../stores/game-store';
 import HeldPiece from './held-piece';
 import PieceQueue from './piece-queue';
 import { Context } from '../context';
@@ -14,6 +14,8 @@ type RenderFn = (params: {
   PieceQueue: React.ComponentType;
   points: number;
   linesCleared: number;
+  state: State;
+  reset: () => void;
 }) => React.ReactElement;
 
 type Props = {
@@ -84,6 +86,11 @@ export default function Tetris(props: Props): JSX.Element {
     };
   }, [game.state]);
 
+  const reset = React.useCallback(() => {
+    dispatch('RESET');
+  }, []);
+
+  console.log(JSON.stringify(game, null, 2));
   return (
     <Context.Provider value={game}>
       {props.children({
@@ -91,7 +98,9 @@ export default function Tetris(props: Props): JSX.Element {
         Gameboard,
         PieceQueue,
         points: game.points,
-        linesCleared: game.lines
+        linesCleared: game.lines,
+        state: game.state,
+        reset
       })}
     </Context.Provider>
   );
