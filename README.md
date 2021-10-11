@@ -20,8 +20,15 @@ const App = () => (
   <div>
     <h1>Tetris</h1>
     <Tetris>
-      {({ HeldPiece, Gameboard, PieceQueue, points, linesCleared }) => (
-        // Render it however you'd like
+      {({
+        HeldPiece,
+        Gameboard,
+        PieceQueue,
+        points,
+        linesCleared,
+        state,
+        reset
+      }) => (
         <div>
           <HeldPiece />
           <div>
@@ -30,6 +37,12 @@ const App = () => (
           </div>
           <Gameboard />
           <PieceQueue />
+          {state === 'LOST' && (
+            <div>
+              <h2>Game Over</h2>
+              <button onClick={reset}>New game</button>
+            </div>
+          )}
         </div>
       )}
     </Tetris>
