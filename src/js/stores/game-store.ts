@@ -101,10 +101,12 @@ export const update = (game: Game, action: Action): Game => {
 const lockInPiece = (game: Game): Game => {
   const [board, linesCleared] = setPiece(game.board, game.piece);
   const next = PieceQueue.getNext(game.queue);
+  const piece = initializePiece(next.piece);
   return {
     ...game,
+    state: isEmptyPosition(board, piece) ? game.state : 'LOST',
     board,
-    piece: initializePiece(next.piece),
+    piece,
     queue: next.queue,
     lines: game.lines + linesCleared,
     points: game.points + addScore(linesCleared)
@@ -161,10 +163,6 @@ export const getInitialGame = (): Game => {
 
 // Good display of merging piece + board
 export function viewGameBoard(game: Game): GameBoard {
-  if (game.state === 'LOST') {
-    return game.board;
-  }
-
   let gameBoard = game.board;
 
   // set the preview
