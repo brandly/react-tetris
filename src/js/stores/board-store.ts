@@ -1,4 +1,4 @@
-import { every } from 'lodash';
+import _ from 'lodash';
 import AppConstants from '../constants/app-constants';
 import { Piece, Rotation, getBlocks, isRotation } from '../modules/piece-types';
 
@@ -82,7 +82,7 @@ function clearFullLines(board: GameBoard): number {
   let linesCleared = 0;
   for (let y = 0; y < board.length; y++) {
     // it's a full line
-    if (every(board[y])) {
+    if (_.every(board[y])) {
       // so rip it out
       board.splice(y, 1);
       board.unshift(buildGameRow());
