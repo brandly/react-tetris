@@ -106,8 +106,19 @@ const lockInPiece = (game: Game): Game => {
     board,
     piece: initializePiece(next.piece),
     queue: next.queue,
-    lines: game.lines + linesCleared
+    lines: game.lines + linesCleared,
+    points: game.points + addScore(linesCleared)
   };
+};
+
+const pointsPerLine = 100;
+const addScore = (additionalLines: number) => {
+  // what's this called?
+  if (additionalLines === 4) {
+    return pointsPerLine * 10;
+  } else {
+    return additionalLines * pointsPerLine;
+  }
 };
 
 const initialPosition = {
