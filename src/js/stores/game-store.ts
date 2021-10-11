@@ -33,6 +33,7 @@ type Action =
   | 'RESUME'
   | 'TICK'
   | 'HOLD'
+  | 'HARD_DROP'
   | 'MOVE_DOWN'
   | 'MOVE_LEFT'
   | 'MOVE_RIGHT'
@@ -47,22 +48,15 @@ export const update = (game: Game, action: Action): Game => {
     case 'RESUME': {
       return game.state === 'PAUSED' ? { ...game, state: 'PLAYING' } : game;
     }
-    // case 'HARD_DROP': {
-    //   return applyMove(hardDrop, game);
-    // }
+    case 'HARD_DROP': {
+      const piece = hardDrop(game.board, game.piece);
+      return lockInPiece({ ...game, piece });
+    }
     case 'TICK':
     case 'MOVE_DOWN': {
       const updated = applyMove(moveDown, game);
       if (game.piece && game.piece === updated.piece) {
-        const [board, linesCleared] = setPiece(game.board, game.piece);
-        const next = PieceQueue.getNext(game.queue);
-        return {
-          ...updated,
-          board,
-          piece: initializePiece(next.piece),
-          queue: next.queue,
-          lines: game.lines + linesCleared
-        };
+        return lockInPiece(updated);
       } else {
         return updated;
       }
@@ -104,6 +98,18 @@ export const update = (game: Game, action: Action): Game => {
       };
     }
   }
+};
+
+const lockInPiece = (game: Game): Game => {
+  const [board, linesCleared] = setPiece(game.board, game.piece);
+  const next = PieceQueue.getNext(game.queue);
+  return {
+    ...game,
+    board,
+    piece: initializePiece(next.piece),
+    queue: next.queue,
+    lines: game.lines + linesCleared
+  };
 };
 
 const initialPosition = {

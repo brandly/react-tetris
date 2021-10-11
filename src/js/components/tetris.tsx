@@ -41,7 +41,6 @@ function removeKeyboardEvents(keyboardMap: KeyboardMap) {
   });
 }
 
-// Tetris should be a provider?
 export default function Tetris(props: Props): JSX.Element {
   const [game, dispatch] = React.useReducer(update, getInitialGame());
 
@@ -50,7 +49,7 @@ export default function Tetris(props: Props): JSX.Element {
       down: () => dispatch('MOVE_DOWN'),
       left: () => dispatch('MOVE_LEFT'),
       right: () => dispatch('MOVE_RIGHT'),
-      // space: AppActions.hardDrop,
+      space: () => dispatch('HARD_DROP'),
       z: () => dispatch('FLIP_COUNTERCLOCKWISE'),
       x: () => dispatch('FLIP_CLOCKWISE'),
       up: () => dispatch('FLIP_CLOCKWISE'),
