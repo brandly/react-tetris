@@ -76,12 +76,10 @@ export const update = (game: Game, action: Action): Game => {
     case 'HOLD': {
       // TODO:
       // if (_hasHeldPiece) return game;
-      if (!game.piece) return game;
 
       // Ensure the held piece will fit on the board
       if (
         game.heldPiece &&
-        // game.piece &&
         !isEmptyPosition(game.board, { ...game.piece, piece: game.heldPiece })
       ) {
         return game;
