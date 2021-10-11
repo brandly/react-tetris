@@ -1,22 +1,8 @@
 import React from 'react';
-import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
-
-function latestPiece() {
-  return PieceStore.getPieceData().heldPiece;
-}
+import { Context } from '../context';
 
 export default function HeldPiece(): JSX.Element {
-  const [heldPiece, setHeldPiece] = React.useState(latestPiece());
-
-  React.useEffect(() => {
-    const onChange = () => {
-      setHeldPiece(latestPiece());
-    };
-
-    PieceStore.addChangeListener(onChange);
-    return () => PieceStore.removeChangeListener(onChange);
-  }, []);
-
-  return <PieceView piece={heldPiece} />;
+  const { heldPiece } = React.useContext(Context);
+  return <PieceView piece={heldPiece?.piece} />;
 }

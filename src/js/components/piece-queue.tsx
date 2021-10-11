@@ -1,29 +1,12 @@
 import React from 'react';
-import { Piece } from '../modules/piece-types';
-import PieceStore from '../stores/piece-store';
 import PieceView from './piece-view';
-
-type State = Piece[];
-
-function latestQueue(): State {
-  return PieceStore.getPieceData().queue;
-}
+import { Context } from '../context';
 
 export default function PieceQueue(): JSX.Element {
-  const [queue, setQueue] = React.useState(latestQueue());
-
-  React.useEffect(() => {
-    const onChange = () => {
-      setQueue(latestQueue());
-    };
-
-    PieceStore.addChangeListener(onChange);
-    return () => PieceStore.removeChangeListener(onChange);
-  }, []);
-
+  const { queue } = React.useContext(Context);
   return (
     <div>
-      {queue.map((piece, i) => (
+      {queue.queue.map((piece, i) => (
         <PieceView piece={piece} key={i} />
       ))}
     </div>

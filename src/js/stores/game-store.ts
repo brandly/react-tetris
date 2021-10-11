@@ -1,108 +1,184 @@
-import AppDispatcher from '../dispatchers/app-dispatcher';
+import {
+  GameBoard,
+  PositionedPiece,
+  Piece,
+  buildGameBoard,
+  addPieceToBoard,
+  isEmptyPosition,
+  flipClockwise,
+  flipCounterclockwise,
+  moveDown,
+  moveLeft,
+  moveRight,
+  setPiece,
+  hardDrop
+} from './board-store';
 import AppConstants from '../constants/app-constants';
-import EventEmitter from '../modules/event-emitter';
-import BoardStore, { placePiece } from './board-store';
-import PieceStore from './piece-store';
+import * as PieceQueue from '../modules/piece-queue';
 
-const { states, actions, events } = AppConstants;
-type State = 'PAUSED' | 'PLAYING' | 'LOST';
+export type State = 'PAUSED' | 'PLAYING' | 'LOST';
 
-let _currentState: State | null = null;
-let _interval: number | null = null;
+type HeldPiece = { available: boolean; piece: Piece };
 
-class GameStore extends EventEmitter {
-  dispatcherIndex: string;
-  constructor() {
-    super();
-    this.dispatcherIndex = AppDispatcher.register((payload) => {
-      const { action } = payload;
-      switch (action) {
-        case actions.PAUSE:
-          this.pause();
-          break;
+export type Game = {
+  state: State;
+  board: GameBoard;
+  piece: PositionedPiece;
+  heldPiece: HeldPiece | undefined;
+  queue: PieceQueue.PieceQueue;
+  points: number;
+  lines: number;
+};
 
-        case actions.RESUME:
-          this.start();
-          break;
+type Action =
+  | 'PAUSE'
+  | 'RESUME'
+  | 'TICK'
+  | 'HOLD'
+  | 'HARD_DROP'
+  | 'MOVE_DOWN'
+  | 'MOVE_LEFT'
+  | 'MOVE_RIGHT'
+  | 'FLIP_CLOCKWISE'
+  | 'FLIP_COUNTERCLOCKWISE'
+  | 'RESET';
+
+export const update = (game: Game, action: Action): Game => {
+  switch (action) {
+    case 'RESET': {
+      return getInitialGame();
+    }
+    case 'PAUSE': {
+      return game.state === 'PLAYING' ? { ...game, state: 'PAUSED' } : game;
+    }
+    case 'RESUME': {
+      return game.state === 'PAUSED' ? { ...game, state: 'PLAYING' } : game;
+    }
+    case 'HARD_DROP': {
+      const piece = hardDrop(game.board, game.piece);
+      return lockInPiece({ ...game, piece });
+    }
+    case 'TICK':
+    case 'MOVE_DOWN': {
+      const updated = applyMove(moveDown, game);
+      if (game.piece === updated.piece) {
+        return lockInPiece(updated);
+      } else {
+        return updated;
+      }
+    }
+    case 'MOVE_LEFT': {
+      return applyMove(moveLeft, game);
+    }
+    case 'MOVE_RIGHT': {
+      return applyMove(moveRight, game);
+    }
+    case 'FLIP_CLOCKWISE': {
+      return applyMove(flipClockwise, game);
+    }
+    case 'FLIP_COUNTERCLOCKWISE': {
+      return applyMove(flipCounterclockwise, game);
+    }
+    case 'HOLD': {
+      if (game.heldPiece && !game.heldPiece.available) return game;
+
+      // Ensure the held piece will fit on the board
+      if (
+        game.heldPiece &&
+        !isEmptyPosition(game.board, {
+          ...game.piece,
+          piece: game.heldPiece.piece
+        })
+      ) {
+        return game;
       }
 
-      return true;
-    });
-  }
+      const next = PieceQueue.getNext(game.queue);
+      const newPiece = game.heldPiece?.piece ?? next.piece;
 
-  getGameBoard() {
-    if (_currentState === states.LOST) {
-      return BoardStore.getBoard();
-    }
-    let gameBoard = BoardStore.getBoard();
-    const pieceData = PieceStore.getPieceData();
-
-    // set the preview
-    if (pieceData.piece) {
-      gameBoard = placePiece(
-        gameBoard,
-        pieceData.piece,
-        pieceData.rotation,
-        pieceData.previewPosition,
-        true
-      );
-    }
-
-    // set the actual piece
-    if (pieceData.piece) {
-      gameBoard = placePiece(
-        gameBoard,
-        pieceData.piece,
-        pieceData.rotation,
-        pieceData.position
-      );
-    }
-
-    return gameBoard;
-  }
-
-  getCurrentState() {
-    return _currentState;
-  }
-
-  start() {
-    if (_currentState !== states.LOST) {
-      _interval = window.setInterval(() => {
-        PieceStore.tick();
-      }, 800);
-      _currentState = 'PLAYING';
-      this.emitChange();
+      return {
+        ...game,
+        heldPiece: { piece: game.piece.piece, available: false }, // hmm
+        piece: { ...game.piece, piece: newPiece },
+        queue: newPiece === next.piece ? next.queue : game.queue
+      };
     }
   }
+};
 
-  pause() {
-    if (_currentState === states.PLAYING) {
-      _interval && window.clearInterval(_interval);
-      _currentState = 'PAUSED';
-      this.emitChange();
-    }
-  }
+const lockInPiece = (game: Game): Game => {
+  const [board, linesCleared] = setPiece(game.board, game.piece);
+  const next = PieceQueue.getNext(game.queue);
+  const piece = initializePiece(next.piece);
+  return {
+    ...game,
+    state: isEmptyPosition(board, piece) ? game.state : 'LOST',
+    board,
+    piece,
+    heldPiece: game.heldPiece
+      ? { ...game.heldPiece, available: true }
+      : undefined,
+    queue: next.queue,
+    lines: game.lines + linesCleared,
+    points: game.points + addScore(linesCleared)
+  };
+};
 
-  onLost() {
-    _interval && window.clearInterval(_interval);
-    _currentState = 'LOST';
-    this.emitChange();
+const pointsPerLine = 100;
+const addScore = (additionalLines: number) => {
+  // what's this called?
+  if (additionalLines === 4) {
+    return pointsPerLine * 10;
+  } else {
+    return additionalLines * pointsPerLine;
   }
+};
+
+const initialPosition = {
+  x: AppConstants.GAME_WIDTH / 2 - AppConstants.BLOCK_WIDTH / 2,
+  y: 0
+};
+
+const initializePiece = (piece: Piece): PositionedPiece => {
+  return {
+    position: initialPosition,
+    piece,
+    rotation: 0
+  };
+};
+
+const applyMove = (
+  move: (
+    board: GameBoard,
+    piece: PositionedPiece
+  ) => PositionedPiece | undefined,
+  game: Game
+): Game => {
+  const afterFlip = move(game.board, game.piece);
+  return afterFlip ? { ...game, piece: afterFlip } : game;
+};
+
+export const getInitialGame = (): Game => {
+  const queue = PieceQueue.create(5);
+  const next = PieceQueue.getNext(queue);
+  return {
+    state: 'PLAYING',
+    points: 0,
+    lines: 0,
+    board: buildGameBoard(),
+    piece: initializePiece(next.piece),
+    heldPiece: undefined,
+    queue: next.queue
+  };
+};
+
+// Good display of merging piece + board
+export function viewGameBoard(game: Game): GameBoard {
+  let gameBoard = game.board;
+
+  // set the preview
+  gameBoard = addPieceToBoard(gameBoard, hardDrop(gameBoard, game.piece), true);
+
+  // set the actual piece
+  return addPieceToBoard(gameBoard, game.piece);
 }
-
-const store = new GameStore();
-
-PieceStore.on(events.PLAYER_LOST, () => {
-  store.onLost();
-});
-
-// Game store should emit all changes that occur
-PieceStore.addChangeListener(() => {
-  store.emitChange();
-});
-
-BoardStore.addChangeListener(() => {
-  store.emitChange();
-});
-
-export default store;
