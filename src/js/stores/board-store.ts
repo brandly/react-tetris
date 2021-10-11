@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { every } from 'lodash';
 import AppConstants from '../constants/app-constants';
 import { Piece, Rotation, getBlocks, isRotation } from '../modules/piece-types';
 
@@ -82,7 +82,7 @@ function clearFullLines(board: GameBoard): number {
   let linesCleared = 0;
   for (let y = 0; y < board.length; y++) {
     // it's a full line
-    if (_.every(board[y])) {
+    if (every(board[y])) {
       // so rip it out
       board.splice(y, 1);
       board.unshift(buildGameRow());
@@ -198,24 +198,3 @@ export function hardDrop(
   position.y -= 1;
   return { ...positionedPiece, position };
 }
-
-// function _lockInPiece() {
-//   if (_piece) {
-//     setPiece(_piece, _rotation, _position);
-//     setUpNewPiece();
-//   }
-// }
-
-// function setUpNewPiece() {
-//   // new values for everyone
-//   _piece = queue.getNext();
-//   _rotation = 0;
-//   _position = _.clone(initialPosition);
-//   _heldPiece = undefined;
-//   if (!isEmptyPosition(_piece, _rotation, _position)) {
-//     store.emitPlayerLost();
-//   }
-//   store.emitChange();
-// }
-
-// setUpNewPiece();
