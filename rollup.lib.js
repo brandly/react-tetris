@@ -18,7 +18,7 @@ export default {
     typescript(),
     babel({
       exclude: 'node_modules/**',
-      plugins: ['@babel/plugin-external-helpers', 'lodash']
+      plugins: ['@babel/plugin-external-helpers']
     }),
     resolve({
       browser: true,

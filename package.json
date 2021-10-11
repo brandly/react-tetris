@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "keymaster": "1.6.2",
-    "lodash": "4.17.21",
     "prop-types": "15.7.2"
   },
   "scripts": {
@@ -32,12 +31,10 @@
     "@rollup/plugin-replace": "3.0.0",
     "@rollup/plugin-typescript": "8.2.5",
     "@types/events": "3.0.0",
-    "@types/lodash": "4.14.175",
     "@types/react": "17.0.27",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
     "babel-eslint": "10.1.0",
-    "babel-plugin-lodash": "3.3.4",
     "babel-plugin-transform-class-properties": "6.24.1",
     "eslint": "7.32.0",
     "eslint-config-airbnb": "18.2.0",
