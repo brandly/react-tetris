@@ -61,7 +61,7 @@ export const update = (game: Game, action: Action): Game => {
     case 'TICK':
     case 'MOVE_DOWN': {
       const updated = applyMove(moveDown, game);
-      if (game.piece && game.piece === updated.piece) {
+      if (game.piece === updated.piece) {
         return lockInPiece(updated);
       } else {
         return updated;
