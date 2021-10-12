@@ -60,5 +60,8 @@
     "react": "^16.8.0 || ^17.0.0",
     "react-dom": "^16.8.0 || ^17.0.0"
   },
-  "homepage": "https://brandly.github.io/react-tetris/"
+  "homepage": "https://brandly.github.io/react-tetris/",
+  "files": [
+    "lib/index.js"
+  ]
 }
