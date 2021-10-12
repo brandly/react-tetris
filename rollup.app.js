@@ -7,7 +7,7 @@ import typescript from '@rollup/plugin-typescript';
 import replace from '@rollup/plugin-replace';
 
 export default {
-  input: 'app/main.js',
+  input: 'app/main.tsx',
   output: {
     file: 'dist/main.js',
     format: 'iife'

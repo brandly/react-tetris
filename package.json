@@ -8,8 +8,7 @@
     "url": "https://github.com/brandly/react-tetris"
   },
   "dependencies": {
-    "keymaster": "1.6.2",
-    "prop-types": "15.7.2"
+    "keymaster": "1.6.2"
   },
   "scripts": {
     "build:lib": "rollup --config rollup.lib.js",
@@ -32,6 +31,7 @@
     "@rollup/plugin-typescript": "8.2.5",
     "@types/events": "3.0.0",
     "@types/react": "17.0.27",
+    "@types/react-dom": "17.0.9",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
     "babel-eslint": "10.1.0",

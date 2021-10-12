@@ -63,7 +63,7 @@ const Button = styled.button`
   background: none;
   margin-top: 12px;
   border-radius: 4px;
-`
+`;
 
 const GamePanel = () => (
   <Container>
@@ -134,16 +134,24 @@ const Digit = styled.span`
   font-size: 24px;
 `;
 
-const Digits = ({ children, count = 4 }) => {
+type DigitsProps = {
+  children: number;
+  count?: number;
+};
+const Digits = ({ children, count = 4 }: DigitsProps): JSX.Element => {
   let str = children.toString();
 
   while (str.length < count) {
     str = `${0}${str}`;
   }
 
-  return str
-    .split('')
-    .map((digit, index) => <Digit key={index}>{digit}</Digit>);
+  return (
+    <>
+      {str.split('').map((digit, index) => (
+        <Digit key={index}>{digit}</Digit>
+      ))}
+    </>
+  );
 };
 
 export default GamePanel;
