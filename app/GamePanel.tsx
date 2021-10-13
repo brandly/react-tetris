@@ -1,5 +1,4 @@
 import React from 'react';
-/* eslint-disable import/no-extraneous-dependencies */
 import styled from 'styled-components';
 import Tetris from '../src/js/components/tetris';
 
@@ -21,7 +20,7 @@ const LeftHalf = styled.div`
   width: 50%;
 `;
 
-const RightHalf = LeftHalf.extend`
+const RightHalf = styled(LeftHalf)`
   text-align: right;
 `;
 
@@ -30,15 +29,15 @@ const Column = styled.div`
   vertical-align: top;
 `;
 
-const LeftColumn = Column.extend`
+const LeftColumn = styled(Column)`
   width: 88px;
 `;
 
-const RightColumn = LeftColumn.extend`
+const RightColumn = styled(LeftColumn)`
   padding-left: 15px;
 `;
 
-const MiddleColumn = Column.extend`
+const MiddleColumn = styled(Column)`
   width: 200px;
 `;
 
@@ -65,7 +64,7 @@ const Button = styled.button`
   border-radius: 4px;
 `;
 
-const GamePanel = () => (
+const GamePanel = (): JSX.Element => (
   <Container>
     <Tetris>
       {({

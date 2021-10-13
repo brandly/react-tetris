@@ -1,5 +1,4 @@
 import React from 'react';
-/* eslint-disable import/no-extraneous-dependencies */
 import styled from 'styled-components';
 import GamePanel from './GamePanel';
 import TypedShell from './TypedShell';
@@ -38,7 +37,7 @@ const VerticallyCenterChildren = styled.div`
   min-height: 100vh;
 `;
 
-const Heading = VerticallyCenterChildren.extend`
+const Heading = styled(VerticallyCenterChildren)`
   text-align: center;
 `;
 
@@ -52,7 +51,7 @@ const SubTitle = styled.h2`
   font-size: 18px;
 `;
 
-const App = () => (
+const App = (): JSX.Element => (
   <Container>
     <LeftHalf>
       <Heading>
