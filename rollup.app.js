@@ -23,13 +23,11 @@ export default {
       preferBuiltins: true
     }),
     commonjs({
+      ignoreGlobal: true,
+      include: /\/node_modules\//,
       namedExports: {
-        'node_modules/react/index.js': [
-          'Children',
-          'Component',
-          'PropTypes',
-          'createElement'
-        ]
+        react: Object.keys(require('react')),
+        'react-is': Object.keys(require('react-is'))
       }
     }),
     globals(),
