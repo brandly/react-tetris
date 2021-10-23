@@ -42,8 +42,7 @@ const defaultKeyboardMap: KeyboardMap = {
   z: 'FLIP_COUNTERCLOCKWISE',
   x: 'FLIP_CLOCKWISE',
   up: 'FLIP_CLOCKWISE',
-  // TODO: bring back pause
-  // p: 'TOGGLE_PAUSE',
+  p: 'TOGGLE_PAUSE',
   c: 'HOLD',
   shift: 'HOLD'
 };

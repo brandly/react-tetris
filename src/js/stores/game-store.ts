@@ -33,6 +33,7 @@ export type Game = {
 export type Action =
   | 'PAUSE'
   | 'RESUME'
+  | 'TOGGLE_PAUSE'
   | 'TICK'
   | 'HOLD'
   | 'HARD_DROP'
@@ -53,6 +54,11 @@ export const update = (game: Game, action: Action): Game => {
     }
     case 'RESUME': {
       return game.state === 'PAUSED' ? { ...game, state: 'PLAYING' } : game;
+    }
+    case 'TOGGLE_PAUSE': {
+      if (game.state === 'PLAYING') return { ...game, state: 'PAUSED' };
+      if (game.state === 'PAUSED') return { ...game, state: 'PLAYING' };
+      return game;
     }
     case 'HARD_DROP': {
       if (game.state !== 'PLAYING') return game;
