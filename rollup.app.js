@@ -23,7 +23,6 @@ export default {
       preferBuiltins: true
     }),
     commonjs({
-      ignoreGlobal: true,
       include: /\/node_modules\//,
       namedExports: {
         react: Object.keys(require('react')),
