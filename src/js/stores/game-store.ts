@@ -41,11 +41,11 @@ export type Action =
   | 'MOVE_RIGHT'
   | 'FLIP_CLOCKWISE'
   | 'FLIP_COUNTERCLOCKWISE'
-  | 'RESET';
+  | 'RESTART';
 
 export const update = (game: Game, action: Action): Game => {
   switch (action) {
-    case 'RESET': {
+    case 'RESTART': {
       return getInitialGame();
     }
     case 'PAUSE': {

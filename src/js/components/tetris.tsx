@@ -13,8 +13,21 @@ type RenderFn = (params: {
   points: number;
   linesCleared: number;
   state: State;
-  reset: () => void;
+  controller: Controller;
 }) => React.ReactElement;
+
+type Controller = {
+  pause: () => void;
+  resume: () => void;
+  hold: () => void;
+  hardDrop: () => void;
+  moveDown: () => void;
+  moveLeft: () => void;
+  moveRight: () => void;
+  flipClockwise: () => void;
+  flipCounterclockwise: () => void;
+  restart: () => void;
+};
 
 type Props = {
   keyboardControls?: KeyboardMap;
@@ -53,7 +66,21 @@ export default function Tetris(props: Props): JSX.Element {
     };
   }, [game.state]);
 
-  const reset = React.useCallback(() => dispatch('RESET'), []);
+  const controller = React.useMemo(
+    () => ({
+      pause: () => dispatch('PAUSE'),
+      resume: () => dispatch('RESUME'),
+      hold: () => dispatch('HOLD'),
+      hardDrop: () => dispatch('HARD_DROP'),
+      moveDown: () => dispatch('MOVE_DOWN'),
+      moveLeft: () => dispatch('MOVE_LEFT'),
+      moveRight: () => dispatch('MOVE_RIGHT'),
+      flipClockwise: () => dispatch('FLIP_CLOCKWISE'),
+      flipCounterclockwise: () => dispatch('FLIP_COUNTERCLOCKWISE'),
+      restart: () => dispatch('RESTART')
+    }),
+    [dispatch]
+  );
 
   return (
     <Context.Provider value={game}>
@@ -64,7 +91,7 @@ export default function Tetris(props: Props): JSX.Element {
         points: game.points,
         linesCleared: game.lines,
         state: game.state,
-        reset
+        controller
       })}
     </Context.Provider>
   );
