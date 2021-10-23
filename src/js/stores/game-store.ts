@@ -30,7 +30,7 @@ export type Game = {
   lines: number;
 };
 
-type Action =
+export type Action =
   | 'PAUSE'
   | 'RESUME'
   | 'TICK'

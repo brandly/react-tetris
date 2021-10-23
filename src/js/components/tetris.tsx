@@ -1,7 +1,7 @@
 import React from 'react';
 import key from 'keymaster';
 import Gameboard from './gameboard';
-import { update, getInitialGame, State } from '../stores/game-store';
+import { update, getInitialGame, State, Action } from '../stores/game-store';
 import HeldPiece from './held-piece';
 import PieceQueue from './piece-queue';
 import { Context } from '../context';
@@ -18,13 +18,14 @@ type RenderFn = (params: {
 }) => React.ReactElement;
 
 type Props = {
+  keyboardControls?: KeyboardMap;
   children: RenderFn;
 };
 
-type KeyboardMap = Record<string, () => void>;
+type KeyboardMap = Record<string, Action>;
 
-function addKeyboardEvents(keyboardMap: KeyboardMap) {
-  Object.keys(keyboardMap).forEach((k: keyof KeyboardMap) => {
+function addKeyboardEvents(keyboardMap: KeyboardDispatch) {
+  Object.keys(keyboardMap).forEach((k: keyof KeyboardDispatch) => {
     if (k === 'shift') {
       DetectShift.bind(keyboardMap[k]);
     } else {
@@ -32,7 +33,7 @@ function addKeyboardEvents(keyboardMap: KeyboardMap) {
     }
   });
 }
-function removeKeyboardEvents(keyboardMap: KeyboardMap) {
+function removeKeyboardEvents(keyboardMap: KeyboardDispatch) {
   Object.keys(keyboardMap).forEach((k) => {
     if (k === 'shift') {
       DetectShift.unbind(keyboardMap[k]);
@@ -42,35 +43,43 @@ function removeKeyboardEvents(keyboardMap: KeyboardMap) {
   });
 }
 
+const defaultKeyboardMap: KeyboardMap = {
+  down: 'MOVE_DOWN',
+  left: 'MOVE_LEFT',
+  right: 'MOVE_RIGHT',
+  space: 'HARD_DROP',
+  z: 'FLIP_COUNTERCLOCKWISE',
+  x: 'FLIP_CLOCKWISE',
+  up: 'FLIP_CLOCKWISE',
+  // TODO: bring back pause
+  // p: 'TOGGLE_PAUSE',
+  c: 'HOLD',
+  shift: 'HOLD'
+};
+
+type KeyboardDispatch = Record<string, () => void>;
+
+const useKeyboardMap = (
+  keyboardMap: KeyboardMap,
+  dispatch: React.Dispatch<Action>
+) => {
+  React.useEffect(() => {
+    const keyboardDispatch = Object.entries(keyboardMap).reduce(
+      (output, [key, action]) => {
+        output[key] = () => dispatch(action);
+        return output;
+      },
+      {} as KeyboardDispatch
+    );
+    addKeyboardEvents(keyboardDispatch);
+    return () => removeKeyboardEvents(keyboardDispatch);
+  }, [keyboardMap, dispatch]);
+};
+
 export default function Tetris(props: Props): JSX.Element {
   const [game, dispatch] = React.useReducer(update, getInitialGame());
-
-  React.useEffect(() => {
-    const keyboardMap: KeyboardMap = {
-      down: () => dispatch('MOVE_DOWN'),
-      left: () => dispatch('MOVE_LEFT'),
-      right: () => dispatch('MOVE_RIGHT'),
-      space: () => dispatch('HARD_DROP'),
-      z: () => dispatch('FLIP_COUNTERCLOCKWISE'),
-      x: () => dispatch('FLIP_CLOCKWISE'),
-      up: () => dispatch('FLIP_CLOCKWISE'),
-      p: () => {
-        if (game.state === 'PLAYING') {
-          dispatch('PAUSE');
-        } else {
-          dispatch('RESUME');
-        }
-      },
-      c: () => dispatch('HOLD'),
-      shift: () => dispatch('HOLD')
-    };
-
-    addKeyboardEvents(keyboardMap);
-
-    return () => {
-      removeKeyboardEvents(keyboardMap);
-    };
-  }, [game.state]);
+  const keyboardMap = props.keyboardControls ?? defaultKeyboardMap;
+  useKeyboardMap(keyboardMap, dispatch);
 
   React.useEffect(() => {
     let interval: number | undefined;
