@@ -74,7 +74,7 @@ const GamePanel = (): JSX.Element => (
         points,
         linesCleared,
         state,
-        reset
+        controller
       }) => (
         <div>
           <div style={{ opacity: state === 'PLAYING' ? 1 : 0.5 }}>
@@ -106,20 +106,31 @@ const GamePanel = (): JSX.Element => (
             <RightColumn>
               <PieceQueue />
             </RightColumn>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <button onClick={controller.moveLeft}>left</button>
+                <button onClick={controller.moveRight}>right</button>
+              </div>
+              <div>
+                <button onClick={controller.flipClockwise}>turn</button>
+                <button onClick={controller.hardDrop}>drop</button>
+              </div>
+            </div>
+
+            {state === 'PAUSED' && (
+              <Popup>
+                <Alert>Paused</Alert>
+              </Popup>
+            )}
+
+            {state === 'LOST' && (
+              <Popup>
+                <Alert>Game Over</Alert>
+                <Button onClick={controller.restart}>Start</Button>
+              </Popup>
+            )}
           </div>
-
-          {state === 'PAUSED' && (
-            <Popup>
-              <Alert>Paused</Alert>
-            </Popup>
-          )}
-
-          {state === 'LOST' && (
-            <Popup>
-              <Alert>Game Over</Alert>
-              <Button onClick={reset}>Start</Button>
-            </Popup>
-          )}
         </div>
       )}
     </Tetris>

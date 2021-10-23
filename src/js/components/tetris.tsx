@@ -1,11 +1,10 @@
 import React from 'react';
-import key from 'keymaster';
 import Gameboard from './gameboard';
 import { update, getInitialGame, State } from '../stores/game-store';
 import HeldPiece from './held-piece';
 import PieceQueue from './piece-queue';
 import { Context } from '../context';
-import DetectShift from '../modules/detect-shift';
+import { KeyboardMap, useKeyboardControls } from '../hooks/useKeyboardControls';
 
 type RenderFn = (params: {
   HeldPiece: React.ComponentType;
@@ -14,63 +13,44 @@ type RenderFn = (params: {
   points: number;
   linesCleared: number;
   state: State;
-  reset: () => void;
+  controller: Controller;
 }) => React.ReactElement;
 
+type Controller = {
+  pause: () => void;
+  resume: () => void;
+  hold: () => void;
+  hardDrop: () => void;
+  moveDown: () => void;
+  moveLeft: () => void;
+  moveRight: () => void;
+  flipClockwise: () => void;
+  flipCounterclockwise: () => void;
+  restart: () => void;
+};
+
 type Props = {
+  keyboardControls?: KeyboardMap;
   children: RenderFn;
 };
 
-type KeyboardMap = Record<string, () => void>;
-
-function addKeyboardEvents(keyboardMap: KeyboardMap) {
-  Object.keys(keyboardMap).forEach((k: keyof KeyboardMap) => {
-    if (k === 'shift') {
-      DetectShift.bind(keyboardMap[k]);
-    } else {
-      key(k, keyboardMap[k]);
-    }
-  });
-}
-function removeKeyboardEvents(keyboardMap: KeyboardMap) {
-  Object.keys(keyboardMap).forEach((k) => {
-    if (k === 'shift') {
-      DetectShift.unbind(keyboardMap[k]);
-    } else {
-      key.unbind(k);
-    }
-  });
-}
+const defaultKeyboardMap: KeyboardMap = {
+  down: 'MOVE_DOWN',
+  left: 'MOVE_LEFT',
+  right: 'MOVE_RIGHT',
+  space: 'HARD_DROP',
+  z: 'FLIP_COUNTERCLOCKWISE',
+  x: 'FLIP_CLOCKWISE',
+  up: 'FLIP_CLOCKWISE',
+  p: 'TOGGLE_PAUSE',
+  c: 'HOLD',
+  shift: 'HOLD'
+};
 
 export default function Tetris(props: Props): JSX.Element {
   const [game, dispatch] = React.useReducer(update, getInitialGame());
-
-  React.useEffect(() => {
-    const keyboardMap: KeyboardMap = {
-      down: () => dispatch('MOVE_DOWN'),
-      left: () => dispatch('MOVE_LEFT'),
-      right: () => dispatch('MOVE_RIGHT'),
-      space: () => dispatch('HARD_DROP'),
-      z: () => dispatch('FLIP_COUNTERCLOCKWISE'),
-      x: () => dispatch('FLIP_CLOCKWISE'),
-      up: () => dispatch('FLIP_CLOCKWISE'),
-      p: () => {
-        if (game.state === 'PLAYING') {
-          dispatch('PAUSE');
-        } else {
-          dispatch('RESUME');
-        }
-      },
-      c: () => dispatch('HOLD'),
-      shift: () => dispatch('HOLD')
-    };
-
-    addKeyboardEvents(keyboardMap);
-
-    return () => {
-      removeKeyboardEvents(keyboardMap);
-    };
-  }, [game.state]);
+  const keyboardMap = props.keyboardControls ?? defaultKeyboardMap;
+  useKeyboardControls(keyboardMap, dispatch);
 
   React.useEffect(() => {
     let interval: number | undefined;
@@ -85,11 +65,22 @@ export default function Tetris(props: Props): JSX.Element {
     };
   }, [game.state]);
 
-  const reset = React.useCallback(() => {
-    dispatch('RESET');
-  }, []);
+  const controller = React.useMemo(
+    () => ({
+      pause: () => dispatch('PAUSE'),
+      resume: () => dispatch('RESUME'),
+      hold: () => dispatch('HOLD'),
+      hardDrop: () => dispatch('HARD_DROP'),
+      moveDown: () => dispatch('MOVE_DOWN'),
+      moveLeft: () => dispatch('MOVE_LEFT'),
+      moveRight: () => dispatch('MOVE_RIGHT'),
+      flipClockwise: () => dispatch('FLIP_CLOCKWISE'),
+      flipCounterclockwise: () => dispatch('FLIP_COUNTERCLOCKWISE'),
+      restart: () => dispatch('RESTART')
+    }),
+    [dispatch]
+  );
 
-  console.log(JSON.stringify(game, null, 2));
   return (
     <Context.Provider value={game}>
       {props.children({
@@ -99,7 +90,7 @@ export default function Tetris(props: Props): JSX.Element {
         points: game.points,
         linesCleared: game.lines,
         state: game.state,
-        reset
+        controller
       })}
     </Context.Provider>
   );

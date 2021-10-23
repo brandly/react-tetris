@@ -30,9 +30,10 @@ export type Game = {
   lines: number;
 };
 
-type Action =
+export type Action =
   | 'PAUSE'
   | 'RESUME'
+  | 'TOGGLE_PAUSE'
   | 'TICK'
   | 'HOLD'
   | 'HARD_DROP'
@@ -41,11 +42,11 @@ type Action =
   | 'MOVE_RIGHT'
   | 'FLIP_CLOCKWISE'
   | 'FLIP_COUNTERCLOCKWISE'
-  | 'RESET';
+  | 'RESTART';
 
 export const update = (game: Game, action: Action): Game => {
   switch (action) {
-    case 'RESET': {
+    case 'RESTART': {
       return getInitialGame();
     }
     case 'PAUSE': {
@@ -53,6 +54,11 @@ export const update = (game: Game, action: Action): Game => {
     }
     case 'RESUME': {
       return game.state === 'PAUSED' ? { ...game, state: 'PLAYING' } : game;
+    }
+    case 'TOGGLE_PAUSE': {
+      if (game.state === 'PLAYING') return { ...game, state: 'PAUSED' };
+      if (game.state === 'PAUSED') return { ...game, state: 'PLAYING' };
+      return game;
     }
     case 'HARD_DROP': {
       if (game.state !== 'PLAYING') return game;
