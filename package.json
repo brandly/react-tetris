@@ -18,7 +18,8 @@
     "html": "cp src/index.html dist/",
     "lint": "eslint . --ext .ts,.tsx",
     "clean": "rm -rf dist/*",
-    "test": "tsc --noEmit && npm run lint"
+    "test": "tsc --noEmit && npm run lint && npm run test:unit",
+    "test:unit": "esbuild --bundle --platform=node test/index.ts | node"
   },
   "author": "Matthew Brandly",
   "license": "MIT",
@@ -29,6 +30,7 @@
     "@babel/preset-react": "7.10.1",
     "@rollup/plugin-replace": "3.0.0",
     "@rollup/plugin-typescript": "8.2.5",
+    "@types/assert": "1.5.6",
     "@types/events": "3.0.0",
     "@types/react": "17.0.30",
     "@types/react-dom": "17.0.9",
@@ -37,6 +39,7 @@
     "@typescript-eslint/parser": "4.33.0",
     "babel-eslint": "10.1.0",
     "babel-plugin-transform-class-properties": "6.24.1",
+    "esbuild": "0.13.9",
     "eslint": "7.32.0",
     "eslint-config-airbnb": "18.2.0",
     "eslint-config-prettier": "6.11.0",
