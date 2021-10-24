@@ -108,7 +108,7 @@ export const update = (game: Game, action: Action): Game => {
       return {
         ...game,
         heldPiece: { piece: game.piece.piece, available: false }, // hmm
-        piece: { ...game.piece, piece: newPiece },
+        piece: initializePiece(newPiece),
         queue: newPiece === next.piece ? next.queue : game.queue
       };
     }
