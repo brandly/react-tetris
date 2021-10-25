@@ -1,11 +1,11 @@
-import appConstants from '../constants/app-constants';
+import Constants from '../constants';
 
 export const pieces = <const>['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
 export type Piece = typeof pieces[number];
 export type Rotation = 0 | 1 | 2 | 3;
 
 export const isRotation = (num: number): num is Rotation =>
-  num >= 0 && num < appConstants.ROTATION_COUNT;
+  num >= 0 && num < Constants.ROTATION_COUNT;
 
 export const getBlocks = (piece: Piece): number[][][] => {
   switch (piece) {

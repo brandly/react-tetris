@@ -13,7 +13,7 @@ import {
   setPiece,
   hardDrop
 } from './Matrix';
-import AppConstants from '../constants/app-constants';
+import Constants from '../constants';
 import * as PieceQueue from '../modules/piece-queue';
 
 export type State = 'PAUSED' | 'PLAYING' | 'LOST';
@@ -144,7 +144,7 @@ const addScore = (additionalLines: number) => {
 };
 
 const initialPosition = {
-  x: AppConstants.GAME_WIDTH / 2 - AppConstants.BLOCK_WIDTH / 2,
+  x: Constants.GAME_WIDTH / 2 - Constants.BLOCK_WIDTH / 2,
   y: 0
 };
 

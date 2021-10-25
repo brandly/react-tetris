@@ -1,7 +1,7 @@
-import AppConstants from '../constants/app-constants';
+import Constants from '../constants';
 import { Piece, Rotation, getBlocks, isRotation } from '../modules/piece-types';
 
-const { GAME_HEIGHT, GAME_WIDTH } = AppConstants;
+const { GAME_HEIGHT, GAME_WIDTH } = Constants;
 
 export { Piece };
 export type Coords = {
@@ -105,8 +105,8 @@ export function isEmptyPosition(
   const { piece, rotation, position } = positionedPiece;
   const blocks = getBlocks(piece)[rotation];
 
-  for (let x = 0; x < AppConstants.BLOCK_WIDTH; x++) {
-    for (let y = 0; y < AppConstants.BLOCK_HEIGHT; y++) {
+  for (let x = 0; x < Constants.BLOCK_WIDTH; x++) {
+    for (let y = 0; y < Constants.BLOCK_HEIGHT; y++) {
       const block = blocks[y][x];
       const matrixX = x + position.x;
       const matrixY = y + position.y;
@@ -176,7 +176,7 @@ export const moveDown = tryMove((positionedPiece: PositionedPiece) => {
 
 export const flipClockwise = tryMove((positionedPiece: PositionedPiece) => {
   const rotation =
-    ((positionedPiece.rotation ?? 0) + 1) % AppConstants.ROTATION_COUNT;
+    ((positionedPiece.rotation ?? 0) + 1) % Constants.ROTATION_COUNT;
   assert(isRotation(rotation));
   return { ...positionedPiece, rotation };
 });
@@ -184,7 +184,7 @@ export const flipClockwise = tryMove((positionedPiece: PositionedPiece) => {
 export const flipCounterclockwise = tryMove(
   (positionedPiece: PositionedPiece) => {
     let rotation = (positionedPiece.rotation ?? 0) - 1;
-    if (rotation < 0) rotation += AppConstants.ROTATION_COUNT;
+    if (rotation < 0) rotation += Constants.ROTATION_COUNT;
     assert(isRotation(rotation));
     return { ...positionedPiece, rotation };
   }
