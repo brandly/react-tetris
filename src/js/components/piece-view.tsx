@@ -1,5 +1,5 @@
 import React from 'react';
-import { getBlocks, getClassName, Piece } from '../modules/piece-types';
+import { getBlocks, getClassName, Piece } from '../models/Piece';
 // import PauseMenu from './pause-menu';
 
 type Props = {

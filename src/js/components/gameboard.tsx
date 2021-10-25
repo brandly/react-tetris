@@ -1,6 +1,6 @@
 import React from 'react';
 import { viewMatrix } from '../models/Game';
-import { getClassName } from '../modules/piece-types';
+import { getClassName } from '../models/Piece';
 import { Context } from '../context';
 
 export default function GameboardView(): JSX.Element {

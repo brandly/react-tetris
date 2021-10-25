@@ -1,5 +1,5 @@
 import Constants from '../constants';
-import { Piece, Rotation, getBlocks, isRotation } from '../modules/piece-types';
+import { Piece, Rotation, getBlocks, isRotation } from './Piece';
 
 const { GAME_HEIGHT, GAME_WIDTH } = Constants;
 
