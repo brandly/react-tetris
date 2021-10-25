@@ -30,6 +30,8 @@ export type Game = {
   lines: number;
 };
 
+export const getLevel = (game: Game): number => Math.floor(game.lines / 10) + 1;
+
 export type Action =
   | 'PAUSE'
   | 'RESUME'

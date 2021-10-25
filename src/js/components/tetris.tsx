@@ -12,6 +12,7 @@ type RenderFn = (params: {
   PieceQueue: React.ComponentType;
   points: number;
   linesCleared: number;
+  level: number;
   state: Game.State;
   controller: Controller;
 }) => React.ReactElement;
@@ -47,23 +48,28 @@ const defaultKeyboardMap: KeyboardMap = {
   shift: 'HOLD'
 };
 
+// https://harddrop.com/wiki/Tetris_Worlds#Gravity
+const tickSeconds = (level: number) =>
+  (0.8 - (level - 1) * 0.007) ** (level - 1);
+
 export default function Tetris(props: Props): JSX.Element {
   const [game, dispatch] = React.useReducer(Game.update, Game.init());
   const keyboardMap = props.keyboardControls ?? defaultKeyboardMap;
   useKeyboardControls(keyboardMap, dispatch);
+  const level = Game.getLevel(game);
 
   React.useEffect(() => {
     let interval: number | undefined;
     if (game.state === 'PLAYING') {
       interval = window.setInterval(() => {
         dispatch('TICK');
-      }, 800);
+      }, tickSeconds(level) * 1000);
     }
 
     return () => {
       window.clearInterval(interval);
     };
-  }, [game.state]);
+  }, [game.state, level]);
 
   const controller = React.useMemo(
     () => ({
@@ -90,6 +96,7 @@ export default function Tetris(props: Props): JSX.Element {
         points: game.points,
         linesCleared: game.lines,
         state: game.state,
+        level,
         controller
       })}
     </Context.Provider>
