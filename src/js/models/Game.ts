@@ -12,7 +12,7 @@ import {
   moveRight,
   setPiece,
   hardDrop
-} from './board-store';
+} from '../stores/board-store';
 import AppConstants from '../constants/app-constants';
 import * as PieceQueue from '../modules/piece-queue';
 

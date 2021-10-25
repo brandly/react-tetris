@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { update, init, Action } from '../src/js/stores/game-store';
+import { update, init, Action } from '../src/js/models/Game';
 
 const ticks: Action[] = ['TICK', 'TICK', 'TICK'];
 

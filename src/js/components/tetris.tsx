@@ -1,6 +1,6 @@
 import React from 'react';
 import Gameboard from './gameboard';
-import * as Game from '../stores/game-store';
+import * as Game from '../models/Game';
 import HeldPiece from './held-piece';
 import PieceQueue from './piece-queue';
 import { Context } from '../context';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { viewGameBoard } from '../stores/game-store';
+import { viewGameBoard } from '../models/Game';
 import { getClassName } from '../modules/piece-types';
 import { Context } from '../context';
 
