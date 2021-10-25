@@ -13,14 +13,14 @@ const serializeCoords = ({ x, y }: Coords): string => `${x},${y}`;
 
 // Two-dimensional array
 // First dimension is height. Second is width.
-export type GameBoard = Array<Array<Piece | 'ghost' | null>>;
+export type Matrix = Array<Array<Piece | 'ghost' | null>>;
 
-export function buildGameBoard(): GameBoard {
-  const board = new Array(GAME_HEIGHT);
-  for (let y = 0; y < board.length; y++) {
-    board[y] = buildGameRow();
+export function buildMatrix(): Matrix {
+  const matrix = new Array(GAME_HEIGHT);
+  for (let y = 0; y < matrix.length; y++) {
+    matrix[y] = buildGameRow();
   }
-  return board;
+  return matrix;
 }
 
 function buildGameRow(): Array<null> {
@@ -28,10 +28,10 @@ function buildGameRow(): Array<null> {
 }
 
 export const addPieceToBoard = (
-  board: GameBoard,
+  matrix: Matrix,
   positionedPiece: PositionedPiece,
   isGhost = false
-): GameBoard => {
+): Matrix => {
   const { piece, rotation, position } = positionedPiece;
   const block = getBlocks(piece)[rotation];
 
@@ -53,7 +53,7 @@ export const addPieceToBoard = (
 
   const value = isGhost ? 'ghost' : piece;
 
-  return board.map((row, y) =>
+  return matrix.map((row, y) =>
     row.map((cell, x) => {
       return filled.has(serializeCoords({ x, y })) ? value : cell;
     })
@@ -67,23 +67,23 @@ export type PositionedPiece = {
 };
 
 export function setPiece(
-  board: GameBoard,
+  matrix: Matrix,
   positionedPiece: PositionedPiece
-): [GameBoard, number] {
-  const _board = addPieceToBoard(board, positionedPiece);
+): [Matrix, number] {
+  const _matrix = addPieceToBoard(matrix, positionedPiece);
   // TODO: purify
-  const linesCleared = clearFullLines(_board);
-  return [_board, linesCleared];
+  const linesCleared = clearFullLines(_matrix);
+  return [_matrix, linesCleared];
 }
 
-function clearFullLines(board: GameBoard): number {
+function clearFullLines(matrix: Matrix): number {
   let linesCleared = 0;
-  for (let y = 0; y < board.length; y++) {
+  for (let y = 0; y < matrix.length; y++) {
     // it's a full line
-    if (every(board[y])) {
+    if (every(matrix[y])) {
       // so rip it out
-      board.splice(y, 1);
-      board.unshift(buildGameRow());
+      matrix.splice(y, 1);
+      matrix.unshift(buildGameRow());
       linesCleared += 1;
     }
   }
@@ -99,7 +99,7 @@ function every<T>(list: T[]): boolean {
 }
 
 export function isEmptyPosition(
-  board: GameBoard,
+  matrix: Matrix,
   positionedPiece: PositionedPiece
 ): boolean {
   const { piece, rotation, position } = positionedPiece;
@@ -108,20 +108,20 @@ export function isEmptyPosition(
   for (let x = 0; x < AppConstants.BLOCK_WIDTH; x++) {
     for (let y = 0; y < AppConstants.BLOCK_HEIGHT; y++) {
       const block = blocks[y][x];
-      const boardX = x + position.x;
-      const boardY = y + position.y;
+      const matrixX = x + position.x;
+      const matrixY = y + position.y;
 
       // might not be filled, ya know
       if (block) {
-        // make sure it's on the board
-        if (boardX >= 0 && boardX < GAME_WIDTH && boardY < GAME_HEIGHT) {
+        // make sure it's on the matrix
+        if (matrixX >= 0 && matrixX < GAME_WIDTH && matrixY < GAME_HEIGHT) {
           // make sure it's available
-          if (!board[boardY] || board[boardY][boardX]) {
-            // that square is taken by the board already
+          if (!matrix[matrixY] || matrix[matrixY][matrixX]) {
+            // that square is taken by the matrix already
             return false;
           }
         } else {
-          // there's a square in the block that's off the board
+          // there's a square in the block that's off the matrix
           return false;
         }
       }
@@ -136,7 +136,7 @@ function assert(value: unknown): asserts value {
 
 function tryMove(move: (pp: PositionedPiece) => PositionedPiece) {
   return function (
-    gameBoard: GameBoard,
+    gameBoard: Matrix,
     positionedPiece: PositionedPiece
   ): PositionedPiece | undefined {
     const updatedPiece = move(positionedPiece);
@@ -191,7 +191,7 @@ export const flipCounterclockwise = tryMove(
 );
 
 export function hardDrop(
-  gameBoard: GameBoard,
+  gameBoard: Matrix,
   positionedPiece: PositionedPiece
 ): PositionedPiece {
   const position = { ...positionedPiece.position };
