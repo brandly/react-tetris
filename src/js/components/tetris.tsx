@@ -1,6 +1,6 @@
 import React from 'react';
 import Gameboard from './gameboard';
-import { update, getInitialGame, State } from '../stores/game-store';
+import * as Game from '../stores/game-store';
 import HeldPiece from './held-piece';
 import PieceQueue from './piece-queue';
 import { Context } from '../context';
@@ -12,7 +12,7 @@ type RenderFn = (params: {
   PieceQueue: React.ComponentType;
   points: number;
   linesCleared: number;
-  state: State;
+  state: Game.State;
   controller: Controller;
 }) => React.ReactElement;
 
@@ -48,7 +48,7 @@ const defaultKeyboardMap: KeyboardMap = {
 };
 
 export default function Tetris(props: Props): JSX.Element {
-  const [game, dispatch] = React.useReducer(update, getInitialGame());
+  const [game, dispatch] = React.useReducer(Game.update, Game.init());
   const keyboardMap = props.keyboardControls ?? defaultKeyboardMap;
   useKeyboardControls(keyboardMap, dispatch);
 

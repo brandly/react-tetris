@@ -47,7 +47,7 @@ export type Action =
 export const update = (game: Game, action: Action): Game => {
   switch (action) {
     case 'RESTART': {
-      return getInitialGame();
+      return init();
     }
     case 'PAUSE': {
       return game.state === 'PLAYING' ? { ...game, state: 'PAUSED' } : game;
@@ -168,7 +168,7 @@ const applyMove = (
   return afterFlip ? { ...game, piece: afterFlip } : game;
 };
 
-export const getInitialGame = (): Game => {
+export const init = (): Game => {
   const queue = PieceQueue.create(5);
   const next = PieceQueue.getNext(queue);
   return {
