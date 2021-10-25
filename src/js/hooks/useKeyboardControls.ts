@@ -1,7 +1,7 @@
 import React from 'react';
 import key from 'keymaster';
 import DetectShift from '../modules/detect-shift';
-import { Action } from '../stores/game-store';
+import { Action } from '../models/Game';
 
 export type KeyboardMap = Record<string, Action>;
 

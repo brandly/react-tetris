@@ -1,4 +1,4 @@
-import { Piece, pieces } from './piece-types';
+import { Piece, pieces } from '../models/Piece';
 
 export type PieceQueue = {
   minimumLength: number;
@@ -29,9 +29,10 @@ function fill(pieceQueue: PieceQueue): PieceQueue {
   };
 }
 
-export function getNext(
-  pieceQueue: PieceQueue
-): { piece: Piece; queue: PieceQueue } {
+export function getNext(pieceQueue: PieceQueue): {
+  piece: Piece;
+  queue: PieceQueue;
+} {
   if (!pieceQueue.queue.length) {
     throw new Error('Unexpected empty queue');
   }

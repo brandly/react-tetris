@@ -1,8 +1,8 @@
 import {
-  GameBoard,
+  Matrix,
   PositionedPiece,
   Piece,
-  buildGameBoard,
+  buildMatrix,
   addPieceToBoard,
   isEmptyPosition,
   flipClockwise,
@@ -12,8 +12,8 @@ import {
   moveRight,
   setPiece,
   hardDrop
-} from './board-store';
-import AppConstants from '../constants/app-constants';
+} from './Matrix';
+import Constants from '../constants';
 import * as PieceQueue from '../modules/piece-queue';
 
 export type State = 'PAUSED' | 'PLAYING' | 'LOST';
@@ -22,7 +22,7 @@ type HeldPiece = { available: boolean; piece: Piece };
 
 export type Game = {
   state: State;
-  board: GameBoard;
+  matrix: Matrix;
   piece: PositionedPiece;
   heldPiece: HeldPiece | undefined;
   queue: PieceQueue.PieceQueue;
@@ -47,7 +47,7 @@ export type Action =
 export const update = (game: Game, action: Action): Game => {
   switch (action) {
     case 'RESTART': {
-      return getInitialGame();
+      return init();
     }
     case 'PAUSE': {
       return game.state === 'PLAYING' ? { ...game, state: 'PAUSED' } : game;
@@ -62,7 +62,7 @@ export const update = (game: Game, action: Action): Game => {
     }
     case 'HARD_DROP': {
       if (game.state !== 'PLAYING') return game;
-      const piece = hardDrop(game.board, game.piece);
+      const piece = hardDrop(game.matrix, game.piece);
       return lockInPiece({ ...game, piece });
     }
     case 'TICK':
@@ -91,10 +91,10 @@ export const update = (game: Game, action: Action): Game => {
       if (game.state !== 'PLAYING') return game;
       if (game.heldPiece && !game.heldPiece.available) return game;
 
-      // Ensure the held piece will fit on the board
+      // Ensure the held piece will fit on the matrix
       if (
         game.heldPiece &&
-        !isEmptyPosition(game.board, {
+        !isEmptyPosition(game.matrix, {
           ...game.piece,
           piece: game.heldPiece.piece
         })
@@ -116,13 +116,13 @@ export const update = (game: Game, action: Action): Game => {
 };
 
 const lockInPiece = (game: Game): Game => {
-  const [board, linesCleared] = setPiece(game.board, game.piece);
+  const [matrix, linesCleared] = setPiece(game.matrix, game.piece);
   const next = PieceQueue.getNext(game.queue);
   const piece = initializePiece(next.piece);
   return {
     ...game,
-    state: isEmptyPosition(board, piece) ? game.state : 'LOST',
-    board,
+    state: isEmptyPosition(matrix, piece) ? game.state : 'LOST',
+    matrix,
     piece,
     heldPiece: game.heldPiece
       ? { ...game.heldPiece, available: true }
@@ -144,7 +144,7 @@ const addScore = (additionalLines: number) => {
 };
 
 const initialPosition = {
-  x: AppConstants.GAME_WIDTH / 2 - AppConstants.BLOCK_WIDTH / 2,
+  x: Constants.GAME_WIDTH / 2 - Constants.BLOCK_WIDTH / 2,
   y: 0
 };
 
@@ -157,34 +157,31 @@ const initializePiece = (piece: Piece): PositionedPiece => {
 };
 
 const applyMove = (
-  move: (
-    board: GameBoard,
-    piece: PositionedPiece
-  ) => PositionedPiece | undefined,
+  move: (matrix: Matrix, piece: PositionedPiece) => PositionedPiece | undefined,
   game: Game
 ): Game => {
   if (game.state !== 'PLAYING') return game;
-  const afterFlip = move(game.board, game.piece);
+  const afterFlip = move(game.matrix, game.piece);
   return afterFlip ? { ...game, piece: afterFlip } : game;
 };
 
-export const getInitialGame = (): Game => {
+export const init = (): Game => {
   const queue = PieceQueue.create(5);
   const next = PieceQueue.getNext(queue);
   return {
     state: 'PLAYING',
     points: 0,
     lines: 0,
-    board: buildGameBoard(),
+    matrix: buildMatrix(),
     piece: initializePiece(next.piece),
     heldPiece: undefined,
     queue: next.queue
   };
 };
 
-// Good display of merging piece + board
-export function viewGameBoard(game: Game): GameBoard {
-  let gameBoard = game.board;
+// Good display of merging piece + matrix
+export function viewMatrix(game: Game): Matrix {
+  let gameBoard = game.matrix;
 
   // set the preview
   gameBoard = addPieceToBoard(gameBoard, hardDrop(gameBoard, game.piece), true);
