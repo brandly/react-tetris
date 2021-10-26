@@ -13,20 +13,16 @@ const Container = styled.div`
   position: relative;
 `;
 
-const LeftHalf = styled.div`
-  width: 50%;
-  min-height: 100vh;
+const Header = styled.header`
+  width: 100%;
+  height: 32pxp;
   background: #fafafa;
-  border-right: 1px solid #eaeaea;
+  border-bottom: 1px solid #eaeaea;
   padding: 0 18px;
 `;
 
-const RightHalf = styled.div`
-  width: 50%;
-  position: fixed;
-  right: 0;
-  top: 0;
-  bottom: 0;
+const Content = styled.div`
+  position: relative;
 `;
 
 const VerticallyCenterChildren = styled.div`
@@ -53,18 +49,18 @@ const SubTitle = styled.h2`
 
 const App = (): JSX.Element => (
   <Container>
-    <LeftHalf>
+    <Header>
       <Heading>
         <Title>react tetris</Title>
         <SubTitle>Embed a game of Tetris in your React app</SubTitle>
         <TypedShell>npm install --save react-tetris</TypedShell>
       </Heading>
-    </LeftHalf>
-    <RightHalf>
+    </Header>
+    <Content>
       <VerticallyCenterChildren>
         <GamePanel />
       </VerticallyCenterChildren>
-    </RightHalf>
+    </Content>
   </Container>
 );
 
