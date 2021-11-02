@@ -11,8 +11,8 @@
     "keymaster": "1.6.2"
   },
   "scripts": {
-    "build:lib": "rollup --config rollup.lib.js",
-    "build:app": "rollup --config rollup.app.js",
+    "build:lib": "esbuild src/js/components/tetris.tsx --bundle --outfile=lib/index.js --external:react --external:react-dom",
+    "build:app": "esbuild app/main.tsx --bundle --outfile=dist/main.js",
     "watch": "npm run build:app -- --watch",
     "build": "npm run clean && npm run build:lib && npm run build:app && npm run html",
     "html": "cp src/index.html dist/",
@@ -28,8 +28,6 @@
     "@babel/plugin-external-helpers": "7.10.1",
     "@babel/preset-env": "7.10.2",
     "@babel/preset-react": "7.10.1",
-    "@rollup/plugin-replace": "3.0.0",
-    "@rollup/plugin-typescript": "8.2.5",
     "@types/assert": "1.5.6",
     "@types/events": "3.0.0",
     "@types/react": "17.0.30",
@@ -50,12 +48,6 @@
     "prettier": "2.4.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "rollup": "2.58.0",
-    "rollup-plugin-babel": "4.4.0",
-    "rollup-plugin-commonjs": "10.1.0",
-    "rollup-plugin-node-builtins": "2.1.2",
-    "rollup-plugin-node-globals": "1.4.0",
-    "rollup-plugin-node-resolve": "5.2.0",
     "styled-components": "5.3.1",
     "typescript": "4.4.4",
     "uglify-js": "3.14.2"
