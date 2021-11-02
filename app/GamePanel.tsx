@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Tetris from '../src/js/components/tetris';
+import Controller from './Controller';
 
 const Container = styled.div`
   margin: 24px auto 0;
@@ -108,16 +109,7 @@ const GamePanel = (): JSX.Element => (
               <PieceQueue />
             </RightColumn>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div>
-                <button onClick={controller.moveLeft}>left</button>
-                <button onClick={controller.moveRight}>right</button>
-              </div>
-              <div>
-                <button onClick={controller.flipClockwise}>turn</button>
-                <button onClick={controller.hardDrop}>drop</button>
-              </div>
-            </div>
+            <Controller controller={controller} />
           </div>
           {state === 'PAUSED' && (
             <Popup>

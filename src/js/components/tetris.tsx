@@ -6,7 +6,7 @@ import PieceQueue from './piece-queue';
 import { Context } from '../context';
 import { KeyboardMap, useKeyboardControls } from '../hooks/useKeyboardControls';
 
-type RenderFn = (params: {
+export type RenderFn = (params: {
   HeldPiece: React.ComponentType;
   Gameboard: React.ComponentType;
   PieceQueue: React.ComponentType;
@@ -17,7 +17,7 @@ type RenderFn = (params: {
   controller: Controller;
 }) => React.ReactElement;
 
-type Controller = {
+export type Controller = {
   pause: () => void;
   resume: () => void;
   hold: () => void;
