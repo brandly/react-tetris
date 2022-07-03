@@ -58,6 +58,6 @@
   },
   "homepage": "https://brandly.github.io/react-tetris/",
   "files": [
-    "lib/index.js"
+    "lib/"
   ]
 }
