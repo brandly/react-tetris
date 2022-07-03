@@ -13,7 +13,7 @@ export default function Controller({ controller }: Props): JSX.Element {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '0 12px'
+        padding: '24px 12px'
       }}
     >
       <div
@@ -36,14 +36,14 @@ export default function Controller({ controller }: Props): JSX.Element {
       </div>
       <div>
         <Row>
-          <RoundBtn onClick={controller.hardDrop}>△</RoundBtn>
+          <RoundBtn onClick={controller.hardDrop} />
         </Row>
         <MidRow>
-          <RoundBtn onClick={controller.hold}>☐</RoundBtn>
-          <RoundBtn onClick={controller.flipClockwise}>O</RoundBtn>
+          <RoundBtn onClick={controller.hold} />
+          <RoundBtn onClick={controller.flipClockwise} />
         </MidRow>
         <Row>
-          <RoundBtn onClick={controller.flipCounterclockwise}>X</RoundBtn>
+          <RoundBtn onClick={controller.flipCounterclockwise} />
         </Row>
       </div>
     </div>
