@@ -11,7 +11,7 @@
     "keymaster": "1.6.2"
   },
   "scripts": {
-    "build:lib": "esbuild src/components/tetris.tsx --bundle --outfile=lib/index.js --external:react --external:react-dom",
+    "build:lib": "esbuild src/components/Tetris.tsx --bundle --outfile=lib/index.js --external:react --external:react-dom",
     "build:app": "esbuild app/main.tsx --bundle --outfile=dist/main.js",
     "watch": "npm run build:app -- --watch",
     "build": "npm run clean && npm run build:lib && npm run build:app && npm run html",

@@ -1,8 +1,8 @@
 import React from 'react';
-import Gameboard from './gameboard';
+import Gameboard from './Gameboard';
 import * as Game from '../models/Game';
-import HeldPiece from './held-piece';
-import PieceQueue from './piece-queue';
+import HeldPiece from './HeldPiece';
+import PieceQueue from './PieceQueue';
 import { Context } from '../context';
 import { KeyboardMap, useKeyboardControls } from '../hooks/useKeyboardControls';
 

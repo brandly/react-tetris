@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Tetris from '../src/components/tetris';
+import Tetris from '../src/components/Tetris';
 import Controller from './Controller';
 
 const Container = styled.div`
