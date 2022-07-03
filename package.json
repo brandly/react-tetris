@@ -17,7 +17,7 @@
     "build": "npm run clean && npm run build:lib && npm run build:app && npm run html",
     "html": "cp app/index.html dist/",
     "lint": "eslint . --ext .ts,.tsx",
-    "clean": "rm -rf dist/*",
+    "clean": "rm -rf dist/* lib/*",
     "test": "tsc --noEmit && npm run lint && npm run test:unit",
     "test:unit": "esbuild --bundle --platform=node test/index.ts | node"
   },
