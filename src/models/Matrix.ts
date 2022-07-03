@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import Constants from '../constants';
 import { Piece, Rotation, getBlocks, isRotation } from './Piece';
 
@@ -34,6 +35,12 @@ export const addPieceToBoard = (
 ): Matrix => {
   const { piece, rotation, position } = positionedPiece;
   const block = getBlocks(piece)[rotation];
+
+  if (!block) {
+    throw new Error(
+      `Unexpected: no rotation ${rotation} found to piece ${piece}`
+    );
+  }
 
   const filledCells: Array<Coords | false> = block.reduce(
     (output, row, y) =>
@@ -80,7 +87,7 @@ function clearFullLines(matrix: Matrix): number {
   let linesCleared = 0;
   for (let y = 0; y < matrix.length; y++) {
     // it's a full line
-    if (every(matrix[y])) {
+    if (every(matrix[y]!)) {
       // so rip it out
       matrix.splice(y, 1);
       matrix.unshift(buildGameRow());
@@ -107,7 +114,7 @@ export function isEmptyPosition(
 
   for (let x = 0; x < Constants.BLOCK_WIDTH; x++) {
     for (let y = 0; y < Constants.BLOCK_HEIGHT; y++) {
-      const block = blocks[y][x];
+      const block = blocks![y]![x];
       const matrixX = x + position.x;
       const matrixY = y + position.y;
 
@@ -116,7 +123,7 @@ export function isEmptyPosition(
         // make sure it's on the matrix
         if (matrixX >= 0 && matrixX < GAME_WIDTH && matrixY < GAME_HEIGHT) {
           // make sure it's available
-          if (!matrix[matrixY] || matrix[matrixY][matrixX]) {
+          if (!matrix[matrixY] || matrix![matrixY]![matrixX]) {
             // that square is taken by the matrix already
             return false;
           }
@@ -144,6 +151,8 @@ function tryMove(move: (pp: PositionedPiece) => PositionedPiece) {
     if (isEmptyPosition(gameboard, updatedPiece)) {
       return updatedPiece;
     }
+
+    return undefined;
   };
 }
 

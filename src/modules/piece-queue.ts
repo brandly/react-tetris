@@ -33,7 +33,7 @@ export function getNext(pieceQueue: PieceQueue): {
   piece: Piece;
   queue: PieceQueue;
 } {
-  if (!pieceQueue.queue.length) {
+  if (!pieceQueue.queue[0]) {
     throw new Error('Unexpected empty queue');
   }
   const next = pieceQueue.queue[0];
@@ -58,7 +58,12 @@ function pullFromBucket(bucket: Piece[]): [Piece, Piece[]] {
       }
     });
   }
-  return [local.splice(randomNumber(local.length), 1)[0], local];
+  const randomPiece = local.splice(randomNumber(local.length), 1)[0];
+  if (!randomPiece) {
+    console.error('bucket:', JSON.stringify(local));
+    throw new Error(`Unexpected: failed to pull from bucket`);
+  }
+  return [randomPiece, local];
 }
 
 export default PieceQueue;

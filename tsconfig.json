@@ -3,7 +3,10 @@
     "lib": ["ES2019", "dom"],
     "typeRoots": ["./src/types"],
     "strict": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true
   }

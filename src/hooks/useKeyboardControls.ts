@@ -24,17 +24,19 @@ export const useKeyboardControls = (
 
 function addKeyboardEvents(keyboardMap: KeyboardDispatch) {
   Object.keys(keyboardMap).forEach((k: keyof KeyboardDispatch) => {
-    if (k === 'shift') {
-      DetectShift.bind(keyboardMap[k]);
-    } else {
-      key(k, keyboardMap[k]);
+    const fn = keyboardMap[k];
+    if (k === 'shift' && fn) {
+      DetectShift.bind(fn);
+    } else if (fn) {
+      key(k, fn);
     }
   });
 }
 function removeKeyboardEvents(keyboardMap: KeyboardDispatch) {
   Object.keys(keyboardMap).forEach((k) => {
     if (k === 'shift') {
-      DetectShift.unbind(keyboardMap[k]);
+      const fn = keyboardMap[k];
+      fn && DetectShift.unbind(fn);
     } else {
       key.unbind(k);
     }
