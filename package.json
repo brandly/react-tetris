@@ -1,6 +1,6 @@
 {
   "name": "react-tetris",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Embed a game of Tetris in your React app",
   "main": "lib/components/Tetris.js",
   "repository": {
