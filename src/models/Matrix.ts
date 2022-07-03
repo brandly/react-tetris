@@ -136,12 +136,12 @@ function assert(value: unknown): asserts value {
 
 function tryMove(move: (pp: PositionedPiece) => PositionedPiece) {
   return function (
-    gameBoard: Matrix,
+    gameboard: Matrix,
     positionedPiece: PositionedPiece
   ): PositionedPiece | undefined {
     const updatedPiece = move(positionedPiece);
 
-    if (isEmptyPosition(gameBoard, updatedPiece)) {
+    if (isEmptyPosition(gameboard, updatedPiece)) {
       return updatedPiece;
     }
   };
@@ -191,12 +191,12 @@ export const flipCounterclockwise = tryMove(
 );
 
 export function hardDrop(
-  gameBoard: Matrix,
+  gameboard: Matrix,
   positionedPiece: PositionedPiece
 ): PositionedPiece {
   const position = { ...positionedPiece.position };
 
-  while (isEmptyPosition(gameBoard, { ...positionedPiece, position })) {
+  while (isEmptyPosition(gameboard, { ...positionedPiece, position })) {
     position.y += 1;
   }
   // at this point, we just found a non-empty position, so let's step back

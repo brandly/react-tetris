@@ -183,11 +183,11 @@ export const init = (): Game => {
 
 // Good display of merging piece + matrix
 export function viewMatrix(game: Game): Matrix {
-  let gameBoard = game.matrix;
+  let gameboard = game.matrix;
 
   // set the preview
-  gameBoard = addPieceToBoard(gameBoard, hardDrop(gameBoard, game.piece), true);
+  gameboard = addPieceToBoard(gameboard, hardDrop(gameboard, game.piece), true);
 
   // set the actual piece
-  return addPieceToBoard(gameBoard, game.piece);
+  return addPieceToBoard(gameboard, game.piece);
 }
