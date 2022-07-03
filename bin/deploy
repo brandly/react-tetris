@@ -3,13 +3,10 @@ set -e
 set -u
 
 bin="./node_modules/.bin"
-gh_pages_dir="./gh-pages"
-destination="$gh_pages_dir/"
 
 function main {
   clean
   npm run build
-  mkdir -p "$destination/"
   uglify_js
   cp app/index.html dist/
   commit_and_push_to_gh
