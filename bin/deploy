@@ -11,7 +11,7 @@ function main {
   npm run build
   mkdir -p "$destination/"
   uglify_js
-  cp src/index.html dist/
+  cp app/index.html dist/
   commit_and_push_to_gh
 }
 
