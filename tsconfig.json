@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["ES2019", "dom"],
-    "typeRoots": ["./src/js/types"],
+    "typeRoots": ["./src/types"],
     "strict": true,
     "noUnusedLocals": true,
     "jsx": "react",
