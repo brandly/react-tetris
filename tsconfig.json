@@ -8,6 +8,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
-    "allowSyntheticDefaultImports": true
-  }
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "module": "ES2020",
+    "moduleResolution": "Node",
+    "declaration": true
+  },
+  "exclude": ["./test", "./app"]
 }
