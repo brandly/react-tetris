@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Tetris from '../src/js/components/tetris';
+import Controller from './Controller';
 
 const Container = styled.div`
   margin: 24px auto 0;
@@ -50,6 +51,7 @@ const Popup = styled.div`
   padding: 12px 24px;
   border-radius: 4px;
   text-align: center;
+  box-shadow: 2px 7px 18px 3px #d2d2d2;
 `;
 
 const Alert = styled.h2`
@@ -107,30 +109,21 @@ const GamePanel = (): JSX.Element => (
               <PieceQueue />
             </RightColumn>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div>
-                <button onClick={controller.moveLeft}>left</button>
-                <button onClick={controller.moveRight}>right</button>
-              </div>
-              <div>
-                <button onClick={controller.flipClockwise}>turn</button>
-                <button onClick={controller.hardDrop}>drop</button>
-              </div>
-            </div>
-
-            {state === 'PAUSED' && (
-              <Popup>
-                <Alert>Paused</Alert>
-              </Popup>
-            )}
-
-            {state === 'LOST' && (
-              <Popup>
-                <Alert>Game Over</Alert>
-                <Button onClick={controller.restart}>Start</Button>
-              </Popup>
-            )}
+            <Controller controller={controller} />
           </div>
+          {state === 'PAUSED' && (
+            <Popup>
+              <Alert>Paused</Alert>
+              <Button onClick={controller.resume}>Resume</Button>
+            </Popup>
+          )}
+
+          {state === 'LOST' && (
+            <Popup>
+              <Alert>Game Over</Alert>
+              <Button onClick={controller.restart}>Start</Button>
+            </Popup>
+          )}
         </div>
       )}
     </Tetris>

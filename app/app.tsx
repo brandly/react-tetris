@@ -11,34 +11,28 @@ const Container = styled.div`
   font-weight: 300;
   width: 100%;
   position: relative;
-`;
 
-const LeftHalf = styled.div`
-  width: 50%;
   min-height: 100vh;
-  background: #fafafa;
-  border-right: 1px solid #eaeaea;
-  padding: 0 18px;
+  display: flex;
+  flex-direction: column;
 `;
 
-const RightHalf = styled.div`
-  width: 50%;
-  position: fixed;
-  right: 0;
-  top: 0;
-  bottom: 0;
+const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background: #fafafa;
+  border-bottom: 1px solid #eaeaea;
+  padding: 0 18px;
 `;
 
 const VerticallyCenterChildren = styled.div`
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  min-height: 100vh;
-`;
-
-const Heading = styled(VerticallyCenterChildren)`
-  text-align: center;
 `;
 
 const Title = styled.h1`
@@ -53,18 +47,14 @@ const SubTitle = styled.h2`
 
 const App = (): JSX.Element => (
   <Container>
-    <LeftHalf>
-      <Heading>
-        <Title>react tetris</Title>
-        <SubTitle>Embed a game of Tetris in your React app</SubTitle>
-        <TypedShell>npm install --save react-tetris</TypedShell>
-      </Heading>
-    </LeftHalf>
-    <RightHalf>
-      <VerticallyCenterChildren>
-        <GamePanel />
-      </VerticallyCenterChildren>
-    </RightHalf>
+    <Header>
+      <Title>react-tetris</Title>
+      <SubTitle>Embed a game of Tetris in your React app</SubTitle>
+      <TypedShell>npm install --save react-tetris</TypedShell>
+    </Header>
+    <VerticallyCenterChildren>
+      <GamePanel />
+    </VerticallyCenterChildren>
   </Container>
 );
 
