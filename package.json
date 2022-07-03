@@ -11,11 +11,11 @@
     "keymaster": "1.6.2"
   },
   "scripts": {
-    "build:lib": "esbuild src/js/components/tetris.tsx --bundle --outfile=lib/index.js --external:react --external:react-dom",
+    "build:lib": "esbuild src/components/tetris.tsx --bundle --outfile=lib/index.js --external:react --external:react-dom",
     "build:app": "esbuild app/main.tsx --bundle --outfile=dist/main.js",
     "watch": "npm run build:app -- --watch",
     "build": "npm run clean && npm run build:lib && npm run build:app && npm run html",
-    "html": "cp src/index.html dist/",
+    "html": "cp app/index.html dist/",
     "lint": "eslint . --ext .ts,.tsx",
     "clean": "rm -rf dist/*",
     "test": "tsc --noEmit && npm run lint && npm run test:unit",
