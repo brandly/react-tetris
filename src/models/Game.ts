@@ -114,6 +114,10 @@ export const update = (game: Game, action: Action): Game => {
         queue: newPiece === next.piece ? next.queue : game.queue
       };
     }
+    default: {
+      const exhaustiveCheck: never = action;
+      throw new Error(`Unhandled action: ${exhaustiveCheck}`);
+    }
   }
 };
 
