@@ -10,13 +10,12 @@ export const useKeyboardControls = (
   dispatch: React.Dispatch<Action>
 ): void => {
   React.useEffect(() => {
-    const keyboardDispatch = Object.entries(keyboardMap).reduce(
-      (output, [key, action]) => {
-        output[key] = () => dispatch(action);
-        return output;
-      },
-      {} as KeyboardDispatch
-    );
+    const keyboardDispatch = Object.entries(
+      keyboardMap
+    ).reduce<KeyboardDispatch>((output, [key, action]) => {
+      output[key] = () => dispatch(action);
+      return output;
+    }, {});
     addKeyboardEvents(keyboardDispatch);
     return () => removeKeyboardEvents(keyboardDispatch);
   }, [keyboardMap, dispatch]);

@@ -42,14 +42,14 @@ export const addPieceToBoard = (
     );
   }
 
-  const filledCells: Array<Coords | false> = block.reduce(
+  const filledCells = block.reduce<Array<Coords | false>>(
     (output, row, y) =>
       output.concat(
         row.map((cell, x) =>
           cell ? { x: x + position.x, y: y + position.y } : false
         )
       ),
-    [] as Array<Coords | false>
+    []
   );
 
   const filled: Set<string> = new Set(
