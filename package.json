@@ -31,7 +31,7 @@
     "@types/styled-components": "5.1.15",
     "@typescript-eslint/eslint-plugin": "6.13.2",
     "@typescript-eslint/parser": "6.13.2",
-    "esbuild": "0.14.49",
+    "esbuild": "0.19.8",
     "eslint": "8.55.0",
     "eslint-plugin-jsx-a11y": "6.6.0",
     "gh-pages": "3.2.3",
@@ -40,7 +40,7 @@
     "react-dom": "18.2.0",
     "styled-components": "5.3.1",
     "typescript": "5.3.3",
-    "uglify-js": "3.14.2"
+    "uglify-js": "3.17.4"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^18.0.0",
