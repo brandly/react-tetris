@@ -61,9 +61,12 @@ export default function Tetris(props: Props): JSX.Element {
   React.useEffect(() => {
     let interval: number | undefined;
     if (game.state === 'PLAYING') {
-      interval = window.setInterval(() => {
-        dispatch('TICK');
-      }, tickSeconds(level) * 1000);
+      interval = window.setInterval(
+        () => {
+          dispatch('TICK');
+        },
+        tickSeconds(level) * 1000
+      );
     }
 
     return () => {
