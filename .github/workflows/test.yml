@@ -51,12 +51,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
+      - 'master'
     tags:
       - 'v*'
   pull_request:
     branches:
-      - 'main'
+      - 'master'
 
 jobs:
   docker:
@@ -86,5 +86,15 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+    
 
+  login:
+          runs-on: ubuntu-latest
+          steps:
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v3
+              with:
+               registry: ghcr.io
+               username: ${{ github.actor }}
+               password: ${{ secrets.GITHUB_TOKEN }}
 #Testing3
