@@ -26,4 +26,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: erdal2021/react-tetris:Ver. 0.0.1a
+          tags: erdal2021/react-tetris:V0.0.1a
