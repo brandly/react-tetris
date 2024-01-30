@@ -8,7 +8,8 @@
     "url": "https://github.com/brandly/react-tetris"
   },
   "dependencies": {
-    "keymaster": "1.6.2"
+    "keymaster": "1.6.2",
+    "react-tetris": "^0.4.0"
   },
   "scripts": {
     "build:lib": "tsc",
